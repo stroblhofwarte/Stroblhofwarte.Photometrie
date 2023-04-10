@@ -1,4 +1,4 @@
-﻿using JPFITS;
+﻿using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,15 +19,13 @@ namespace Stroblhofwarte.Photometrie
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : MetroWindow
     {
-        private uint[,] TBTC_IMAGE;
         public MainWindow()
         {
             InitializeComponent();
 
-            int[,] arr;
-            FITSImage img = new FITSImage("C:\\Users\\othmar\\Nextcloud\\Transfer\\M13_22.4.2021_RGB_10s_C9.25_f6.3_ASI16000.fit", TBTC_IMAGE, true, true);
+           
         }
     }
 }

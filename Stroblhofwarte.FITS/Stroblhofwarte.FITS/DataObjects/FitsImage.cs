@@ -14,10 +14,10 @@ namespace Stroblhofwarte.FITS.DataObjects
         #region Properties
 
         private ushort[] _rawImageData;
-        private int _width;
-        private int _height;
-        private int _bitPix;
-        private Bitmap _bitmap;
+        public int Width { get; private set; }
+        public int Height { get; private set; }
+        public int BitPix { get; private set; }
+        public Bitmap BitmapData { get; private set; }
         private bool _isValid = false;
         private string _error = String.Empty;
         private FITSHeader _header;
@@ -27,12 +27,12 @@ namespace Stroblhofwarte.FITS.DataObjects
 
         public FitsImage(int width, int height, int bitpix, FITSHeader header, ushort[] data)
         {
-            _width = width;
-            _height = height;
-            _bitPix = bitpix;
+            Width = width;
+            Height = height;
+            BitPix = bitpix;
             _header = header;
             _rawImageData = data;
-            _bitmap = new Bitmap(width, height, PixelFormat.Format48bppRgb);
+            BitmapData = new Bitmap(width, height, PixelFormat.Format48bppRgb);
            
             int max = 0;
             int min = int.MaxValue;
@@ -44,7 +44,7 @@ namespace Stroblhofwarte.FITS.DataObjects
             double f = 8192.0/(double)(max - min);
             try
             {
-                var rawData = _bitmap.LockBits(new Rectangle(0, 0, _bitmap.Width, _bitmap.Height),ImageLockMode.ReadWrite, _bitmap.PixelFormat);
+                var rawData = BitmapData.LockBits(new Rectangle(0, 0, BitmapData.Width, BitmapData.Height),ImageLockMode.ReadWrite, BitmapData.PixelFormat);
                 int ptr = 0;
                 for (int y = 0; y < height; y++)
                     for (int x = 0; x < width; x++)
@@ -55,9 +55,9 @@ namespace Stroblhofwarte.FITS.DataObjects
                         System.Runtime.InteropServices.Marshal.WriteInt16(rawData.Scan0, ptr*6 + 4 , pix);
                         ptr++;
                     }
-                _bitmap.UnlockBits(rawData);
+                BitmapData.UnlockBits(rawData);
                 _isValid = true;
-                _bitmap.Save("filename.jpg", ImageFormat.Jpeg);
+                BitmapData.Save("filename.jpg", ImageFormat.Jpeg);
             } catch (Exception ex)
             {
                 _error = ex.ToString();

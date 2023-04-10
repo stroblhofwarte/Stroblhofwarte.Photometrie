@@ -17,8 +17,11 @@
 
 #endregion "copyright"
 
+using Stroblhofwarte.FITS.DataObjects;
+using Stroblhofwarte.FITS.Interface;
 using Stroblhofwarte.FITS.Utility;
 using System;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Runtime.ExceptionServices;
@@ -26,6 +29,8 @@ using System.Runtime.InteropServices;
 using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Markup;
+using System.Windows.Media.Media3D;
 
 namespace Stroblhofwarte.FITS
 {
@@ -35,16 +40,11 @@ namespace Stroblhofwarte.FITS
     /// https://fits.gsfc.nasa.gov/fits_standard.html
     /// http://archive.stsci.edu/fits/fits_standard/fits_standard.html
     /// </summary>
-    public class FITS {
-
-        public FITS(ushort[] data, int width, int height) {
-            this.Header = new FITSHeader(width, height);
-            this.Data = new FITSData(data);
-        }
-
+    public class FITS
+    {
 
         [SecurityCritical]
-        public static DataObjects.FitsImage LoadInternal(Uri filePath, bool isBayered) {
+        public static DataObjects.FitsImage Load(Uri filePath, bool isBayered) {
             IntPtr fitsPtr = IntPtr.Zero;
             IntPtr buffer = IntPtr.Zero;
             try {
@@ -129,23 +129,6 @@ namespace Stroblhofwarte.FITS
             }
         }
 
-        public FITSHeader Header { get; }
-
-        public FITSData Data { get; }
-
-
-        public void Write(Stream s) {
-            this.Header.Write(s);
-
-            this.Data.Write(s);
-
-            long remainingBlockPadding = (long)Math.Ceiling((double)s.Position / (double)BLOCKSIZE) * (long)BLOCKSIZE - s.Position;
-            byte zeroByte = 0;
-            //Pad remaining FITS block with zero values
-            for (int i = 0; i < remainingBlockPadding; i++) {
-                s.WriteByte(zeroByte);
-            }
-        }
 
         /* Header card size Specification: http://archive.stsci.edu/fits/fits_standard/node29.html#SECTION00912100000000000000 */
         public const int HEADERCARDSIZE = 80;

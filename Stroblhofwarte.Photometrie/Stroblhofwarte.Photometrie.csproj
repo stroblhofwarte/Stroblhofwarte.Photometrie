@@ -5,11 +5,28 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\JPChart\JPChart.csproj" />
-    <ProjectReference Include="..\JPFITS\JPFITS.csproj" />
+    <PackageReference Include="Dirkster.AvalonDock" Version="4.72.0" />
+    <PackageReference Include="Dirkster.AvalonDock.Themes.Metro" Version="4.72.0" />
+    <PackageReference Include="Dirkster.AvalonDock.Themes.VS2013" Version="4.72.0" />
+    <PackageReference Include="MahApps.Metro" Version="2.4.9" />
+    <PackageReference Include="MahApps.Metro.IconPacks" Version="4.11.0" />
+    <PackageReference Include="MahApps.Metro.IconPacks.FontAwesome" Version="4.11.0" />
+    <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="4.11.0" />
+    <PackageReference Include="MahApps.Metro.IconPacks.Modern" Version="4.11.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Stroblhofwarte.FITS\Stroblhofwarte.FITS\Stroblhofwarte.FITS.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Ring Nebula%282%29_2021-05-31_22-41-52_GAIN_0_G_-20.00_600.00s_0001.fits">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
