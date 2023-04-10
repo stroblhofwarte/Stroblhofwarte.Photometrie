@@ -5,6 +5,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Stroblhofwarte.Photometrie.View" 
+      xmlns:main="clr-namespace:Stroblhofwarte.Photometrie"
       xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
               mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
@@ -21,10 +22,18 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <Image  Source="{Binding ImageSource}" Margin="0,0,0,57"/>
-
+        <main:MouseTrackerDecorator x:Name="mouseTracker">
+            <Image  Source="{Binding ImageSource}" Margin="0,0,0,57" />
+        </main:MouseTrackerDecorator>
+        <Label Content="{Binding CoordinateText}" Margin="0,0,0,80" HorizontalAlignment="Left" Width="360" Height="28" VerticalAlignment="Bottom"/>
         <Button Width="55"
         Style="{DynamicResource MahApps.Styles.Button.Circle}" Height="55" VerticalAlignment="Bottom" HorizontalAlignment="Left" ToolTip="Switch Coordinates Grid on or off">
+            <StackPanel Orientation="Vertical">
+                <icon:PackIconMaterial Width="30" Height="30" Kind="Grid" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Button>
+        <Button Width="55"
+        Style="{DynamicResource MahApps.Styles.Button.Circle}" Height="55" VerticalAlignment="Bottom" HorizontalAlignment="Left" ToolTip="Switch Coordinates Grid on or off" Margin="73,0,0,0">
             <StackPanel Orientation="Vertical">
                 <icon:PackIconMaterial Width="30" Height="30" Kind="Grid" HorizontalAlignment="Center"/>
             </StackPanel>

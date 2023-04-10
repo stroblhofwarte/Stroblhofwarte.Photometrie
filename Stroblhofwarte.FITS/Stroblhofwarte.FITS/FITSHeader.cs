@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using Stroblhofwarte.FITS.DataObjects;
 using Stroblhofwarte.FITS.Utility;
 
 namespace Stroblhofwarte.FITS
@@ -32,12 +33,15 @@ namespace Stroblhofwarte.FITS
             Add("NAXIS2", height, "");
             Add("BZERO", 32768, "");
             Add("EXTEND", true, "Extensions are permitted");
+            WCSValid = false;
         }
 
         private Dictionary<string, FITSHeaderCard> _headerCards = new Dictionary<string, FITSHeaderCard>();
 
         public ICollection<FITSHeaderCard> HeaderCards => _headerCards.Values;
 
+        public WorldCoordinateSystem WCS { get; private set; }
+        public bool WCSValid { get; private set; }
         public void Add(string keyword, string value, string comment) {
             if (!_headerCards.ContainsKey(keyword)) {
                 _headerCards.Add(keyword, new FITSHeaderCard(keyword, value, comment));
@@ -84,6 +88,59 @@ namespace Stroblhofwarte.FITS
             }
         }
 
+        public bool CheckForWCS()
+        {
+            WCSValid = false;
+            double crval1 = GetDoubleValue("CRVAL1");
+            double crval2 = GetDoubleValue("CRVAL2");
+            double crpix1 = GetDoubleValue("CRPIX1");
+            double crpix2 = GetDoubleValue("CRPIX2");
+            double cd1_1 = GetDoubleValue("CD1_1");
+            double cd1_2 = GetDoubleValue("CD1_2");
+            double cd2_1 = GetDoubleValue("CD2_1");
+            double cd2_2 = GetDoubleValue("CD2_2");
+            double cdelta1 = GetDoubleValue("CDELT1");
+            double cdelta2 = GetDoubleValue("CDELT2");
+            double crota2 = GetDoubleValue("CROTA2");
+           
+            if (!double.IsNaN(crval1) &&
+               !double.IsNaN(crval2) &&
+               !double.IsNaN(crpix1) &&
+               !double.IsNaN(crpix2) &&
+               !double.IsNaN(cdelta1) &&
+               !double.IsNaN(cdelta2) &&
+               !double.IsNaN(crota2))
+            {
+                // WCD foud. Create WorldCoordinateSystem object
+                WCS = new WorldCoordinateSystem(crval1, crval2, crpix1, crpix2, cdelta1, cdelta2, crota2);
+                WCSValid = true;
+                return true;
+            }
+
+            if (!double.IsNaN(crval1) &&
+              !double.IsNaN(crval2) &&
+              !double.IsNaN(crpix1) &&
+              !double.IsNaN(crpix2) &&
+              !double.IsNaN(cd1_1) &&
+              !double.IsNaN(cd1_2) &&
+              !double.IsNaN(cd2_1) &&
+              !double.IsNaN(cd2_2))
+            {
+                // WCD foud. Create WorldCoordinateSystem object
+                WCS = new WorldCoordinateSystem(crval1, crval2, crpix1, crpix2, cd1_1, cd1_2, cd2_1, cd2_2);
+                WCSValid = true;
+                return true;
+            }
+            return false;
+        }
+        private double GetDoubleValue(string keyword)
+        {
+            if (_headerCards.TryGetValue(keyword, out var card))
+            {
+                return ParseDouble(card.OriginalValue);
+            }
+            return double.NaN;
+        }
         public void ExtractMetaData() {
           
             if (_headerCards.TryGetValue("IMAGETYP", out var card)) {

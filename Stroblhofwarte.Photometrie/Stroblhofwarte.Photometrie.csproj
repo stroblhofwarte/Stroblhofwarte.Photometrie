@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Stroblhofwarte.FITS\Stroblhofwarte.FITS\Stroblhofwarte.FITS.csproj" />
+    <ProjectReference Include="..\Stroblhofwarte.Image\Stroblhofwarte.Image.csproj" />
   </ItemGroup>
 
   <ItemGroup>

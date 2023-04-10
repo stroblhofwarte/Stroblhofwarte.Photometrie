@@ -17,9 +17,19 @@ namespace Stroblhofwarte.FITS
         public bool IsValid { get; private set; }
         public string ErrorText { get; private set; }
 
+        public WorldCoordinateSystem WCS
+        {
+            get
+            {
+                if (_image == null) return null;
+                if (!_image.WCSValid) return null;
+                return _image.WCS;
+            }
+        }
+
         #endregion
 
-        #region CTor
+            #region CTor
 
         public StroblhofwarteFITS(string filename)
         {

@@ -18,6 +18,9 @@ namespace Stroblhofwarte.FITS.DataObjects
         public int Height { get; private set; }
         public int BitPix { get; private set; }
         public Bitmap BitmapData { get; private set; }
+        public WorldCoordinateSystem WCS { get; private set; }
+        public bool WCSValid { get; private set; }
+
         private bool _isValid = false;
         private string _error = String.Empty;
         private FITSHeader _header;
@@ -32,6 +35,14 @@ namespace Stroblhofwarte.FITS.DataObjects
             BitPix = bitpix;
             _header = header;
             _rawImageData = data;
+            WCSValid = false;
+            if (header.CheckForWCS())
+            {
+                // WCS found
+                WCS = header.WCS;
+                WCSValid = header.WCSValid;
+            }
+
             BitmapData = new Bitmap(width, height, PixelFormat.Format48bppRgb);
            
             int max = 0;
