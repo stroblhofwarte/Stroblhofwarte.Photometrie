@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32421.90
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stroblhofwarte.Photometrie", "Stroblhofwarte.Photometrie\Stroblhofwarte.Photometrie.csproj", "{51A05FC5-4680-4FB0-AA80-FBBC4069A32C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JPFITS", "JPFITS\JPFITS.csproj", "{5E0105B8-C803-4436-9CB8-05FE2CDBAD91}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JPChart", "JPChart\JPChart.csproj", "{0C403160-D30D-4C54-91A1-20743F2393E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CCDLAB", "CCDLAB\CCDLAB.csproj", "{27A53E62-D277-4098-ADA9-C7E688AA3BFF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stroblhofwarte.FITS", "Stroblhofwarte.FITS\Stroblhofwarte.FITS\Stroblhofwarte.FITS.csproj", "{105455B0-1F4E-44D8-A03F-5B416D2B4EE5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stroblhofwarte.FITS.test", "Stroblhofwarte.FITS.test\Stroblhofwarte.FITS.test\Stroblhofwarte.FITS.test.csproj", "{0211C79F-94B4-4B11-8E2A-3663A1B57749}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{51A05FC5-4680-4FB0-AA80-FBBC4069A32C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51A05FC5-4680-4FB0-AA80-FBBC4069A32C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51A05FC5-4680-4FB0-AA80-FBBC4069A32C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51A05FC5-4680-4FB0-AA80-FBBC4069A32C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E0105B8-C803-4436-9CB8-05FE2CDBAD91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E0105B8-C803-4436-9CB8-05FE2CDBAD91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E0105B8-C803-4436-9CB8-05FE2CDBAD91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E0105B8-C803-4436-9CB8-05FE2CDBAD91}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C403160-D30D-4C54-91A1-20743F2393E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C403160-D30D-4C54-91A1-20743F2393E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C403160-D30D-4C54-91A1-20743F2393E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C403160-D30D-4C54-91A1-20743F2393E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27A53E62-D277-4098-ADA9-C7E688AA3BFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27A53E62-D277-4098-ADA9-C7E688AA3BFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27A53E62-D277-4098-ADA9-C7E688AA3BFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27A53E62-D277-4098-ADA9-C7E688AA3BFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{105455B0-1F4E-44D8-A03F-5B416D2B4EE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{105455B0-1F4E-44D8-A03F-5B416D2B4EE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{105455B0-1F4E-44D8-A03F-5B416D2B4EE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{105455B0-1F4E-44D8-A03F-5B416D2B4EE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0211C79F-94B4-4B11-8E2A-3663A1B57749}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0211C79F-94B4-4B11-8E2A-3663A1B57749}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0211C79F-94B4-4B11-8E2A-3663A1B57749}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0211C79F-94B4-4B11-8E2A-3663A1B57749}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {741205CC-C286-41C7-88AC-E10F8B6BB549}
+	EndGlobalSection
+EndGlobal
