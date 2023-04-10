@@ -8,6 +8,11 @@
     This Source Code Form is subject to the terms of the Mozilla Public
     License, v. 2.0. If a copy of the MPL was not distributed with this
     file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+    CHANGELOG:
+    ===================================
+    Author: Othmar Ehrhardt, https://astro.stroblhof-oberrohrbach.de, 10.4.2023: Some minor changes to meet my req. for the photometrie tool
+
 */
 
 #endregion "copyright"
@@ -99,7 +104,7 @@ namespace Stroblhofwarte.FITS
                         }
                     }
                 }
-                DataObjects.FitsImage img = new DataObjects.FitsImage(width, height, intBitPix, pixels);
+                DataObjects.FitsImage img = new DataObjects.FitsImage(width, height, intBitPix, header, pixels);
                 return img;
 
             } catch (AccessViolationException ex) {

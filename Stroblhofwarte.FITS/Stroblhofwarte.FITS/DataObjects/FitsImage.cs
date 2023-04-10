@@ -18,15 +18,19 @@ namespace Stroblhofwarte.FITS.DataObjects
         private int _height;
         private int _bitPix;
         private Bitmap _bitmap;
+        private bool _isValid = false;
+        private string _error = String.Empty;
+        private FITSHeader _header;
 
         #endregion
         #region Ctor
 
-        public FitsImage(int width, int height, int bitpix, ushort[] data)
+        public FitsImage(int width, int height, int bitpix, FITSHeader header, ushort[] data)
         {
             _width = width;
             _height = height;
             _bitPix = bitpix;
+            _header = header;
             _rawImageData = data;
             _bitmap = new Bitmap(width, height, PixelFormat.Format48bppRgb);
            
@@ -52,10 +56,11 @@ namespace Stroblhofwarte.FITS.DataObjects
                         ptr++;
                     }
                 _bitmap.UnlockBits(rawData);
+                _isValid = true;
                 _bitmap.Save("filename.jpg", ImageFormat.Jpeg);
             } catch (Exception ex)
             {
-                int i = 7;
+                _error = ex.ToString();
             }
         }
 
