@@ -129,6 +129,118 @@ namespace Stroblhofwarte.FITS
             }
         }
 
+        [SecurityCritical]
+        public static DataObjects.FitsImage LoadHeaderOnly(Uri filePath)
+        {
+            IntPtr fitsPtr = IntPtr.Zero;
+            IntPtr buffer = IntPtr.Zero;
+            try
+            {
+                var bytes = File.ReadAllBytes(filePath.LocalPath);
+
+                buffer = Marshal.AllocHGlobal(bytes.Length);
+                Marshal.Copy(bytes, 0, buffer, bytes.Length);
+
+                UIntPtr size = new UIntPtr((uint)bytes.Length);
+                UIntPtr deltaSize = UIntPtr.Zero;
+
+                CfitsioNative.fits_open_memory(out fitsPtr, string.Empty, CfitsioNative.IOMODE.READONLY, ref buffer, ref size, ref deltaSize, IntPtr.Zero, out var status);
+                CfitsioNative.CheckStatus("fits_open_memory", status);
+
+                var dimensions = CfitsioNative.fits_read_key_long(fitsPtr, "NAXIS");
+                if (dimensions > 2)
+                {
+                    Logger.Warning("Reading debayered FITS images not supported. Reading the first 2 axes to get a monochrome image");
+                }
+
+                var width = (int)CfitsioNative.fits_read_key_long(fitsPtr, "NAXIS1");
+                var height = (int)CfitsioNative.fits_read_key_long(fitsPtr, "NAXIS2");
+                var bitPix = (CfitsioNative.BITPIX)(int)CfitsioNative.fits_read_key_long(fitsPtr, "BITPIX");
+                int intBitPix = (int)CfitsioNative.fits_read_key_long(fitsPtr, "BITPIX");
+               
+                //Translate CFITSio into N.I.N.A. FITSHeader
+                FITSHeader header = new FITSHeader(width, height);
+                CfitsioNative.fits_get_hdrspace(fitsPtr, out var numKeywords, out var numMoreKeywords, out status);
+                CfitsioNative.CheckStatus("fits_get_hdrspace", status);
+                for (int headerIdx = 1; headerIdx <= numKeywords; ++headerIdx)
+                {
+                    CfitsioNative.fits_read_keyn(fitsPtr, headerIdx, out var keyName, out var keyValue, out var keyComment);
+
+                    if (string.IsNullOrEmpty(keyValue) || keyName.Equals("COMMENT") || keyName.Equals("HISTORY"))
+                    {
+                        continue;
+                    }
+
+                    if (keyValue.Equals("T"))
+                    {
+                        header.Add(keyName, true, keyComment);
+                    }
+                    else if (keyValue.Equals("F"))
+                    {
+                        header.Add(keyName, false, keyComment);
+                    }
+                    else if (keyValue.StartsWith("'"))
+                    {
+                        // Treat as a string
+                        keyValue = $"{keyValue.TrimStart('\'').TrimEnd('\'', ' ').Replace(@"''", @"'")}";
+                        header.Add(keyName, keyValue, keyComment);
+
+                    }
+                    else if (keyValue.Contains("."))
+                    {
+                        if (double.TryParse(keyValue, NumberStyles.Float, CultureInfo.InvariantCulture, out var value))
+                        {
+                            header.Add(keyName, value, keyComment);
+                        }
+                    }
+                    else
+                    {
+                        if (int.TryParse(keyValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out var value))
+                        {
+                            header.Add(keyName, value, keyComment);
+                        }
+                        else
+                        {
+                            // Treat as a string
+                            keyValue = $"{keyValue.TrimStart('\'').TrimEnd('\'', ' ').Replace(@"''", @"'")}";
+                            header.Add(keyName, keyValue, keyComment);
+                        }
+                    }
+                }
+                DataObjects.FitsImage img = new DataObjects.FitsImage(width, height, intBitPix, header, null);
+                return img;
+
+            }
+            catch (AccessViolationException ex)
+            {
+                Logger.Error($"{nameof(FITS)} - Access Violation Exception occurred during cfitsio load!", ex);
+                // Finally blocks are not executed after corrupted state exception
+                if (fitsPtr != IntPtr.Zero)
+                {
+                    try
+                    {
+                        CfitsioNative.fits_close_file(fitsPtr, out var status);
+                    }
+                    catch (Exception) { }
+                }
+                if (buffer != IntPtr.Zero)
+                {
+                    Marshal.FreeHGlobal(buffer);
+                }
+                throw new Exception($"Unable to load FITS file from {filePath.LocalPath}");
+            }
+            finally
+            {
+                if (fitsPtr != IntPtr.Zero)
+                {
+                    CfitsioNative.fits_close_file(fitsPtr, out var status);
+                }
+                if (buffer != IntPtr.Zero)
+                {
+                    Marshal.FreeHGlobal(buffer);
+                }
+            }
+        }
 
         /* Header card size Specification: http://archive.stsci.edu/fits/fits_standard/node29.html#SECTION00912100000000000000 */
         public const int HEADERCARDSIZE = 80;

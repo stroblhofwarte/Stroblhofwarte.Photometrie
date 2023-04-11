@@ -15,9 +15,10 @@ namespace Stroblhofwarte.Photometrie.ViewModel
     {
       var documents = new List<DockWindowViewModel>();
 
-      for (int i = 0; i < 6; i++)
+      for (int i = 0; i < 2; i++)
         documents.Add(new SampleDockWindowViewModel() { Title = "Sample " + i.ToString() });
 
+      documents.Add(new FileViewModel() { Title = "Files" });
       documents.Add(new ImageViewModel() { Title = "Image" });
 
       this.DockManagerViewModel = new DockManagerViewModel(documents);

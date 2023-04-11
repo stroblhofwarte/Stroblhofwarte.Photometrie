@@ -133,13 +133,22 @@ namespace Stroblhofwarte.FITS
             }
             return false;
         }
-        private double GetDoubleValue(string keyword)
+        public double GetDoubleValue(string keyword)
         {
             if (_headerCards.TryGetValue(keyword, out var card))
             {
                 return ParseDouble(card.OriginalValue);
             }
             return double.NaN;
+        }
+
+        public string GetStringValue(string keyword)
+        {
+            if (_headerCards.TryGetValue(keyword, out var card))
+            {
+                return card.OriginalValue;
+            }
+            return String.Empty;
         }
         public void ExtractMetaData() {
           

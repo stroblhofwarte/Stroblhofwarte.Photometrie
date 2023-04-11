@@ -21,6 +21,15 @@ namespace Stroblhofwarte.FITS.DataObjects
         public WorldCoordinateSystem WCS { get; private set; }
         public bool WCSValid { get; private set; }
 
+        public string DATE_LOC
+        {
+            get
+            {
+                return _header.GetStringValue("DATE-LOC");
+            }
+        }
+
+
         private bool _isValid = false;
         private string _error = String.Empty;
         private FITSHeader _header;
@@ -44,6 +53,9 @@ namespace Stroblhofwarte.FITS.DataObjects
                 WCSValid = header.WCSValid;
                 flipped = WCS.Flipped;
             }
+
+            // Could be a request to load only the header data:
+            if (data == null) return;
 
             BitmapData = new Bitmap(width, height, PixelFormat.Format48bppRgb);
            
