@@ -9,7 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stroblhofwarte.FITS", "Stro
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stroblhofwarte.FITS.test", "Stroblhofwarte.FITS.test\Stroblhofwarte.FITS.test\Stroblhofwarte.FITS.test.csproj", "{0211C79F-94B4-4B11-8E2A-3663A1B57749}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stroblhofwarte.Image", "Stroblhofwarte.Image\Stroblhofwarte.Image.csproj", "{CB72CEB2-F310-40F4-AA90-DE1FAB98C012}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stroblhofwarte.Image", "Stroblhofwarte.Image\Stroblhofwarte.Image.csproj", "{CB72CEB2-F310-40F4-AA90-DE1FAB98C012}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stroblhofwarte.Astrometry.Solver", "Stroblhofwarte.Astrometry.Solver\Stroblhofwarte.Astrometry.Solver.csproj", "{3419E768-ED2C-4E87-BAD4-A190BA0C5C11}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stroblhofwarte.Astrometry.Solver.test", "Stroblhofwarte.Astrometry.Solver.test\Stroblhofwarte.Astrometry.Solver.test.csproj", "{238CE47C-5E89-4C1C-AF20-DF5A9FA3CBBD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +37,14 @@ Global
 		{CB72CEB2-F310-40F4-AA90-DE1FAB98C012}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CB72CEB2-F310-40F4-AA90-DE1FAB98C012}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CB72CEB2-F310-40F4-AA90-DE1FAB98C012}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3419E768-ED2C-4E87-BAD4-A190BA0C5C11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3419E768-ED2C-4E87-BAD4-A190BA0C5C11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3419E768-ED2C-4E87-BAD4-A190BA0C5C11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3419E768-ED2C-4E87-BAD4-A190BA0C5C11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{238CE47C-5E89-4C1C-AF20-DF5A9FA3CBBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{238CE47C-5E89-4C1C-AF20-DF5A9FA3CBBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{238CE47C-5E89-4C1C-AF20-DF5A9FA3CBBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{238CE47C-5E89-4C1C-AF20-DF5A9FA3CBBD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
