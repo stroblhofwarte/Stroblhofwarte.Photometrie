@@ -104,20 +104,6 @@ namespace Stroblhofwarte.FITS
             double crota2 = GetDoubleValue("CROTA2");
            
             if (!double.IsNaN(crval1) &&
-               !double.IsNaN(crval2) &&
-               !double.IsNaN(crpix1) &&
-               !double.IsNaN(crpix2) &&
-               !double.IsNaN(cdelta1) &&
-               !double.IsNaN(cdelta2) &&
-               !double.IsNaN(crota2))
-            {
-                // WCD foud. Create WorldCoordinateSystem object
-                WCS = new WorldCoordinateSystem(crval1, crval2, crpix1, crpix2, cdelta1, cdelta2, crota2);
-                WCSValid = true;
-                return true;
-            }
-
-            if (!double.IsNaN(crval1) &&
               !double.IsNaN(crval2) &&
               !double.IsNaN(crpix1) &&
               !double.IsNaN(crpix2) &&
@@ -128,6 +114,20 @@ namespace Stroblhofwarte.FITS
             {
                 // WCD foud. Create WorldCoordinateSystem object
                 WCS = new WorldCoordinateSystem(crval1, crval2, crpix1, crpix2, cd1_1, cd1_2, cd2_1, cd2_2);
+                WCSValid = true;
+                return true;
+            }
+
+            if (!double.IsNaN(crval1) &&
+               !double.IsNaN(crval2) &&
+               !double.IsNaN(crpix1) &&
+               !double.IsNaN(crpix2) &&
+               !double.IsNaN(cdelta1) &&
+               !double.IsNaN(cdelta2) &&
+               !double.IsNaN(crota2))
+            {
+                // WCD foud. Create WorldCoordinateSystem object
+                WCS = new WorldCoordinateSystem(crval1, crval2, crpix1, crpix2, cdelta1, cdelta2, crota2);
                 WCSValid = true;
                 return true;
             }

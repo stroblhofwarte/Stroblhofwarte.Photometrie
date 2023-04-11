@@ -58,8 +58,8 @@ namespace Stroblhofwarte.Photometrie
                 if(wcs != null)
                 {
                     // WCS is valid
-                    double xRel = x+  imageControl.Source.Width/2.0;// imageControl.Source.Width-x;
-                    double yRel = imageControl.Source.Height-y;
+                    double xRel = x;// imageControl.Source.Width-x;
+                    double yRel = y;
                     Coordinates c = wcs.GetCoordinates(xRel, yRel);
                     model.CoordinateText = c.ToString();
                 }

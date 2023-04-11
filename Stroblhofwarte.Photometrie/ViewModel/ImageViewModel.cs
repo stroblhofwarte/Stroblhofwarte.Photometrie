@@ -1,4 +1,5 @@
 ﻿using Stroblhofwarte.FITS;
+using Stroblhofwarte.FITS.DataObjects;
 using Stroblhofwarte.FITS.Interface;
 using Stroblhofwarte.Image;
 using System;
@@ -23,6 +24,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             get
             {
                 if (!StroblhofwarteImage.Instance.IsValid) return null;
+
                 using (MemoryStream memory = new MemoryStream())
                 {
                     StroblhofwarteImage.Instance.GetBitmap().Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);

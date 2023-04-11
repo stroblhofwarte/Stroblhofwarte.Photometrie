@@ -76,7 +76,12 @@ namespace Stroblhofwarte.FITS.DataObjects
 
             var rot1_cd = Math.Atan2(sign * cd1_2, cd2_2);
             var rot2_cd = Math.Atan2(sign * cd1_1, cd2_1) - Math.PI / 2d;
-            var rotation = AstroUtil.ToDegree(Flipped ? -rot2_cd : rot2_cd);
+            // Othmar Ehrhardt: For any reason: Image taken with N.I.N.A. with a crdio system
+            //                  leads to a flipped image. The orginal code was:
+            // var rotation = AstroUtil.ToDegree(Flipped ? -rot2_cd : rot2_cd);
+            //                  which leads to a wron rotation. Swapping the minus leads to a correct
+            //                  coordinate transformation. Not tested with a not flipped image...
+            var rotation = AstroUtil.ToDegree(Flipped ? rot2_cd : -rot2_cd);
             var skew = AstroUtil.ToDegree(Math.Abs(rot1_cd - rot2_cd));
 
             //Approximation as the matrix can account for skewed axes

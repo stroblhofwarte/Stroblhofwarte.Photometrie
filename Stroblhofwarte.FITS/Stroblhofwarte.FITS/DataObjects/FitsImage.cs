@@ -36,11 +36,13 @@ namespace Stroblhofwarte.FITS.DataObjects
             _header = header;
             _rawImageData = data;
             WCSValid = false;
+            bool flipped = false;
             if (header.CheckForWCS())
             {
                 // WCS found
                 WCS = header.WCS;
                 WCSValid = header.WCSValid;
+                flipped = WCS.Flipped;
             }
 
             BitmapData = new Bitmap(width, height, PixelFormat.Format48bppRgb);
