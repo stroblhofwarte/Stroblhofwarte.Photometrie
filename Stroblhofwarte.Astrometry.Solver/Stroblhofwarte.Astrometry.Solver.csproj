@@ -9,6 +9,11 @@
 
   <ItemGroup>
     <PackageReference Include="AstrometryNet" Version="1.1.2" />
+    <PackageReference Include="CSharpFITS-rgw0" Version="1.1.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Stroblhofwarte.FITS\Stroblhofwarte.FITS\Stroblhofwarte.FITS.csproj" />
   </ItemGroup>
 
 </Project>

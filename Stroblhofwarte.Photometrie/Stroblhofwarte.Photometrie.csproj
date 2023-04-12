@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="circle.gif" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AstrometryNet" Version="1.1.2" />
     <PackageReference Include="Dirkster.AvalonDock" Version="4.72.0" />
     <PackageReference Include="Dirkster.AvalonDock.Themes.Metro" Version="4.72.0" />
@@ -18,14 +22,32 @@
     <PackageReference Include="MahApps.Metro.IconPacks.FontAwesome" Version="4.11.0" />
     <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="4.11.0" />
     <PackageReference Include="MahApps.Metro.IconPacks.Modern" Version="4.11.0" />
+    <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Stroblhofwarte.Astrometry.Solver\Stroblhofwarte.Astrometry.Solver.csproj" />
     <ProjectReference Include="..\Stroblhofwarte.FITS\Stroblhofwarte.FITS\Stroblhofwarte.FITS.csproj" />
     <ProjectReference Include="..\Stroblhofwarte.Image\Stroblhofwarte.Image.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="circle.gif" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Update="Ring Nebula%282%29_2021-05-31_22-41-52_GAIN_0_G_-20.00_600.00s_0001.fits">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

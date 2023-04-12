@@ -9,8 +9,9 @@
         xmlns:vm="clr-namespace:Stroblhofwarte.Photometrie.ViewModel"
         xmlns:dock="https://github.com/Dirkster99/AvalonDock"
         xmlns:dockctrl="clr-namespace:AvalonDock.Controls;assembly=AvalonDock"
+        xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525"
+        Title="MainWindow" Height="768" Width="1024"
         >
     <Grid>
         <Grid.RowDefinitions>
@@ -29,14 +30,19 @@
                 <HierarchicalDataTemplate DataType="{x:Type vm:MenuItemViewModel}" ItemsSource="{Binding Items}" />
             </Menu.Resources>
         </Menu>
-
+        <Button Width="35"
+        Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding SettingsCommand}" Height="35" VerticalAlignment="Top" HorizontalAlignment="Left" ToolTip="Solve all images without WCS via Astronomy.net..." Margin="15,30,0,0" Grid.RowSpan="2">
+            <StackPanel Orientation="Vertical">
+                <icon:PackIconFeatherIcons Width="20" Height="20" Kind="Settings" HorizontalAlignment="Center" ToolTip="Application settings"/>
+            </StackPanel>
+        </Button>
         <dock:DockingManager Grid.Row="1"
                          DataContext="{Binding DockManagerViewModel}"
                          DocumentsSource="{Binding Documents}"
-                         AnchorablesSource="{Binding Anchorables}" >
+                         AnchorablesSource="{Binding Anchorables}" Margin="0,48,0,0" >
             <dock:DockingManager.Theme>
                 <dock:Vs2013DarkTheme>
-                    
+
                 </dock:Vs2013DarkTheme>
             </dock:DockingManager.Theme>
             <dock:DockingManager.Resources>

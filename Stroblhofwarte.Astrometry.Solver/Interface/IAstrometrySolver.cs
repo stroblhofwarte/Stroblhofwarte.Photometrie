@@ -9,6 +9,6 @@ namespace Stroblhofwarte.Astrometry.Solver.Interface
     public interface IAstrometrySolver
     {
         string ErrorText { get; }
-        bool Solve(string filename);
+        Task<bool> Solve(string filename);
     }
 }

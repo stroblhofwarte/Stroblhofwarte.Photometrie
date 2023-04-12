@@ -18,5 +18,7 @@ namespace Stroblhofwarte.FITS.Interface
         int Width();
         int Height();
 
+        bool MergeHeaderIntoImage(string filenameNewHeader, string filenameImage);
+
     }
 }

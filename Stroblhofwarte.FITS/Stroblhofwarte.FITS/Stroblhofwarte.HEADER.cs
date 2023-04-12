@@ -84,5 +84,10 @@ namespace Stroblhofwarte.FITS
             }
             return 1;
         }
+
+        public bool MergeHeaderIntoImage(string filenameNewHeader, string filenameImage)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

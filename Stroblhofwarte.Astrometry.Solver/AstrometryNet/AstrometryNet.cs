@@ -8,6 +8,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net;
+using System.IO;
+using Stroblhofwarte.FITS.Interface;
+using Stroblhofwarte.FITS;
+using nom.tam.fits;
+using nom.tam.util;
+using System.Collections;
 
 namespace Stroblhofwarte.Astrometry.Solver.AstrometryNet
 {
@@ -37,7 +43,7 @@ namespace Stroblhofwarte.Astrometry.Solver.AstrometryNet
 
         #endregion
 
-        public bool Solve(string file)
+        public async Task<bool> Solve(string file)
         {
             try
             {
@@ -64,10 +70,27 @@ namespace Stroblhofwarte.Astrometry.Solver.AstrometryNet
 
                     // Das Ergebnis-Image mit WCS ist unter https://nova.astrometry.net/new_fits_file/{submissionStatusResponse.Result.jobs[0]}
                     // Herunterladen über C#
-                    using (var webClient = new WebClient())
-                    {
-                        webClient.DownloadFile("https://nova.astrometry.net/new_fits_file/" + submissionStatusResponse.Result.jobs[0], "WCS_" + file);
-                    }
+                   
+                    string path = Path.GetDirectoryName(file);
+                    string filename = Path.GetFileName(file);
+                    
+                    Uri uri = new Uri("https://nova.astrometry.net/wcs_file/" + submissionStatusResponse.Result.jobs[0]);
+                    HttpClient webClient = new HttpClient();
+                    webClient.Timeout = new TimeSpan(0, 5, 0);
+                    var response = await webClient.GetAsync(uri);
+                    response.EnsureSuccessStatusCode();
+                    await using var ms = await response.Content.ReadAsStreamAsync();
+                    await using var fs = File.Create(path + "\\" + "wcs_" + filename + ".wcs");
+                    ms.Seek(0, SeekOrigin.Begin);
+                    ms.CopyTo(fs);
+                    fs.Close();
+                    IFits fitsMerge = new StroblhofwarteFITS();
+                    MergeHeaderIntoImage(path + "\\" + "wcs_" + filename + ".wcs", file);
+
+                    //webClient.Fi .DownloadFile("https://nova.astrometry.net/new_fits_file/" + submissionStatusResponse.Result.jobs[0], path + "\\" + "wcs_" + filename);
+                    //System.IO.File.Move(path + "\\" + filename, path + "\\" + filename + ".bak", true);
+                    //System.IO.File.Move(path + "\\" + "wcs_" + filename, path + "\\" + filename, true);
+
                     return true;
                 }
                 else
@@ -82,6 +105,48 @@ namespace Stroblhofwarte.Astrometry.Solver.AstrometryNet
                 return false;
             }
             return false;
+        }
+
+        private bool MergeHeaderIntoImage(string wcs, string img)
+        {
+            Fits f = new Fits(wcs);
+            ImageHDU hdu = (ImageHDU)f.ReadHDU();
+            f.Close();
+            
+            Fits f2 = new Fits(img);
+            ImageHDU hdu2 = (ImageHDU)f2.ReadHDU();
+            Array[] arr = (Array[])hdu2.Data.DataArray;
+
+
+            var iterator = hdu.Header.GetCursor();
+            while (iterator.MoveNext())
+            {
+                HeaderCard card = (HeaderCard)((DictionaryEntry)iterator.Current).Value;
+                if (card.Key == "WCSAXES") hdu2.AddValue(card.Key, card.Value, card.Comment);
+                if (card.Key == "CTYPE1") hdu2.AddValue(card.Key, card.Value, card.Comment);
+                if (card.Key == "CTYPE2") hdu2.AddValue(card.Key, card.Value, card.Comment);
+                if (card.Key == "EQUINOX") hdu2.AddValue(card.Key, card.Value, card.Comment);
+                if (card.Key == "LONPOLE") hdu2.AddValue(card.Key, card.Value, card.Comment);
+                if (card.Key == "LATPOLE") hdu2.AddValue(card.Key, card.Value, card.Comment);
+                if (card.Key == "CRVAL1") hdu2.AddValue(card.Key, card.Value, card.Comment);
+                if (card.Key == "CRVAL2") hdu2.AddValue(card.Key, card.Value, card.Comment);
+                if (card.Key == "CRPIX1") hdu2.AddValue(card.Key, card.Value, card.Comment);
+                if (card.Key == "CRPIX2") hdu2.AddValue(card.Key, card.Value, card.Comment);
+                if (card.Key == "CUNIT1") hdu2.AddValue(card.Key, card.Value, card.Comment);
+                if (card.Key == "CUNIT2") hdu2.AddValue(card.Key, card.Value, card.Comment);
+                if (card.Key == "CD1_1") hdu2.AddValue(card.Key, card.Value, card.Comment);
+                if (card.Key == "CD1_2") hdu2.AddValue(card.Key, card.Value, card.Comment);
+                if (card.Key == "CD2_1") hdu2.AddValue(card.Key, card.Value, card.Comment);
+                if (card.Key == "CD2_2") hdu2.AddValue(card.Key, card.Value, card.Comment);
+                if (card.Key == "IMAGEW") hdu2.AddValue(card.Key, card.Value, card.Comment);
+                if (card.Key == "IMAGEH") hdu2.AddValue(card.Key, card.Value, card.Comment);
+            }
+
+            f2.Close();
+            BufferedFile bf = new BufferedFile(img /*args[1]*/, FileAccess.ReadWrite, FileShare.ReadWrite);
+            f2.Write(bf);
+            bf.Close();
+            return true;
         }
     }
 }

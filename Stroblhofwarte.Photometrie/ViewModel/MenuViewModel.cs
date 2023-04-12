@@ -16,14 +16,15 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
     public MenuViewModel(IEnumerable<DockWindowViewModel> dockWindows)
     {
-      var view = this.ViewMenuItemViewModel = new MenuItemViewModel() { Header = "Views" };
+        var view = this.ViewMenuItemViewModel = new MenuItemViewModel() { Header = "Windows" };
 
-      foreach (var dockWindow in dockWindows)
-        view.Items.Add(GetMenuItemViewModel(dockWindow));
+        foreach (var dockWindow in dockWindows)
+            view.Items.Add(GetMenuItemViewModel(dockWindow));
 
-      var items = new List<MenuItemViewModel>();
-      items.Add(view);
-      this.Items = items;
+        var items = new List<MenuItemViewModel>();
+        items.Add(view);
+        this.Items = items;
+
     }
 
     private MenuItemViewModel GetMenuItemViewModel(DockWindowViewModel dockWindowViewModel)

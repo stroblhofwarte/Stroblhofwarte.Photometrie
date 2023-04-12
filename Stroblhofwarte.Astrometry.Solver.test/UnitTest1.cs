@@ -9,7 +9,7 @@ namespace Stroblhofwarte.Astrometry.Solver.test
         [TestMethod]
         public void TestMethod1()
         {
-            IAstrometrySolver solver = new AstrometryNet.AstrometryNet("http://nova.astrometry.net/api/", "vnxyefaoypruzwuj");
+            IAstrometrySolver solver = new AstrometryNet.AstrometryNet("http://nova.astrometry.net/api/", "");
             solver.Solve("Question Mark Galaxy(1)_2021-05-30_23-09-02_GAIN_0_R_-20.00_120.00s_0001.fits");
         }
     }

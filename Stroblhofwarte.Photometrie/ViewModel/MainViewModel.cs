@@ -1,13 +1,19 @@
-﻿using System;
+﻿using MahApps.Metro.Controls.Dialogs;
+using MahApps.Metro.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using Stroblhofwarte.Photometrie.Dialogs;
 
 namespace Stroblhofwarte.Photometrie.ViewModel
 {
   public class MainViewModel
   {
+
+
     public DockManagerViewModel DockManagerViewModel { get; private set; }
     public MenuViewModel MenuViewModel { get; private set; }
 
@@ -15,14 +21,38 @@ namespace Stroblhofwarte.Photometrie.ViewModel
     {
       var documents = new List<DockWindowViewModel>();
 
-      for (int i = 0; i < 2; i++)
-        documents.Add(new SampleDockWindowViewModel() { Title = "Sample " + i.ToString() });
-
       documents.Add(new FileViewModel() { Title = "Files" });
       documents.Add(new ImageViewModel() { Title = "Image" });
 
       this.DockManagerViewModel = new DockManagerViewModel(documents);
       this.MenuViewModel = new MenuViewModel(documents);
     }
-  }
+
+        #region Commands
+        private RelayCommand settingsCommand;
+        public ICommand SettingsCommand
+        {
+            get
+            {
+                if (settingsCommand == null)
+                {
+                    settingsCommand = new RelayCommand(param => this.Settings(), param => this.CanSettings());
+                }
+                return settingsCommand;
+            }
+        }
+
+        private bool CanSettings()
+        {
+            return true;
+        }
+
+        private async void Settings()
+        {
+            DialogSettings dlg = new DialogSettings();
+            dlg.ShowDialog();
+        }
+
+        #endregion
+    }
 }
