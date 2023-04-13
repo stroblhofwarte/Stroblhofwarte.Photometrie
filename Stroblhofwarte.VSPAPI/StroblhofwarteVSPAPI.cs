@@ -14,7 +14,7 @@ namespace Stroblhofwarte.VSPAPI
     public class StroblhofwarteVSPAPI
     {
 
-        public VariableStar GetAAVSOData(string name, string fov, string maglimit)
+        public async Task<VariableStar> GetAAVSOData(string name, string fov, string maglimit)
         {
             AAVSOChartRequestParameter p = new AAVSOChartRequestParameter();
             p.Star = name;

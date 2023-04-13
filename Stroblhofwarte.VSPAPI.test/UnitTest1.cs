@@ -20,8 +20,12 @@ namespace Stroblhofwarte.VSPAPI.test
         [TestMethod]
         public void GetStarFromAAVSO()
         {
-            StroblhofwarteVSPAPI api = new StroblhofwarteVSPAPI();
-            VariableStar star = api.GetAAVSOData("SS Cyg", "60.0", "14.5");
+            Task.Run(async () =>
+            {
+                StroblhofwarteVSPAPI api = new StroblhofwarteVSPAPI();
+                Task<VariableStar> task = api.GetAAVSOData("TV Boo", "60.0", "14.5");
+                VariableStar star = task.Result;
+            }).GetAwaiter().GetResult();
         }
     }
 }
