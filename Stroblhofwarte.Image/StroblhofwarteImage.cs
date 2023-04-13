@@ -4,10 +4,14 @@ using Stroblhofwarte.FITS.Interface;
 using Stroblhofwarte.Image.Interface;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Annotations;
+using System.Windows.Input;
+using System.Windows.Markup;
 using System.Windows.Media;
+using System.Windows.Media.Media3D;
 
 namespace Stroblhofwarte.Image
 {
@@ -29,9 +33,39 @@ namespace Stroblhofwarte.Image
 
         #region Properties
 
+        private System.Drawing.Point _cursorPosition;
+        public System.Drawing.Point CursorPosition
+        {
+            get { return _cursorPosition; }
+            set
+            {
+                _cursorPosition = value;
+                if (NewCursorPosition != null)
+                {
+                    NewCursorPosition(this, null);
+                }
+            }
+        }
+
         private List<Annotation> _annotations = new List<Annotation>();
         private IFits _imageData = null;
 
+        public int Width
+        {
+            get {
+                if (_imageData == null) return 0;
+                    return _imageData.Width(); 
+            }
+        }
+
+        public int Height
+        {
+            get
+            {
+                if (_imageData == null) return 0;
+                return _imageData.Height();
+            }
+        }
         public bool Annotate { set; get; }
         public double AnnotateScale { set; get; }
         public bool IsValid
@@ -57,6 +91,7 @@ namespace Stroblhofwarte.Image
         #region Events
 
         public event EventHandler NewImageLoaded;
+        public event EventHandler NewCursorPosition;
 
         #endregion
 
@@ -64,7 +99,7 @@ namespace Stroblhofwarte.Image
 
         public StroblhofwarteImage()
         {
-            
+            CursorPosition = new System.Drawing.Point(0, 0);
         }
 
         #endregion
@@ -112,6 +147,40 @@ namespace Stroblhofwarte.Image
         public void AddAnnotation(string name, Coordinates c)
         {
             _annotations.Add(new Annotation() { Name = name, Coor = c }); 
+        }
+
+        public Bitmap GetSubimage(System.Drawing.Point center, int width, int height)
+        {
+            ushort[] fitsData = _imageData.GetRawImage().GetSubimage(center, width, height);
+            try
+            {
+                int max = 0;
+                int min = int.MaxValue;
+                foreach (ushort v in fitsData)
+                {
+                    if (v > max) max = v;
+                    if (v < min) min = v;
+                }
+                double f = 8192.0 / (double)(max - min);
+                Bitmap BitmapData = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format48bppRgb);
+                var rawData = BitmapData.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadWrite, BitmapData.PixelFormat);
+                int ptr = 0;
+                for (int y = 0; y < height; y++)
+                    for (int x = 0; x < width; x++)
+                    {
+                        short pix = (short)((double)(fitsData[ptr] - min) * f);
+                        System.Runtime.InteropServices.Marshal.WriteInt16(rawData.Scan0, ptr * 6, pix);
+                        System.Runtime.InteropServices.Marshal.WriteInt16(rawData.Scan0, ptr * 6 + 2, pix);
+                        System.Runtime.InteropServices.Marshal.WriteInt16(rawData.Scan0, ptr * 6 + 4, pix);
+                        ptr++;
+                    }
+                BitmapData.UnlockBits(rawData);
+                return BitmapData;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
     }
 

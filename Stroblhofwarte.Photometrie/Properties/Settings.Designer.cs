@@ -46,5 +46,41 @@ namespace Stroblhofwarte.Photometrie.Properties {
                 this["AstrometrynetKey"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("60")]
+        public double AAVSOFov {
+            get {
+                return ((double)(this["AAVSOFov"]));
+            }
+            set {
+                this["AAVSOFov"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("14.5")]
+        public double AAVSOLimitMag {
+            get {
+                return ((double)(this["AAVSOLimitMag"]));
+            }
+            set {
+                this["AAVSOLimitMag"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("300")]
+        public int MagnificationN {
+            get {
+                return ((int)(this["MagnificationN"]));
+            }
+            set {
+                this["MagnificationN"] = value;
+            }
+        }
     }
 }

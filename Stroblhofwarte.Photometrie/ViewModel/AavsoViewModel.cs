@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -53,6 +54,17 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             {
                 _name = value;
                 OnPropertyChanged("Name");
+            }
+        }
+
+        private string _requestName = string.Empty;
+        public string RequestName
+        {
+            get { return _requestName; }
+            set
+            {
+                _requestName = value;
+                OnPropertyChanged("RequestName");
             }
         }
 
@@ -112,8 +124,10 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 }));
 
                 StroblhofwarteVSPAPI aavso = new StroblhofwarteVSPAPI();
-                Task<VariableStar> result = aavso.GetAAVSOData("TV Boo", "60.0", "14.5");
-
+                Task<VariableStar> result = aavso.GetAAVSOData(RequestName, 
+                    Properties.Settings.Default.AAVSOFov.ToString(CultureInfo.InvariantCulture),
+                    Properties.Settings.Default.AAVSOLimitMag.ToString(CultureInfo.InvariantCulture));
+                
                 VariableStar star = result.Result;
                 Name = star.Var.Name;
                 Auid = star.Var.Auid;
@@ -149,6 +163,81 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
             });
             
+        }
+
+        private RelayCommand searchPlateCenterCommand;
+        public ICommand SearchPlateCenterCommand
+        {
+            get
+            {
+                if (searchPlateCenterCommand == null)
+                {
+                    searchPlateCenterCommand = new RelayCommand(param => this.SearchPlateCenter(), param => this.CanSearchPlateCenter());
+                }
+                return searchPlateCenterCommand;
+            }
+        }
+
+        private bool CanSearchPlateCenter()
+        {
+            if (!StroblhofwarteImage.Instance.IsValid) return false;
+            if (StroblhofwarteImage.Instance.WCS != null) return true;
+            return false;
+        }
+
+        private async void SearchPlateCenter()
+        {
+            _refStars.Clear();
+            StroblhofwarteImage.Instance.ClearAnnotation();
+            await Task.Factory.StartNew(() =>
+            {
+
+                System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
+                {
+                    WaitAnimation = Visibility.Visible;
+                }));
+
+                StroblhofwarteVSPAPI aavso = new StroblhofwarteVSPAPI();
+               
+                Coordinates coor = StroblhofwarteImage.Instance.WCS.GetCoordinates(StroblhofwarteImage.Instance.Width / 2, StroblhofwarteImage.Instance.Height / 2);
+                Task<VariableStar> result = aavso.GetAAVSOData(coor.RADegrees, coor.Dec,
+                    Properties.Settings.Default.AAVSOFov.ToString(CultureInfo.InvariantCulture),
+                    Properties.Settings.Default.AAVSOLimitMag.ToString(CultureInfo.InvariantCulture));
+                VariableStar star = result.Result;
+                Name = star.Var.Name;
+                Auid = star.Var.Auid;
+                Coor = star.Var.StarCoordinates;
+                StroblhofwarteImage.Instance.AddAnnotation(Name, Coor);
+
+                foreach (Star s in star.ReferenceStars)
+                {
+                    ReferenceStar reference = new ReferenceStar();
+                    reference.Name = s.Name;
+                    reference.AUID = s.Auid;
+                    reference.Coor = s.StarCoordinates;
+                    foreach (Mag m in s.Magnitudes)
+                    {
+                        if (m.Band == "V")
+                        {
+                            reference.MAG = m.Magnitude;
+                        }
+                    }
+                    System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
+                    {
+                        _refStars.Add(reference);
+                        StroblhofwarteImage.Instance.AddAnnotation(reference.Name, reference.Coor);
+                    }));
+
+                }
+
+
+                System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
+                {
+                    WaitAnimation = Visibility.Hidden;
+                }));
+
+            });
+
         }
         #endregion
 

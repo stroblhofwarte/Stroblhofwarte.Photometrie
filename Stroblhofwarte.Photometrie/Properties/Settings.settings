@@ -8,5 +8,14 @@
     <Setting Name="AstrometrynetKey" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="AAVSOFov" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="AAVSOLimitMag" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">14.5</Value>
+    </Setting>
+    <Setting Name="MagnificationN" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">300</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

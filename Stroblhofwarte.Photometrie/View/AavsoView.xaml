@@ -33,13 +33,14 @@
         </ListView>
         <Label Content="{Binding Name}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Foreground="#FFCECECE" FontWeight="Bold"/>
         <Label Content="Var Name:" HorizontalAlignment="Left" Margin="23,0,0,11" Foreground="#FFCECECE" Height="26" VerticalAlignment="Bottom"/>
-        <TextBox HorizontalAlignment="Left" Margin="92,0,0,11" TextWrapping="Wrap" Text="TextBox" Width="120" Height="26" VerticalAlignment="Bottom"/>
+        <TextBox HorizontalAlignment="Left" Margin="92,0,0,11" TextWrapping="Wrap" Text="{Binding RequestName, Mode=TwoWay}" Width="120" Height="26" VerticalAlignment="Bottom"/>
         <Button Content="&gt;&gt;" Command="{Binding SearchNamedCommand}" HorizontalAlignment="Left" Margin="217,0,0,10" Height="27" VerticalAlignment="Bottom"/>
         <Label Content="Search:" HorizontalAlignment="Left" Margin="10,0,0,31" Foreground="#FFCECECE" RenderTransformOrigin="0.497,-0.462" FontWeight="Bold" Height="26" VerticalAlignment="Bottom"/>
         <Label Content="{Binding Coor}" HorizontalAlignment="Left" Margin="10,62,0,0" VerticalAlignment="Top" Foreground="#FFCECECE" RenderTransformOrigin="1.4,0.424" FontWeight="Bold"/>
         <Label Content="{Binding Auid}" HorizontalAlignment="Left" Margin="10,36,0,0" VerticalAlignment="Top" Foreground="#FFCECECE" FontWeight="Bold"/>
 
         <Image x:Name="imgCircle" Visibility="{Binding WaitAnimation}" Width="100" Height="100" gif:ImageBehavior.AnimatedSource="/circle.gif" Margin="102,0,0,82" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
+        <Button Content="By Plate Center" Command="{Binding SearchPlateCenterCommand}" HorizontalAlignment="Left" Margin="278,0,0,10" VerticalAlignment="Bottom"/>
 
     </Grid>
 </UserControl>

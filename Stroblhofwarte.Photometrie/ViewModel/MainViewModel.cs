@@ -24,6 +24,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
       documents.Add(new FileViewModel() { Title = "Files" });
       documents.Add(new ImageViewModel() { Title = "Image" });
       documents.Add(new AavsoViewModel() { Title = "AAVSO Data" });
+      documents.Add(new MagnificationViewModel() { Title = "Magnification" });
 
       this.DockManagerViewModel = new DockManagerViewModel(documents);
       this.MenuViewModel = new MenuViewModel(documents);

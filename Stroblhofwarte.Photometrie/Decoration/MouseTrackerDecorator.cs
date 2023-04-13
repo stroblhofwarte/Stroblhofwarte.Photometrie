@@ -60,9 +60,10 @@ namespace Stroblhofwarte.Photometrie
                     // WCS is valid
                     double xRel = x;// imageControl.Source.Width-x;
                     double yRel = y;
+                    StroblhofwarteImage.Instance.CursorPosition = new System.Drawing.Point((int)x, (int)y);
                     Coordinates c = wcs.GetCoordinates(xRel, yRel);
                     Point test = wcs.GetCoordinates(c);
-                    model.CoordinateText = c.ToString() + " (" + x.ToString() + "," + y.ToString() + " => " + test.ToString();
+                    model.CoordinateText = c.ToString();
                 }
                 
             }
