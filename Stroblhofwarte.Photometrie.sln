@@ -11,9 +11,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stroblhofwarte.FITS.test", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stroblhofwarte.Image", "Stroblhofwarte.Image\Stroblhofwarte.Image.csproj", "{CB72CEB2-F310-40F4-AA90-DE1FAB98C012}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stroblhofwarte.Astrometry.Solver", "Stroblhofwarte.Astrometry.Solver\Stroblhofwarte.Astrometry.Solver.csproj", "{3419E768-ED2C-4E87-BAD4-A190BA0C5C11}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stroblhofwarte.Astrometry.Solver", "Stroblhofwarte.Astrometry.Solver\Stroblhofwarte.Astrometry.Solver.csproj", "{3419E768-ED2C-4E87-BAD4-A190BA0C5C11}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stroblhofwarte.Astrometry.Solver.test", "Stroblhofwarte.Astrometry.Solver.test\Stroblhofwarte.Astrometry.Solver.test.csproj", "{238CE47C-5E89-4C1C-AF20-DF5A9FA3CBBD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stroblhofwarte.Astrometry.Solver.test", "Stroblhofwarte.Astrometry.Solver.test\Stroblhofwarte.Astrometry.Solver.test.csproj", "{238CE47C-5E89-4C1C-AF20-DF5A9FA3CBBD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stroblhofwarte.VSPAPI", "Stroblhofwarte.VSPAPI\Stroblhofwarte.VSPAPI.csproj", "{43369CB3-8A08-422E-B4B2-121439C21358}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stroblhofwarte.VSPAPI.test", "Stroblhofwarte.VSPAPI.test\Stroblhofwarte.VSPAPI.test.csproj", "{F3A08E28-5449-433C-AA9F-83CB0AD32627}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +49,14 @@ Global
 		{238CE47C-5E89-4C1C-AF20-DF5A9FA3CBBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{238CE47C-5E89-4C1C-AF20-DF5A9FA3CBBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{238CE47C-5E89-4C1C-AF20-DF5A9FA3CBBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43369CB3-8A08-422E-B4B2-121439C21358}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43369CB3-8A08-422E-B4B2-121439C21358}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43369CB3-8A08-422E-B4B2-121439C21358}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43369CB3-8A08-422E-B4B2-121439C21358}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3A08E28-5449-433C-AA9F-83CB0AD32627}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3A08E28-5449-433C-AA9F-83CB0AD32627}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3A08E28-5449-433C-AA9F-83CB0AD32627}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3A08E28-5449-433C-AA9F-83CB0AD32627}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
