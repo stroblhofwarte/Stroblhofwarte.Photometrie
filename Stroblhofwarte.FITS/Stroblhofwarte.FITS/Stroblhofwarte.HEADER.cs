@@ -85,5 +85,9 @@ namespace Stroblhofwarte.FITS
             return 1;
         }
 
+        public FitsImage GetRawImage()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -81,6 +81,11 @@ namespace Stroblhofwarte.FITS
             }
             return 1;
         }
+
+        public FitsImage GetRawImage()
+        {
+            return _image;
+        }
     }
 
     internal class HDUValue

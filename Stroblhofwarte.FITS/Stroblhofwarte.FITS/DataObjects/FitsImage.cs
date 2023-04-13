@@ -82,7 +82,6 @@ namespace Stroblhofwarte.FITS.DataObjects
                     }
                 BitmapData.UnlockBits(rawData);
                 _isValid = true;
-                BitmapData.Save("filename.jpg", ImageFormat.Jpeg);
             } catch (Exception ex)
             {
                 _error = ex.ToString();
@@ -90,5 +89,31 @@ namespace Stroblhofwarte.FITS.DataObjects
         }
 
         #endregion
+
+        public ushort[] GetSubimage(Point center, int width, int hight)
+        {
+            ushort[] subimage = new ushort[width*hight];
+            if (width > Width / 2) throw new Exception("Subimage: Width to big for the source image!");
+            if (hight > Height / 2) throw new Exception("Subimage: Hight to big for the source image!");
+
+            // Check if the center point is near the border and correct the center:
+            if (center.X + width / 2 > Width) center.X = Width - (width / 2);
+            if (center.X - width / 2 < 0) center.X = width / 2;
+            if (center.Y + hight / 2 > Height) center.Y = Height - (hight / 2);
+            if (center.Y - hight / 2 < 0) center.Y = hight / 2;
+
+            int ptr = 0;
+            for(int y = center.Y - hight / 2; y < center.Y + hight / 2; y++)
+                for (int x = center.X - width / 2; x < center.X + width / 2; x++)
+                {
+                    subimage[ptr++] = _rawImageData[DataPtr(x, y)];
+                }
+            return subimage;
+        }
+
+        public Int32 DataPtr(int x, int y)
+        {
+            return y * Width + x;
+        }
     }
 }

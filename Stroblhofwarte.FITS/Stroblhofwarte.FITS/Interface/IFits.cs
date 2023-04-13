@@ -17,6 +17,7 @@ namespace Stroblhofwarte.FITS.Interface
         Bitmap GetImage();
         int Width();
         int Height();
+        Stroblhofwarte.FITS.DataObjects.FitsImage GetRawImage();
 
     }
 }
