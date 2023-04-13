@@ -5,11 +5,15 @@ using Stroblhofwarte.Image;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
+using System.Windows;
 using System.Windows.Media.Imaging;
+using System.Windows.Input;
 
 namespace Stroblhofwarte.Photometrie.ViewModel
 {
@@ -35,6 +39,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                     bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
                     //bitmapimage.DecodePixelWidth = _fitsImage.Width();
                     bitmapimage.EndInit();
+
                     return bitmapimage;
                 }
             }
@@ -52,6 +57,73 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             {
                 return _coordinateText;
             }
+        }
+
+        private double _annotationScale = 3.0;
+        public double AnnotationScale
+        {
+            set
+            {
+                _annotationScale = value;
+                OnPropertyChanged("AnnotationScale");
+            }
+            get
+            {
+                return _annotationScale;
+            }
+        }
+
+        private bool _annotation = false;
+        public bool Annotation
+        {
+            set
+            {
+                _annotation = value;
+                OnPropertyChanged("Annotation");
+            }
+            get
+            {
+                return _annotation;
+            }
+        }
+
+        #endregion
+
+        #region Commands
+
+        private RelayCommand annotateCommand;
+        public ICommand AnnotateCommand
+        {
+            get
+            {
+                if (annotateCommand == null)
+                {
+                    annotateCommand = new RelayCommand(param => this.Annotate(), param => this.CanAnnotate());
+                }
+                return annotateCommand;
+            }
+        }
+
+        private bool CanAnnotate()
+        {
+            if (StroblhofwarteImage.Instance.IsValid) return true;
+            return false;
+        }
+
+        private async void Annotate()
+        {
+           if(StroblhofwarteImage.Instance.Annotate)
+            {
+                StroblhofwarteImage.Instance.Annotate = false;
+                Annotation = false;
+            }
+           else
+            {
+                StroblhofwarteImage.Instance.AnnotateScale = AnnotationScale;
+                StroblhofwarteImage.Instance.Annotate = true;
+                Annotation = true;
+            }
+            OnPropertyChanged("ImageSource");
         }
 
         #endregion
@@ -80,9 +152,9 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 bitmapimage.StreamSource = memory;
                 bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
                 bitmapimage.EndInit();
-
                 return bitmapimage;
             }
         }
+
     }
 }

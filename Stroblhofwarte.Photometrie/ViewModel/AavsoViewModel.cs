@@ -1,5 +1,6 @@
 ﻿using Stroblhofwarte.FITS;
 using Stroblhofwarte.FITS.DataObjects;
+using Stroblhofwarte.Image;
 using Stroblhofwarte.VSPAPI;
 using Stroblhofwarte.VSPAPI.Data;
 using System;
@@ -101,6 +102,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         private async void SearchNamed()
         {
             _refStars.Clear();
+            StroblhofwarteImage.Instance.ClearAnnotation();
             await Task.Factory.StartNew(() =>
             {
 
@@ -116,8 +118,9 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 Name = star.Var.Name;
                 Auid = star.Var.Auid;
                 Coor = star.Var.StarCoordinates;
+                StroblhofwarteImage.Instance.AddAnnotation(Name, Coor);
 
-                foreach(Star s in star.ReferenceStars)
+                foreach (Star s in star.ReferenceStars)
                 {
                     ReferenceStar reference = new ReferenceStar();
                     reference.Name = s.Name;
@@ -133,6 +136,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                     System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
                     {
                         _refStars.Add(reference);
+                        StroblhofwarteImage.Instance.AddAnnotation(reference.Name, reference.Coor);
                     }));
                     
                 }

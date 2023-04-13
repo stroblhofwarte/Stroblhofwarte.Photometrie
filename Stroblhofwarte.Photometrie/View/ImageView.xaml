@@ -22,9 +22,11 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
+        
         <main:MouseTrackerDecorator x:Name="mouseTracker">
             <Image  Source="{Binding ImageSource}" Margin="0,0,0,76" />
         </main:MouseTrackerDecorator>
+ 
         <Label Content="{Binding CoordinateText}" Margin="220,0,220,36" Height="28" VerticalAlignment="Bottom"/>
         <Button Width="55"
         Style="{DynamicResource MahApps.Styles.Button.Circle}" Height="55" VerticalAlignment="Bottom" HorizontalAlignment="Left" ToolTip="Switch Coordinates Grid on or off" Margin="9,0,0,9">
@@ -32,11 +34,11 @@
                 <icon:PackIconMaterial Width="30" Height="30" Kind="Grid" HorizontalAlignment="Center"/>
             </StackPanel>
         </Button>
-        <Button Width="55"
-        Style="{DynamicResource MahApps.Styles.Button.Circle}" Height="55" VerticalAlignment="Bottom" HorizontalAlignment="Left" ToolTip="Switch Coordinates Grid on or off" Margin="82,0,0,9">
+        <ToggleButton Width="55"
+        Style="{DynamicResource MahApps.Styles.ToggleButton.Circle}" Command="{Binding AnnotateCommand}" Height="55" VerticalAlignment="Bottom" HorizontalAlignment="Left" ToolTip="Annotate reference stars from AAVSO data when loaded" Margin="82,0,0,9">
             <StackPanel Orientation="Vertical">
-                <icon:PackIconMaterial Width="30" Height="30" Kind="Grid" HorizontalAlignment="Center"/>
+                <icon:PackIconMaterial Width="30" Height="30" Kind="Creation" HorizontalAlignment="Center"/>
             </StackPanel>
-        </Button>
+        </ToggleButton>
     </Grid>
 </UserControl>

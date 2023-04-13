@@ -156,5 +156,11 @@ namespace Stroblhofwarte.FITS.DataObjects
         {
             return Coordinates.Shift(pixelX - Point.X, pixelY - Point.Y, Rotation, PixelScaleX, PixelScaleY, Coordinates.ProjectionType.Gnomonic);
         }
+
+        public Point GetCoordinates(Coordinates here)
+        {
+            // TODO: Why rotation inbverse? Flipped?
+            return Coordinates.XYProjection(here, Point, PixelScaleX, PixelScaleY, 360.0 - Rotation, Coordinates.ProjectionType.Gnomonic);
+        }
     }
 }
