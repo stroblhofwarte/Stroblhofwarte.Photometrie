@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Drawing;
 using Microsoft.VisualBasic;
 using System.Drawing.Imaging;
+using System.Globalization;
 
 namespace Stroblhofwarte.FITS.DataObjects
 {
@@ -114,6 +115,36 @@ namespace Stroblhofwarte.FITS.DataObjects
         public Int32 DataPtr(int x, int y)
         {
             return y * Width + x;
+        }
+
+        public double GetExposureTime()
+        {
+            foreach(FITSHeaderCard card in _header.HeaderCards)
+            {
+                if(card.Key == "EXPOSURE")
+                {
+                    try
+                    {
+                        return Convert.ToDouble(card.Value, CultureInfo.InvariantCulture);
+                    }
+                    catch(Exception)
+                    {
+                        return 0.0;
+                    }
+                }
+                if (card.Key == "EXPTIME")
+                {
+                    try
+                    {
+                        return Convert.ToDouble(card.Value, CultureInfo.InvariantCulture);
+                    }
+                    catch (Exception)
+                    {
+                        return 0.0;
+                    }
+                }
+            }
+            return 0.0;
         }
     }
 }

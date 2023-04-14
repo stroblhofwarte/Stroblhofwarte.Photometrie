@@ -207,6 +207,11 @@ namespace Stroblhofwarte.Image
         {
             return _imageData.GetRawImage().DataPtr(x, y);
         }
+
+        public double GetExposureTime()
+        {
+            return _imageData.GetExposureTime();
+        }
     }
 
     public class Annotation

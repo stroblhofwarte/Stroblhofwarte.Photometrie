@@ -89,5 +89,10 @@ namespace Stroblhofwarte.FITS
         {
             throw new NotImplementedException();
         }
+
+        public double GetExposureTime()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -86,6 +86,12 @@ namespace Stroblhofwarte.FITS
         {
             return _image;
         }
+
+        public double GetExposureTime()
+        {
+            if (_image == null) return 0.0;
+            return _image.GetExposureTime();
+        }
     }
 
     internal class HDUValue

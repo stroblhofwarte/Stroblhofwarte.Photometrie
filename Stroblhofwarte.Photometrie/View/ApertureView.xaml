@@ -20,5 +20,7 @@
     </UserControl.Resources>
     <Grid>
         <Image  Source="{Binding ImageSource}" Margin="0,0,0,76" />
+        <TextBox HorizontalAlignment="Left" Margin="102,0,0,23" TextWrapping="Wrap" Text="{Binding Z, Mode=TwoWay}" Width="120" Height="26" VerticalAlignment="Bottom"/>
+        <Label Content="{Binding MagString}" HorizontalAlignment="Left" Margin="43,309,0,111" Width="151" FontSize="16" FontWeight="Bold" Foreground="#FFFDF534"/>
     </Grid>
 </UserControl>

@@ -18,6 +18,7 @@ namespace Stroblhofwarte.FITS.Interface
         int Width();
         int Height();
         Stroblhofwarte.FITS.DataObjects.FitsImage GetRawImage();
+        double GetExposureTime();
 
     }
 }
