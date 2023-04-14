@@ -63,6 +63,10 @@
                 <DataTemplate DataType="{x:Type vm:MagnificationViewModel}">
                     <v:MagnificationView />
                 </DataTemplate>
+                <DataTemplate DataType="{x:Type vm:ApertureViewModel}">
+                    <v:ApertureView />
+                </DataTemplate>
+
 
             </dock:DockingManager.Resources>
 

@@ -11,9 +11,11 @@ using System.Windows.Media.Imaging;
 
 namespace Stroblhofwarte.Photometrie.ViewModel
 {
-    public class MagnificationViewModel : DockWindowViewModel
+    public class ApertureViewModel : DockWindowViewModel
     {
         #region Properties
+
+        private Point _starCentroid = new Point(0, 0);
 
         public BitmapImage ImageSource
         {
@@ -24,7 +26,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 using (MemoryStream memory = new MemoryStream())
                 {
                     int magN = Properties.Settings.Default.MagnificationN;
-                    StroblhofwarteImage.Instance.GetSubimage(StroblhofwarteImage.Instance.CursorPosition, magN, magN).Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
+                    StroblhofwarteImage.Instance.GetSubimage(_starCentroid, magN, magN).Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
                     memory.Position = 0;
                     BitmapImage bitmapimage = new BitmapImage();
                     bitmapimage.BeginInit();
@@ -42,15 +44,24 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
         #region ctor
 
-        public MagnificationViewModel()
+        public ApertureViewModel()
         {
-            StroblhofwarteImage.Instance.NewCursorPosition += Instance_NewCursorPosition;
+            StroblhofwarteImage.Instance.NewCursorClickPosition += Instance_NewCursorClickPosition; ;
         }
 
-        private void Instance_NewCursorPosition(object? sender, EventArgs e)
+        private void Instance_NewCursorClickPosition(object? sender, EventArgs e)
         {
-            OnPropertyChanged("ImageSource");
+            try
+            {
+                Stroblhofwarte.AperturePhotometry.Centroid photometer = new Centroid(100);
+                _starCentroid = photometer.GetCentroid(StroblhofwarteImage.Instance.CursorClickPosition.X, StroblhofwarteImage.Instance.CursorClickPosition.Y);
+                OnPropertyChanged("ImageSource");
+            } catch (Exception ex)
+            {
+                // Centroid is outside the search region. 
+            }
         }
+
         #endregion
     }
 }

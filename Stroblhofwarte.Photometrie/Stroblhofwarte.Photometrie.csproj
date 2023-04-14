@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Stroblhofwarte.AperturePhotometry\Stroblhofwarte.AperturePhotometry.csproj" />
     <ProjectReference Include="..\Stroblhofwarte.Astrometry.Solver\Stroblhofwarte.Astrometry.Solver.csproj" />
     <ProjectReference Include="..\Stroblhofwarte.FITS\Stroblhofwarte.FITS\Stroblhofwarte.FITS.csproj" />
     <ProjectReference Include="..\Stroblhofwarte.Image\Stroblhofwarte.Image.csproj" />

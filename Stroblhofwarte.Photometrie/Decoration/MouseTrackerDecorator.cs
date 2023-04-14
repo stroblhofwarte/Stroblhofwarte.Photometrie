@@ -25,9 +25,13 @@ namespace Stroblhofwarte.Photometrie
             set
             {
                 if (base.Child != null)
+                {
                     base.Child.MouseMove -= _controlledObject_MouseMove;
+                    base.Child.MouseMove -= _controlledObject_MouseUp;
+                }
                 base.Child = value;
                 base.Child.MouseMove += _controlledObject_MouseMove;
+                base.Child.MouseUp += _controlledObject_MouseUp;
             }
         }
 
@@ -55,7 +59,7 @@ namespace Stroblhofwarte.Photometrie
                 var x = Math.Floor(p.X * imageControl.Source.Width / imageControl.ActualWidth);
                 var y = Math.Floor(p.Y * imageControl.Source.Height / imageControl.ActualHeight);
                 WorldCoordinateSystem wcs = StroblhofwarteImage.Instance.WCS;
-                if(wcs != null)
+                if (wcs != null)
                 {
                     // WCS is valid
                     double xRel = x;// imageControl.Source.Width-x;
@@ -65,11 +69,21 @@ namespace Stroblhofwarte.Photometrie
                     Point test = wcs.GetCoordinates(c);
                     model.CoordinateText = c.ToString();
                 }
-                
+
             }
 
             // Here you can add some validation logic
             MousePosition = p;
+        }
+
+        void _controlledObject_MouseUp(object sender, MouseEventArgs e)
+        {
+            Point p = e.GetPosition(base.Child);
+            // Transfer screen click coordinate to entire image click position
+            var imageControl = this.Child as System.Windows.Controls.Image;
+            var x = Math.Floor(p.X * imageControl.Source.Width / imageControl.ActualWidth);
+            var y = Math.Floor(p.Y * imageControl.Source.Height / imageControl.ActualHeight);
+            StroblhofwarteImage.Instance.CursorClickPosition = new System.Drawing.Point((int)x, (int)y);
         }
     }
 }

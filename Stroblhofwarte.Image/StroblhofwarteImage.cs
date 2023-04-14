@@ -33,6 +33,20 @@ namespace Stroblhofwarte.Image
 
         #region Properties
 
+        private System.Drawing.Point _cursorClickPosition;
+        public System.Drawing.Point CursorClickPosition
+        {
+            get { return _cursorClickPosition; }
+            set
+            {
+                _cursorClickPosition = value;
+                if (NewCursorClickPosition != null)
+                {
+                    NewCursorClickPosition(this, null);
+                }
+            }
+        }
+
         private System.Drawing.Point _cursorPosition;
         public System.Drawing.Point CursorPosition
         {
@@ -92,6 +106,7 @@ namespace Stroblhofwarte.Image
 
         public event EventHandler NewImageLoaded;
         public event EventHandler NewCursorPosition;
+        public event EventHandler NewCursorClickPosition;
 
         #endregion
 
@@ -181,6 +196,16 @@ namespace Stroblhofwarte.Image
             {
                 return null;
             }
+        }
+
+        public ushort[] GetSubimagRaw(System.Drawing.Point center, int width, int height)
+        {
+            return _imageData.GetRawImage().GetSubimage(center, width, height);
+        }
+
+        public int XYtoPtr(int x, int y)
+        {
+            return _imageData.GetRawImage().DataPtr(x, y);
         }
     }
 
