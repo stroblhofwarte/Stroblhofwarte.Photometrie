@@ -19,8 +19,8 @@ namespace Stroblhofwarte.AperturePhotometry
         #endregion
 
         #region Ctor
-
-        public Radius(int userx, int usery, int searchRadius, out double apertureR, out double outerAnnulusR, out double innerAnulusR)
+        #endregion
+        public void CalculateRadius(int userx, int usery, int searchRadius, out double apertureR, out double outerAnnulusR, out double innerAnulusR)
         {
             Dictionary<double, double> machineMags = new Dictionary<double, double>();
             apertureR = 0.0;
@@ -54,14 +54,14 @@ namespace Stroblhofwarte.AperturePhotometry
             CalculateCircles(apertureR, out outerAnnulusR, out innerAnulusR);
         }
 
-        #endregion
+      
 
         private int DataPtr(int x, int y)
         {
             return (y * ((_searchRadius * 2) + 4)) + x;
         }
 
-        private void CalculateCircles(double apertureR, out double innerAnnulusR, out double outerAnnulusR)
+        public void CalculateCircles(double apertureR, out double innerAnnulusR, out double outerAnnulusR)
         {
             innerAnnulusR = apertureR + apertureR / 2;
             outerAnnulusR = innerAnnulusR + apertureR;

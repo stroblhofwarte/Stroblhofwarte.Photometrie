@@ -19,7 +19,7 @@ namespace Stroblhofwarte.AperturePhotometry
     {
         #region Properties
 
-        private double _thresholdFactor = 1.2;
+        private double _thresholdFactor = 1.01;
 
         private int _searchRadius;
         public int SearchRadius

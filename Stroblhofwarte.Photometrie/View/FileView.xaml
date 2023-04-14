@@ -29,7 +29,7 @@
             </StackPanel>
         </Button>
         <Button Width="55"
-        Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding SolveCommand}" Height="55" VerticalAlignment="Bottom" HorizontalAlignment="Left" ToolTip="Solve all images without WCS via Astronomy.net..." Margin="81,0,0,10">
+        Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding SolveCommand}" Height="55" VerticalAlignment="Bottom" HorizontalAlignment="Left" ToolTip="Solve all images without WCS via Astronomy.net..." Margin="81,0,0,9">
             <StackPanel Orientation="Vertical">
                 <icon:PackIconMaterial Width="30" Height="30" Kind="Apps" HorizontalAlignment="Center"/>
             </StackPanel>

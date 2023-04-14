@@ -1,6 +1,7 @@
 ﻿using Stroblhofwarte.Image;
 using System;
 using System.Collections.Generic;
+using System.DirectoryServices;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -99,6 +100,29 @@ namespace Stroblhofwarte.AperturePhotometry
         private int DataPtr(int x, int y)
         {
             return (y * ((_searchRadius * 2) + 4)) + x;
+        }
+
+        public double GetZ(MeasurementResult machineMag, int referenceMag /* mag*10 */)
+        {
+            double Zmax = 100;
+            double Zmin = 0.0;
+
+            double goal = (double)referenceMag / 10.0;
+
+            while (true)
+            {
+                double Z = ((Zmax - Zmin) / 2.0) + Zmin;
+                double mag = Magnitude(machineMag, Z);
+                double diff = mag - goal;
+                if(Math.Abs(diff) < 0.01)
+                {
+                    return Z;
+                }
+                if (diff > 0)
+                    Zmax = Z;
+                if (diff < 0)
+                    Zmin = Z;
+            }
         }
     }
 
