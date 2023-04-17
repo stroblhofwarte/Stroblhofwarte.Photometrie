@@ -30,8 +30,8 @@
                 <HierarchicalDataTemplate DataType="{x:Type vm:MenuItemViewModel}" ItemsSource="{Binding Items}" />
             </Menu.Resources>
         </Menu>
-        <Button Width="35"
-        Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding SettingsCommand}" Height="35" VerticalAlignment="Top" HorizontalAlignment="Left" ToolTip="Solve all images without WCS via Astronomy.net..." Margin="15,30,0,0" Grid.RowSpan="2">
+        <Button
+        Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding SettingsCommand}" Height="35" VerticalAlignment="Top" ToolTip="Solve all images without WCS via Astronomy.net..." Margin="0,30,68,0" Grid.RowSpan="2" HorizontalAlignment="Right" Width="36">
             <StackPanel Orientation="Vertical">
                 <icon:PackIconFeatherIcons Width="20" Height="20" Kind="Settings" HorizontalAlignment="Center" ToolTip="Application settings"/>
             </StackPanel>
@@ -83,5 +83,11 @@
             </dock:DockingManager.LayoutItemContainerStyle>
 
         </dock:DockingManager>
+        <Button
+            Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding FilterCommand}" Height="35" VerticalAlignment="Top" ToolTip="Solve all images without WCS via Astronomy.net..." Margin="0,30,22,0" Grid.RowSpan="2" HorizontalAlignment="Right" Width="36">
+            <StackPanel Orientation="Vertical">
+                <icon:PackIconFeatherIcons Width="20" Height="20" Kind="Filter" HorizontalAlignment="Center" ToolTip="Application settings"/>
+            </StackPanel>
+        </Button>
     </Grid>
 </Controls:MetroWindow>

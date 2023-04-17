@@ -17,5 +17,8 @@
     <Setting Name="MagnificationN" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">300</Value>
     </Setting>
+    <Setting Name="FilterFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">filters.csv</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

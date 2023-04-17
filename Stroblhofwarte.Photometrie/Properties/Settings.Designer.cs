@@ -82,5 +82,17 @@ namespace Stroblhofwarte.Photometrie.Properties {
                 this["MagnificationN"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("filters.csv")]
+        public string FilterFile {
+            get {
+                return ((string)(this["FilterFile"]));
+            }
+            set {
+                this["FilterFile"] = value;
+            }
+        }
     }
 }
