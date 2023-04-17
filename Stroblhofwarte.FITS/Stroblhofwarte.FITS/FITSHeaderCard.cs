@@ -30,9 +30,11 @@ namespace Stroblhofwarte.FITS
              */
             this.Key = key;
             if (value == null) { value = string.Empty; }
-            if (value.Length > 20) {
-                value = value.Substring(0, 20);
-            }
+            
+            // Othmar Ehrhardt: Why truncate here to 20 chars? This will cut the DATE-OBS and other values.
+            //if (value.Length > 20) {
+            //    value = value.Substring(0, 20);
+            //}
             this.Value = $"'{value.Replace(@"'", @"''")}'".PadRight(20);
 
             if (comment == null) { comment = string.Empty; }

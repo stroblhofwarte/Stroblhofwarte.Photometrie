@@ -19,6 +19,13 @@ namespace Stroblhofwarte.FITS.Interface
         int Height();
         Stroblhofwarte.FITS.DataObjects.FitsImage GetRawImage();
         double GetExposureTime();
-
+        string GetInstrument();
+        string GetTelescope();
+        double GetFocalLength();
+        double GetFocalRatio();
+        string GetFilter();
+        string GetObject();
+        DateTime GetObservationTimeUTC();
+        DateTime GetObservationTime();
     }
 }

@@ -92,6 +92,54 @@ namespace Stroblhofwarte.FITS
             if (_image == null) return 0.0;
             return _image.GetExposureTime();
         }
+
+        public string GetInstrument()
+        {
+            if (_image == null) return string.Empty;
+            return _image.GetInstrument();
+        }
+
+        public string GetTelescope()
+        {
+            if (_image == null) return string.Empty;
+            return _image.GetTelescope();
+        }
+
+        public double GetFocalLength()
+        {
+            if (_image == null) return 0.0;
+            return _image.GetFocalLength();
+        }
+
+        public double GetFocalRatio()
+        {
+            if (_image == null) return 0.0;
+            return _image.GetFocalRatio();
+        }
+
+        public string GetFilter()
+        {
+            if(_image == null) return string.Empty;
+            return _image.GetFilter();
+        }
+
+        public string GetObject()
+        {
+            if(_image == null) return string.Empty;
+            return _image.GetObject();
+        }
+
+        public DateTime GetObservationTimeUTC()
+        {
+            if (_image == null) return DateTime.MinValue;
+            return _image.GetObservationTimeUTC();
+        }
+
+        public DateTime GetObservationTime()
+        {
+            if (_image == null) return DateTime.MinValue;
+            return _image.GetObservationTime();
+        }
     }
 
     internal class HDUValue

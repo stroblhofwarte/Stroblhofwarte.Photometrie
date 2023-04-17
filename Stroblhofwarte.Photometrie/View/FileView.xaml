@@ -47,7 +47,7 @@
                     <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
                     <GridViewColumn Header="Obs. Date" DisplayMemberBinding="{Binding Date}" />
                     <GridViewColumn Header="WCS" DisplayMemberBinding="{Binding WCS}" />
-                    <GridViewColumn Header="State" DisplayMemberBinding="{Binding State}" />
+                    <GridViewColumn Header="State" DisplayMemberBinding="{Binding State}" Width="80"/>
                 </GridView>
             </ListView.View>
         </ListView>

@@ -8,6 +8,7 @@
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
     <OutputType>Library</OutputType>
     <UseWPF>True</UseWPF>
+    <UseWindowsForms>True</UseWindowsForms>
   </PropertyGroup>
 
   <ItemGroup>

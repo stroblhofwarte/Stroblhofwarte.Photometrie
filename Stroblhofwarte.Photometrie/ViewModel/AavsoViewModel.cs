@@ -246,6 +246,12 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         public AavsoViewModel()
         {
             _refStars = new ObservableCollection<ReferenceStar>();
+            StroblhofwarteImage.Instance.NewImageLoaded += Instance_NewImageLoaded;
+        }
+
+        private void Instance_NewImageLoaded(object? sender, EventArgs e)
+        {
+            RequestName = StroblhofwarteImage.Instance.GetObject();
         }
 
         #endregion

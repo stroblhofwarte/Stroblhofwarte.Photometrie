@@ -33,6 +33,10 @@ namespace Stroblhofwarte.Image
 
         #region Properties
 
+        private Font _font = null;
+
+        private Bitmap _annotatedBmp = null;
+
         private System.Drawing.Point _cursorClickPosition;
         public System.Drawing.Point CursorClickPosition
         {
@@ -142,17 +146,18 @@ namespace Stroblhofwarte.Image
             {
                 Bitmap bmp =(Bitmap) _imageData.GetImage().Clone();
                 Graphics g = Graphics.FromImage(bmp);
+                if(_font == null)
+                    _font = new Font("Segoe UI", (float)(24.0 * AnnotateScale));
                 foreach (Annotation a in _annotations)
                 {
                     System.Windows.Point p = WCS.GetCoordinates(a.Coor);
-                    g.DrawLine(new System.Drawing.Pen(System.Drawing.Brushes.Yellow, 10.0f),
+                    /*g.DrawLine(new System.Drawing.Pen(System.Drawing.Brushes.Yellow, 10.0f),
                         (int)p.X + (int)(10* AnnotateScale),
                         (int)p.Y + (int)(10* AnnotateScale),
                         (int)p.X+(int)(20 * AnnotateScale),
-                        (int)p.Y+(int)(20 * AnnotateScale));
-                    g.DrawString(a.Name, new Font("Segoe UI", (float)(24.0 * AnnotateScale)), System.Drawing.Brushes.Yellow, 
-                        new System.Drawing.Point((int)p.X + (int)(30 * AnnotateScale),
-                        (int)p.Y + (int)(30 * AnnotateScale)));
+                        (int)p.Y+(int)(20 * AnnotateScale));*/
+                    TextRenderer.DrawText(g, a.Name, _font, new System.Drawing.Point((int)p.X + (int)(30 * AnnotateScale),
+                        (int)p.Y + (int)(30 * AnnotateScale)), System.Drawing.Color.Yellow);
                 }   
                 return bmp;
             }
@@ -211,6 +216,44 @@ namespace Stroblhofwarte.Image
         public double GetExposureTime()
         {
             return _imageData.GetExposureTime();
+        }
+
+        public string GetInstrument()
+        {
+            return _imageData.GetInstrument();
+        }
+        public string GetTelescope()
+        {
+            return _imageData.GetTelescope();
+        }
+        public double GetFocalLength()
+        {
+            return _imageData.GetFocalLength();
+        }
+        public double GetFocalRatio()
+        {
+            return _imageData.GetFocalRatio();
+        }
+        public string GetFilter()
+        {
+            return _imageData.GetFilter();
+        }
+        public string GetObject()
+        {
+            return _imageData.GetObject();
+        }
+        public DateTime GetObservationTimeUTC()
+        {
+            return _imageData.GetObservationTimeUTC();
+        }
+        public DateTime GetObservationTime()
+        {
+            return _imageData.GetObservationTime();
+        }
+
+        public double GetJD()
+        {
+            return AstroUtil.GetJulianDate(GetObservationTimeUTC());
         }
     }
 

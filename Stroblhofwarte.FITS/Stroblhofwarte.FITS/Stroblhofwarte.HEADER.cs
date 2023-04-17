@@ -94,5 +94,45 @@ namespace Stroblhofwarte.FITS
         {
             throw new NotImplementedException();
         }
+
+        public string GetInstrument()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetTelescope()
+        {
+            throw new NotImplementedException();
+        }
+
+        public double GetFocalLength()
+        {
+            throw new NotImplementedException();
+        }
+
+        public double GetFocalRatio()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetFilter()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetObject()
+        {
+            throw new NotImplementedException();
+        }
+
+        public DateTime GetObservationTimeUTC()
+        {
+            throw new NotImplementedException();
+        }
+
+        public DateTime GetObservationTime()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

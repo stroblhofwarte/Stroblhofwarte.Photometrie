@@ -24,7 +24,7 @@
     <Grid>
         
         <main:MouseTrackerDecorator x:Name="mouseTracker">
-            <Image  Source="{Binding ImageSource}" Margin="0,0,0,76" />
+            <Image Source="{Binding ImageSource}" Margin="0,0,0,76" />
         </main:MouseTrackerDecorator>
  
         <Label Content="{Binding CoordinateText}" Margin="220,0,220,36" Height="28" VerticalAlignment="Bottom"/>

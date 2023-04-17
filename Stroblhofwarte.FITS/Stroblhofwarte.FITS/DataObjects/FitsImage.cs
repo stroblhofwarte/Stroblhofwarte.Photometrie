@@ -7,6 +7,8 @@ using System.Drawing;
 using Microsoft.VisualBasic;
 using System.Drawing.Imaging;
 using System.Globalization;
+using static System.Net.Mime.MediaTypeNames;
+using Stroblhofwarte.FITS.Extension;
 
 namespace Stroblhofwarte.FITS.DataObjects
 {
@@ -145,6 +147,157 @@ namespace Stroblhofwarte.FITS.DataObjects
                 }
             }
             return 0.0;
+        }
+
+        public string GetInstrument()
+        {
+            foreach (FITSHeaderCard card in _header.HeaderCards)
+            {
+                if (card.Key == "INSTRUME")
+                {
+                    try
+                    {
+                        return card.Value.Replace("'","");
+                    }
+                    catch (Exception)
+                    {
+                        return string.Empty;
+                    }
+                }
+            }
+            return string.Empty;
+        }
+
+        public string GetTelescope()
+        {
+            foreach (FITSHeaderCard card in _header.HeaderCards)
+            {
+                if (card.Key == "TELESCOP")
+                {
+                    try
+                    {
+                        return card.Value.Replace("'", "");
+                    }
+                    catch (Exception)
+                    {
+                        return string.Empty;
+                    }
+                }
+            }
+            return string.Empty;
+        }
+
+        public double GetFocalLength()
+        {
+            foreach (FITSHeaderCard card in _header.HeaderCards)
+            {
+                if (card.Key == "FOCALLEN")
+                {
+                    try
+                    {
+                        return Convert.ToDouble(card.Value, CultureInfo.InvariantCulture);
+                    }
+                    catch (Exception)
+                    {
+                        return 0.0;
+                    }
+                }
+            }
+            return 0.0;
+        }
+        public double GetFocalRatio()
+        {
+            foreach (FITSHeaderCard card in _header.HeaderCards)
+            {
+                if (card.Key == "FOCRATIO")
+                {
+                    try
+                    {
+                        return Convert.ToDouble(card.Value, CultureInfo.InvariantCulture);
+                    }
+                    catch (Exception)
+                    {
+                        return 0.0;
+                    }
+                }
+            }
+            return 0.0;
+        }
+        public string GetFilter()
+        {
+            foreach (FITSHeaderCard card in _header.HeaderCards)
+            {
+                if (card.Key == "FILTER")
+                {
+                    try
+                    {
+                        return card.Value.Replace("'", "");
+                    }
+                    catch (Exception)
+                    {
+                        return string.Empty;
+                    }
+                }
+            }
+            return string.Empty;
+        }
+        public string GetObject()
+        {
+            foreach (FITSHeaderCard card in _header.HeaderCards)
+            {
+                if (card.Key == "OBJECT")
+                {
+                    try
+                    {
+                        return card.Value.Replace("'", "");
+                    }
+                    catch (Exception)
+                    {
+                        return string.Empty;
+                    }
+                }
+            }
+            return string.Empty;
+        }
+
+        public DateTime GetObservationTimeUTC()
+        {
+            foreach (FITSHeaderCard card in _header.HeaderCards)
+            {
+                if (card.Key == "DATE-OBS")
+                {
+                    try
+                    {
+                        string iso8601 = card.Value.Replace("'", "");
+                        DateTime d =  DateTime.ParseExact(iso8601, "yyyy-MM-ddTHH:mm:ss.fff", CultureInfo.InvariantCulture, DateTimeStyles.None);
+                        return DateTime.SpecifyKind(d, DateTimeKind.Utc);
+                    }
+                    catch (Exception)
+                    {
+                        return DateTime.MinValue;
+                    }
+                }
+            }
+            return DateTime.MinValue;
+        }
+        public DateTime GetObservationTime()
+        {
+            foreach (FITSHeaderCard card in _header.HeaderCards)
+            {
+                if (card.Key == "DATE-LOC")
+                {
+                    try
+                    {
+                        string iso8601 = card.Value.Replace("'", "");
+                        return DateTime.ParseExact(iso8601, "yyyy-MM-ddTHH:mm:ss.fff", CultureInfo.InvariantCulture);
+                    }
+                    catch (Exception)
+                    {
+                        return DateTime.MinValue;
+                    }
+                }
+            }
+            return DateTime.MinValue;
         }
     }
 }
