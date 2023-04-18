@@ -20,7 +20,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <ListView Margin="0,93,0,62" ItemsSource="{Binding RefStars}">
+        <ListView Margin="0,80,0,62" ItemsSource="{Binding RefStars}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="80" />
@@ -36,11 +36,27 @@
         <TextBox HorizontalAlignment="Left" Margin="92,0,0,11" TextWrapping="Wrap" Text="{Binding RequestName, Mode=TwoWay}" Width="120" Height="26" VerticalAlignment="Bottom"/>
         <Button Content="&gt;&gt;" Command="{Binding SearchNamedCommand}" HorizontalAlignment="Left" Margin="217,0,0,10" Height="27" VerticalAlignment="Bottom"/>
         <Label Content="Search:" HorizontalAlignment="Left" Margin="10,0,0,31" Foreground="#FFCECECE" RenderTransformOrigin="0.497,-0.462" FontWeight="Bold" Height="26" VerticalAlignment="Bottom"/>
-        <Label Content="{Binding Coor}" HorizontalAlignment="Left" Margin="10,62,0,0" VerticalAlignment="Top" Foreground="#FFCECECE" RenderTransformOrigin="1.4,0.424" FontWeight="Bold"/>
+
         <Label Content="{Binding Auid}" HorizontalAlignment="Left" Margin="10,36,0,0" VerticalAlignment="Top" Foreground="#FFCECECE" FontWeight="Bold"/>
 
         <Image x:Name="imgCircle" Visibility="{Binding WaitAnimation}" Width="100" Height="100" gif:ImageBehavior.AnimatedSource="/circle.gif" Margin="102,0,0,82" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
         <Button Content="By Plate Center" Command="{Binding SearchPlateCenterCommand}" HorizontalAlignment="Left" Margin="278,0,0,10" VerticalAlignment="Bottom"/>
+        <Label Content="Filter Translation:" Margin="0,15,406,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="99"/>
+        <Label Content="{Binding FilterTransition}" Margin="0,15,259,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="128"/>
+        <ComboBox Margin="0,15,10,0" VerticalAlignment="Top" ItemsSource="{Binding Filters}"
+                  SelectedItem="{Binding AAVSOFilterChange,UpdateSourceTrigger=PropertyChanged}"
+                  IsSynchronizedWithCurrentItem="True" HorizontalAlignment="Right" Width="120">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding AAVSOName}" Width="150"/>
+                        <TextBlock Text="{Binding AAVSOFilter}" Width="100"/>
+                        <TextBlock Text="{Binding Filter}" Width="80"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        <Label Content="Change AAVSO Filter:" Margin="0,15,131,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="123"/>
 
     </Grid>
 </UserControl>

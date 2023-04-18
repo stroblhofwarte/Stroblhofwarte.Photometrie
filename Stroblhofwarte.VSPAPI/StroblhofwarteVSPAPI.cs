@@ -24,7 +24,10 @@ namespace Stroblhofwarte.VSPAPI
 
             string jsonStr = RESTRequest(p);
             JObject json = JObject.Parse(jsonStr);
-
+            if (json["error"] != null)
+            {
+                return null;
+            }
             VariableStar varStar = new VariableStar(new Star(json["ra"].ToString(), 
                 json["dec"].ToString(), 
                 json["star"].ToString(), 

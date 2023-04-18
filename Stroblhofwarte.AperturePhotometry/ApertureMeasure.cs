@@ -91,6 +91,7 @@ namespace Stroblhofwarte.AperturePhotometry
 
         public double Magnitude(MeasurementResult meas, double Z)
         {
+            if (meas == null) return -999.0;
             if (meas.ExposureTime <= 0.0) return -999.0;
             double StarADU = meas.StarPixels * ((meas.StarADU / meas.StarPixels) - (meas.SkyADU / meas.SkyPixels));
             double SoftApertureMagnitude = Z - 2.5 * Math.Log10(StarADU / meas.ExposureTime);
@@ -102,17 +103,18 @@ namespace Stroblhofwarte.AperturePhotometry
             return (y * ((_searchRadius * 2) + 4)) + x;
         }
 
-        public double GetZ(MeasurementResult machineMag, int referenceMag /* mag*10 */)
+        public double GetZ(MeasurementResult machineMag, double referenceMag)
         {
             double Zmax = 100;
             double Zmin = 0.0;
 
-            double goal = (double)referenceMag / 10.0;
+            double goal = (double)referenceMag;
 
             while (true)
             {
                 double Z = ((Zmax - Zmin) / 2.0) + Zmin;
                 double mag = Magnitude(machineMag, Z);
+                if (mag == -999.0) return 0.0;
                 double diff = mag - goal;
                 if(Math.Abs(diff) < 0.01)
                 {

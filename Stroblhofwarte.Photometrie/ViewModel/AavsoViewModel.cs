@@ -1,6 +1,8 @@
-﻿using Stroblhofwarte.FITS;
+﻿using Stroblhofwarte.AperturePhotometry;
+using Stroblhofwarte.FITS;
 using Stroblhofwarte.FITS.DataObjects;
 using Stroblhofwarte.Image;
+using Stroblhofwarte.Photometrie.Dialogs;
 using Stroblhofwarte.VSPAPI;
 using Stroblhofwarte.VSPAPI.Data;
 using System;
@@ -11,15 +13,19 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace Stroblhofwarte.Photometrie.ViewModel
 {
     public class AavsoViewModel : DockWindowViewModel
     {
         #region Properties
+        private VariableStar _varStar;
+
         private ObservableCollection<ReferenceStar> _refStars;
 
         public ObservableCollection<ReferenceStar> RefStars
@@ -33,6 +39,58 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 _refStars = value;
                 OnPropertyChanged("RefStars");
             }
+        }
+
+        private ObservableCollection<Filters> _filters;
+        public ObservableCollection<Filters> Filters
+        {
+            get
+            {
+                _filters = new ObservableCollection<Filters>();
+                foreach (FilterObject f in Stroblhofwarte.AperturePhotometry.Filter.Instance.Filters)
+                {
+                    _filters.Add(new Filters() { AAVSOName = f.AAVSOName, AAVSOFilter = f.AAVSOShort, Filter = f.MyFilter });
+                }
+                return _filters;
+            }
+        }
+
+        private string _filter;
+        public string Filter
+        {
+            set { 
+                _filter = value;
+                OnPropertyChanged("Filter");
+                OnPropertyChanged("FilterTransition");
+            }
+            get
+            {
+                return _filter;
+            }
+        }
+
+        private Filters _selectedItem;
+        public Filters AAVSOFilterChange
+        {
+            get { 
+                return _selectedItem;
+            }
+            set
+            {
+                _selectedItem = value;
+                Filter = value.AAVSOFilter;
+                System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
+                {
+                    OnPropertyChanged("AAVSOFilterChange");
+                }));
+                if(_varStar != null)
+                    UpdateData();
+            }
+        }
+
+        public string FilterTransition
+        {
+            get { return _filter + " -> " + Stroblhofwarte.AperturePhotometry.Filter.Instance.TranslateToMyFilter(_filter); }
         }
 
         private Visibility _waitAnimation = Visibility.Hidden;
@@ -113,7 +171,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
         private async void SearchNamed()
         {
-            _refStars.Clear();
+            
             StroblhofwarteImage.Instance.ClearAnnotation();
             await Task.Factory.StartNew(() =>
             {
@@ -127,33 +185,9 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 Task<VariableStar> result = aavso.GetAAVSOData(RequestName, 
                     Properties.Settings.Default.AAVSOFov.ToString(CultureInfo.InvariantCulture),
                     Properties.Settings.Default.AAVSOLimitMag.ToString(CultureInfo.InvariantCulture));
-                
-                VariableStar star = result.Result;
-                Name = star.Var.Name;
-                Auid = star.Var.Auid;
-                Coor = star.Var.StarCoordinates;
-                StroblhofwarteImage.Instance.AddAnnotation(Name, Coor);
 
-                foreach (Star s in star.ReferenceStars)
-                {
-                    ReferenceStar reference = new ReferenceStar();
-                    reference.Name = s.Name;
-                    reference.AUID = s.Auid;
-                    reference.Coor = s.StarCoordinates;
-                    foreach(Mag m in s.Magnitudes)
-                    {
-                        if(m.Band == "V")
-                        {
-                            reference.MAG = m.Magnitude;
-                        }
-                    }
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
-                    {
-                        _refStars.Add(reference);
-                        StroblhofwarteImage.Instance.AddAnnotation(reference.Name, reference.Coor);
-                    }));
-                    
-                }
+                _varStar = result.Result;
+                UpdateData();
 
 
                 System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
@@ -187,7 +221,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
         private async void SearchPlateCenter()
         {
-            _refStars.Clear();
+           
             StroblhofwarteImage.Instance.ClearAnnotation();
             await Task.Factory.StartNew(() =>
             {
@@ -203,32 +237,8 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 Task<VariableStar> result = aavso.GetAAVSOData(coor.RADegrees, coor.Dec,
                     Properties.Settings.Default.AAVSOFov.ToString(CultureInfo.InvariantCulture),
                     Properties.Settings.Default.AAVSOLimitMag.ToString(CultureInfo.InvariantCulture));
-                VariableStar star = result.Result;
-                Name = star.Var.Name;
-                Auid = star.Var.Auid;
-                Coor = star.Var.StarCoordinates;
-                StroblhofwarteImage.Instance.AddAnnotation(Name, Coor);
-
-                foreach (Star s in star.ReferenceStars)
-                {
-                    ReferenceStar reference = new ReferenceStar();
-                    reference.Name = s.Name;
-                    reference.AUID = s.Auid;
-                    reference.Coor = s.StarCoordinates;
-                    foreach (Mag m in s.Magnitudes)
-                    {
-                        if (m.Band == "V")
-                        {
-                            reference.MAG = m.Magnitude;
-                        }
-                    }
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
-                    {
-                        _refStars.Add(reference);
-                        StroblhofwarteImage.Instance.AddAnnotation(reference.Name, reference.Coor);
-                    }));
-
-                }
+                _varStar = result.Result;
+                UpdateData();
 
 
                 System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
@@ -252,9 +262,52 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         private void Instance_NewImageLoaded(object? sender, EventArgs e)
         {
             RequestName = StroblhofwarteImage.Instance.GetObject();
+            Filter = Stroblhofwarte.AperturePhotometry.Filter.Instance.TranslateToAAVSOFilter(StroblhofwarteImage.Instance.GetFilter());
+            foreach(Filters f in Filters)
+            {
+                if(Filter == f.AAVSOFilter)
+                {
+                    AAVSOFilterChange = f;
+                    break;
+                }
+            }
         }
 
         #endregion
+
+        private void UpdateData()
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                _refStars.Clear();
+            }));
+            if (_varStar == null) return;
+            Name = _varStar.Var.Name;
+            Auid = _varStar.Var.Auid;
+            Coor = _varStar.Var.StarCoordinates;
+            StroblhofwarteImage.Instance.AddAnnotation(Name, Coor);
+
+            foreach (Star s in _varStar.ReferenceStars)
+            {
+                ReferenceStar reference = new ReferenceStar();
+                reference.Name = s.Name;
+                reference.AUID = s.Auid;
+                reference.Coor = s.StarCoordinates;
+                foreach (Mag m in s.Magnitudes)
+                {
+                    if (m.Band == Filter)
+                    {
+                        reference.MAG = m.Magnitude;
+                    }
+                }
+                System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
+                {
+                    _refStars.Add(reference);
+                    StroblhofwarteImage.Instance.AddAnnotation(reference.Name, reference.Coor);
+                }));
+
+            }
+        }
     }
 
     public class ReferenceStar : INotifyPropertyChanged

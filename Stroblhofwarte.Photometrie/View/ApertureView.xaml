@@ -95,8 +95,8 @@
                 </TransformGroup>
             </Separator.RenderTransform>
         </Separator>
-        <TextBox HorizontalAlignment="Left" Margin="208,0,0,120" TextWrapping="Wrap" Text="{Binding ReferenceMag}" Width="48" Height="26" VerticalAlignment="Bottom" ToolTip="Enter reference magnitude in m*10, e.g. 10.5 -> 105"/>
-        <Label Content="m*10" HorizontalAlignment="Left" Margin="254,0,0,130" Foreground="#FFADADAD" Height="26" VerticalAlignment="Bottom" FontSize="9"/>
+        <TextBox HorizontalAlignment="Left" Margin="208,0,0,120" TextWrapping="Wrap" Text="{Binding ReferenceMag}" Width="62" Height="26" VerticalAlignment="Bottom" ToolTip="Enter reference magnitude in m*10, e.g. 10.5 -> 105"/>
+        <Label Content="m" HorizontalAlignment="Left" Margin="270,0,0,130" Foreground="#FFADADAD" Height="26" VerticalAlignment="Bottom" FontSize="9"/>
         <Label Content="{Binding VarMagStr}" HorizontalAlignment="Left" Margin="102,0,0,122" Foreground="#FFADADAD" Height="26" VerticalAlignment="Bottom"/>
         <Label Content="{Binding CheckMagStr}" HorizontalAlignment="Left" Margin="448,0,0,120" Foreground="#FFADADAD" Height="26" VerticalAlignment="Bottom"/>
         <Label Content="Magnitude" HorizontalAlignment="Left" Margin="15,0,0,122" Foreground="#FFADADAD" Height="26" VerticalAlignment="Bottom"/>
@@ -104,8 +104,8 @@
         <Label Content="{Binding VarErrorStr}" HorizontalAlignment="Left" Margin="102,0,0,96" Foreground="#FFADADAD" Height="26" VerticalAlignment="Bottom"/>
         <Button Content="Reset" Command="{Binding CommandResetPhoto}" HorizontalAlignment="Left" Margin="532,0,0,40" Height="27" VerticalAlignment="Bottom"/>
         <Label Content="{Binding CompMagStr}" HorizontalAlignment="Left" Margin="290,0,0,120" Foreground="#FFADADAD" Height="26" VerticalAlignment="Bottom"/>
-        <TextBox HorizontalAlignment="Left" Margin="367,0,0,120" TextWrapping="Wrap" Text="{Binding CheckReferenceMag}" Width="48" Height="26" VerticalAlignment="Bottom" ToolTip="Enter reference magnitude in m*10, e.g. 10.5 -&gt; 105"/>
-        <Label Content="m*10" HorizontalAlignment="Left" Margin="415,0,0,130" Foreground="#FFADADAD" Height="26" VerticalAlignment="Bottom" FontSize="9"/>
+        <TextBox HorizontalAlignment="Left" Margin="367,0,0,120" TextWrapping="Wrap" Text="{Binding CheckReferenceMag}" Width="61" Height="26" VerticalAlignment="Bottom" ToolTip="Enter reference magnitude in m*10, e.g. 10.5 -&gt; 105"/>
+        <Label Content="m" HorizontalAlignment="Left" Margin="428,0,0,130" Foreground="#FFADADAD" Height="26" VerticalAlignment="Bottom" FontSize="9"/>
 
     </Grid>
 </UserControl>

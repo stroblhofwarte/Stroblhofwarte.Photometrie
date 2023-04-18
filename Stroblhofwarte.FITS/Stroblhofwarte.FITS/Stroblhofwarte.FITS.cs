@@ -96,13 +96,13 @@ namespace Stroblhofwarte.FITS
         public string GetInstrument()
         {
             if (_image == null) return string.Empty;
-            return _image.GetInstrument();
+            return _image.GetInstrument().Trim();
         }
 
         public string GetTelescope()
         {
             if (_image == null) return string.Empty;
-            return _image.GetTelescope();
+            return _image.GetTelescope().Trim();
         }
 
         public double GetFocalLength()
@@ -120,13 +120,13 @@ namespace Stroblhofwarte.FITS
         public string GetFilter()
         {
             if(_image == null) return string.Empty;
-            return _image.GetFilter();
+            return _image.GetFilter().Trim();
         }
 
         public string GetObject()
         {
             if(_image == null) return string.Empty;
-            return _image.GetObject();
+            return _image.GetObject().Trim();
         }
 
         public DateTime GetObservationTimeUTC()

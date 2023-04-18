@@ -15,6 +15,7 @@ using System.Windows.Input;
 using System.Windows.Media.TextFormatting;
 using System.Xml.Linq;
 using Stroblhofwarte.AperturePhotometry;
+using Microsoft.VisualBasic;
 
 namespace Stroblhofwarte.Photometrie.Dialogs
 {
@@ -127,6 +128,18 @@ namespace Stroblhofwarte.Photometrie.Dialogs
         }
 
         #endregion
+
+        public override bool Equals(object obj)
+        {
+            Filters f = obj as Filters;
+            if (f == null) return false;
+            return f.AAVSOFilter == AAVSOFilter;
+        }
+
+        public override int GetHashCode()
+        {
+            return AAVSOFilter.GetHashCode();
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

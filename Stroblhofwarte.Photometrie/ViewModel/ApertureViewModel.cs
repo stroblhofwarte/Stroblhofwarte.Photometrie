@@ -225,8 +225,8 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
         public string CheckMagStr { get { return _checkMag.ToString("0.##", CultureInfo.InvariantCulture); } }
 
-        private int _referenceMag;
-        public int ReferenceMag
+        private double _referenceMag;
+        public double ReferenceMag
         {
             get { return _referenceMag; }
             set
@@ -237,19 +237,19 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 VarMag = measure.Magnitude(_measVar, Z);
                 CheckMag = measure.Magnitude(_measCheck, Z);
                 CompMag = measure.Magnitude(_measComp, Z);
-                VarError = CheckMag - (double)(CheckReferenceMag / 10.0);
+                VarError = CheckMag - (double)(CheckReferenceMag);
                 OnPropertyChanged("ReferenceMag");
             }
         }
 
-        private int _checkReferenceMag;
-        public int CheckReferenceMag
+        private double _checkReferenceMag;
+        public double CheckReferenceMag
         {
             get { return _checkReferenceMag; }
             set
             {
                 _checkReferenceMag = value;
-                VarError = CheckMag - (double)(CheckReferenceMag / 10.0);
+                VarError = CheckMag - (double)(CheckReferenceMag);
                 OnPropertyChanged("CheckReferenceMag");
             }
         }
@@ -532,9 +532,15 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         public ApertureViewModel()
         {
             StroblhofwarteImage.Instance.NewCursorClickPosition += Instance_NewCursorClickPosition;
+            StroblhofwarteImage.Instance.NewImageLoaded += Instance_NewImageLoaded;
             AutoCentroid = true;
             PhotoState = enumPhotoState.VAR;
             Z = 21.1;
+        }
+
+        private void Instance_NewImageLoaded(object? sender, EventArgs e)
+        {
+            PhotoState = enumPhotoState.VAR;
         }
 
         private void Instance_NewCursorClickPosition(object? sender, EventArgs e)
@@ -563,6 +569,8 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
                 }
                 OnPropertyChanged("ImageSource");
+                // If the reference data are prefilled, recalculate Z
+                ReferenceMag = _referenceMag;
             } catch (Exception ex)
             {
                 // Centroid is outside the search region. 
