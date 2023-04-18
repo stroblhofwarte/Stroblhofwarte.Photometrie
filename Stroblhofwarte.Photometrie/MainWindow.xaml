@@ -89,5 +89,11 @@
                 <icon:PackIconFeatherIcons Width="20" Height="20" Kind="Filter" HorizontalAlignment="Center" ToolTip="Application settings"/>
             </StackPanel>
         </Button>
+        <Button
+            Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding InstrumentCommand}" Height="35" VerticalAlignment="Top" ToolTip="Solve all images without WCS via Astronomy.net..." Margin="0,30,112,0" Grid.RowSpan="2" HorizontalAlignment="Right" Width="36">
+            <StackPanel Orientation="Vertical">
+                <icon:PackIconFeatherIcons Width="20" Height="20" Kind="Airplay" HorizontalAlignment="Center" ToolTip="Application settings"/>
+            </StackPanel>
+        </Button>
     </Grid>
 </Controls:MetroWindow>

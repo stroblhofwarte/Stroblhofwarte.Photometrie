@@ -1,0 +1,104 @@
+﻿<Controls:MetroWindow x:Class="Stroblhofwarte.Photometrie.Dialogs.DialogInstrumentView"
+        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Stroblhofwarte.Photometrie.Dialogs"
+        xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        mc:Ignorable="d"
+        Title="DialogInstrumentView" Height="648" Width="940">
+    <Grid>
+        <ListView Margin="0,0,0,86">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Instrument" DisplayMemberBinding="{Binding AAVSOName}" Width="130" />
+                    <GridViewColumn Width="100">
+                        <GridViewColumn.Header>
+                            <TextBlock Text="CAMERA GAIN" />
+                        </GridViewColumn.Header>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox
+                                    Width="80"  
+                                    HorizontalAlignment="Center"
+                                    Text="{Binding Path=Filter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="110">
+                        <GridViewColumn.Header>
+                            <TextBlock Text="CAMERA OFFSET" />
+                        </GridViewColumn.Header>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox
+                                    Width="90"  
+                                    HorizontalAlignment="Center"
+                                    Text="{Binding Path=Filter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="100">
+                        <GridViewColumn.Header>
+                            <TextBlock Text="GAIN [e/ADU]" />
+                        </GridViewColumn.Header>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox
+                                    Width="80"  
+                                    HorizontalAlignment="Center"
+                                    Text="{Binding Path=Filter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="150">
+                        <GridViewColumn.Header>
+                            <TextBlock Text="READOUT NOISE [e-rms]" />
+                        </GridViewColumn.Header>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox
+                                    Width="130"  
+                                    HorizontalAlignment="Center"
+                                    Text="{Binding Path=Filter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="150">
+                        <GridViewColumn.Header>
+                            <TextBlock Text="DARK CURRENT [e/s/pix]" />
+                        </GridViewColumn.Header>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox
+                                    Width="130"  
+                                    HorizontalAlignment="Center"
+                                    Text="{Binding Path=Filter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="150">
+                        <GridViewColumn.Header>
+                            <TextBlock Text="ZERO POINT [ADU]" />
+                        </GridViewColumn.Header>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox
+                                    Width="130"  
+                                    HorizontalAlignment="Center"
+                                    Text="{Binding Path=Filter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button Width="55"
+        Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding OpenCommand}" Height="55" VerticalAlignment="Bottom" HorizontalAlignment="Left" ToolTip="Switch Coordinates Grid on or off" Margin="9,0,0,9">
+            <StackPanel Orientation="Vertical">
+                <icon:PackIconMaterial Width="30" Height="30" Kind="ContentSaveOutline" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Button>
+    </Grid>
+</Controls:MetroWindow>

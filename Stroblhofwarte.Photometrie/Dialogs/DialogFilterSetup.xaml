@@ -32,13 +32,7 @@
             </ListView.View>
         </ListView>
         <Button Width="55"
-        Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding OpenCommand}" Height="55" VerticalAlignment="Bottom" HorizontalAlignment="Left" ToolTip="Switch Coordinates Grid on or off" Margin="9,0,0,9">
-            <StackPanel Orientation="Vertical">
-                <icon:PackIconMaterial Width="30" Height="30" Kind="FolderOpenOutline" HorizontalAlignment="Center"/>
-            </StackPanel>
-        </Button>
-        <Button Width="55"
-        Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding SaveCommand}" Height="55" VerticalAlignment="Bottom" HorizontalAlignment="Left" ToolTip="Switch Coordinates Grid on or off" Margin="81,0,0,9">
+        Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding SaveCommand}" Height="55" VerticalAlignment="Bottom" HorizontalAlignment="Left" ToolTip="Switch Coordinates Grid on or off" Margin="15,0,0,9">
             <StackPanel Orientation="Vertical">
                 <icon:PackIconMaterial Width="30" Height="30" Kind="ContentSaveOutline" HorizontalAlignment="Center"/>
             </StackPanel>

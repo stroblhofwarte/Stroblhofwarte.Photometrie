@@ -81,6 +81,32 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             dlg.ShowDialog();
         }
 
+        private RelayCommand instrumentCommand;
+        public ICommand InstrumentCommand
+        {
+            get
+            {
+                if (instrumentCommand == null)
+                {
+                    instrumentCommand = new RelayCommand(param => this.Instrument(), param => this.CanInstrument());
+                }
+                return instrumentCommand;
+            }
+        }
+
+        private bool CanInstrument()
+        {
+            return true;
+        }
+
+        private async void Instrument()
+        {
+            DialogInstrumentView dlg = new DialogInstrumentView();
+            dlg.ShowDialog();
+        }
+
+
+        
         #endregion
     }
 }
