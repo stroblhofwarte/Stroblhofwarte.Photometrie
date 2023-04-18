@@ -8,7 +8,7 @@
         xmlns:vm="clr-namespace:Stroblhofwarte.Photometrie.ViewModel"
         xmlns:local="clr-namespace:Stroblhofwarte.Photometrie.Dialogs"
         mc:Ignorable="d"
-        Title="Stroblhofwarte.Photometrie Settings" Height="450" Width="800">
+        Title="Stroblhofwarte.Photometrie Settings" Height="495" Width="800">
     <Grid>
         <Label Content="Astrometry.Net Solver" HorizontalAlignment="Left" Margin="51,67,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
         <Label Content="__________________________________________________________________________________________________________" HorizontalAlignment="Left" Margin="180,62,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
@@ -26,6 +26,11 @@
         <Label Content="__________________________________________________________________________________________________________" HorizontalAlignment="Left" Margin="180,274,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
         <TextBox HorizontalAlignment="Left" Margin="226,305,0,0" TextWrapping="Wrap" Text="{Binding MagnificationN, Mode=TwoWay}" VerticalAlignment="Top" Width="56"/>
         <Label Content="Magnification NxN (px):" HorizontalAlignment="Left" Margin="84,305,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
+        <Label Content="Filter database" HorizontalAlignment="Left" Margin="51,350,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
+        <Label Content="__________________________________________________________________________________________________________" HorizontalAlignment="Left" Margin="180,345,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
+        <TextBox HorizontalAlignment="Left" Margin="226,376,0,0" TextWrapping="Wrap" Text="{Binding FilterDatabasePath, Mode=TwoWay}" VerticalAlignment="Top" Width="307" ToolTip="Set this only, when you want to have the db outside the standard directory. Otherwise set this to blank." />
+        <Label Content="Directory:" HorizontalAlignment="Left" Margin="84,376,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
+        <Button Content="..." Command="{Binding BrowseFilterPathCommand}" HorizontalAlignment="Left" Margin="534,376,0,0" VerticalAlignment="Top"/>
 
 
     </Grid>

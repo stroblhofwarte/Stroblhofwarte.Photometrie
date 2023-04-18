@@ -8,6 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Stroblhofwarte.Config\Stroblhofwarte.Config.csproj" />
     <ProjectReference Include="..\Stroblhofwarte.Image\Stroblhofwarte.Image.csproj" />
   </ItemGroup>
 

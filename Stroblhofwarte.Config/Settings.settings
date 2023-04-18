@@ -1,5 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Stroblhofwarte.Photometrie.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Stroblhofwarte.Config" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
     <Setting Name="AstrometrynetHost" Type="System.String" Scope="User">
@@ -9,16 +9,13 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="AAVSOFov" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">60</Value>
+      <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="AAVSOLimitMag" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">14.5</Value>
+      <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="MagnificationN" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">300</Value>
-    </Setting>
-    <Setting Name="FilterFile" Type="System.String" Scope="User">
-      <Value Profile="(Default)">filters.csv</Value>
     </Setting>
     <Setting Name="FilterDatabasePath" Type="System.String" Scope="User">
       <Value Profile="(Default)" />

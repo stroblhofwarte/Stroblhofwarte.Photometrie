@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Stroblhofwarte.Photometrie.Properties {
+namespace Stroblhofwarte.Config {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -49,7 +49,7 @@ namespace Stroblhofwarte.Photometrie.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("60")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public double AAVSOFov {
             get {
                 return ((double)(this["AAVSOFov"]));
@@ -61,7 +61,7 @@ namespace Stroblhofwarte.Photometrie.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("14.5")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public double AAVSOLimitMag {
             get {
                 return ((double)(this["AAVSOLimitMag"]));
@@ -80,18 +80,6 @@ namespace Stroblhofwarte.Photometrie.Properties {
             }
             set {
                 this["MagnificationN"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("filters.csv")]
-        public string FilterFile {
-            get {
-                return ((string)(this["FilterFile"]));
-            }
-            set {
-                this["FilterFile"] = value;
             }
         }
         

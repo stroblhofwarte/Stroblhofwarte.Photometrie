@@ -1,110 +1,153 @@
-﻿using Stroblhofwarte.Photometrie.ViewModel;
+﻿using Stroblhofwarte.Config;
+using Stroblhofwarte.Photometrie.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Automation;
+using System.Windows.Input;
 
 namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
 {
     public class SettingsViewModel : BaseViewModel
     {
         #region Properties
-
-        private string _astrometrynetHost;
         public string AstrometrynetHost
         {
-            get { return _astrometrynetHost; }
-            set { _astrometrynetHost = value;
-                Properties.Settings.Default.AstrometrynetHost = value;
-                Properties.Settings.Default.Save();
+            get { return GlobalConfig.Instance.AstrometrynetHost; }
+            set {
+                GlobalConfig.Instance.AstrometrynetHost = value;
                 OnPropertyChanged("AstrometrynetHost"); }
         }
-
-        private string _astrometrynetKey;
         public string AstrometrynetKey
         {
-            get { return _astrometrynetKey; }
-            set { _astrometrynetKey = value;
-                Properties.Settings.Default.AstrometrynetKey = value;
-                Properties.Settings.Default.Save(); 
+            get { return GlobalConfig.Instance.AstrometrynetKey; }
+            set {
+                GlobalConfig.Instance.AstrometrynetKey = value;
                 OnPropertyChanged("AstrometrynetKey"); }
         }
 
-        private string _aavsoFov;
         public string AAVSOFov
         {
-            get { return _aavsoFov; }
+            get { return GlobalConfig.Instance.AAVSOFov.ToString(); }
             set
             {
-                _aavsoFov = value;
-                _aavsoFov.Replace(",", ".");
+                value.Replace(",", ".");
                 try
                 {
-                    Properties.Settings.Default.AAVSOFov = Convert.ToDouble(value, CultureInfo.InvariantCulture);
+                    GlobalConfig.Instance.AAVSOFov = Convert.ToDouble(value, CultureInfo.InvariantCulture);
                 } catch(Exception ex)
                 {
-                    Properties.Settings.Default.AAVSOFov = 60.0;
+                    GlobalConfig.Instance.AAVSOFov = 60.0;
                 }
-                Properties.Settings.Default.Save();
                 OnPropertyChanged("AAVSOFov");
             }
         }
 
-        private string _aavsoLimitMag;
         public string AAVSOLimitMag
         {
-            get { return _aavsoLimitMag; }
+            get { return GlobalConfig.Instance.AAVSOLimitMag.ToString(); }
             set
             {
-                _aavsoLimitMag = value;
-                _aavsoLimitMag.Replace(",", ".");
+                value.Replace(",", ".");
                 try
                 {
-                    Properties.Settings.Default.AAVSOLimitMag = Convert.ToDouble(value, CultureInfo.InvariantCulture);
+                    GlobalConfig.Instance.AAVSOLimitMag = Convert.ToDouble(value, CultureInfo.InvariantCulture);
                 }
                 catch (Exception ex)
                 {
-                    Properties.Settings.Default.AAVSOLimitMag = 14.5;
+                    GlobalConfig.Instance.AAVSOLimitMag = 14.5;
                 }
-                Properties.Settings.Default.Save();
                 OnPropertyChanged("AAVSOLimitMag");
             }
         }
-
-        private string _magnificationN;
         public string MagnificationN
         {
-            get { return _magnificationN; }
+            get { return GlobalConfig.Instance.MagnificationN.ToString(); }
             set
             {
-                _magnificationN = value;
-               
                 try
                 {
-                    Properties.Settings.Default.MagnificationN = Convert.ToInt32(value);
+                    GlobalConfig.Instance.MagnificationN = Convert.ToInt32(value);
                 }
                 catch (Exception ex)
                 {
-                    Properties.Settings.Default.MagnificationN = 300;
+                    GlobalConfig.Instance.MagnificationN = 300;
                 }
-                Properties.Settings.Default.Save();
                 OnPropertyChanged("MagnificationN");
+            }
+        }
+
+        public string FilterDatabasePath
+        {
+            get { return GlobalConfig.Instance.FilterDatabasePath; }
+            set
+            {
+                try
+                {
+                    GlobalConfig.Instance.FilterDatabasePath = value;
+                }
+                catch (Exception ex)
+                {
+                    GlobalConfig.Instance.FilterDatabasePath = "";
+                }
+                OnPropertyChanged("FilterDatabasePath");
             }
         }
 
         #endregion
 
+        #region Commands
+
+        private RelayCommand _browseFilterPathCommand;
+        public ICommand BrowseFilterPathCommand
+        {
+            get
+            {
+                if (_browseFilterPathCommand == null)
+                {
+                    _browseFilterPathCommand = new RelayCommand(param => this.BrowseFilterPath(), param => this.CanBrowseFilterPath());
+                }
+                return _browseFilterPathCommand;
+            }
+        }
+
+        private bool CanBrowseFilterPath()
+        {
+            return true;
+        }
+
+        private void BrowseFilterPath()
+        {
+            // Create OpenFileDialog 
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+
+
+            dlg.ValidateNames = false;
+            dlg.CheckFileExists = false;
+            dlg.CheckPathExists = true;
+            // Always default to Folder Selection.
+            dlg.FileName = "Folder Selection.";
+            if (dlg.ShowDialog() == true)
+            {
+                string folderPath = Path.GetDirectoryName(dlg.FileName);
+                FilterDatabasePath = folderPath;
+            }
+        }
+        #endregion
+
         #region Ctor
         public SettingsViewModel()
         {
-            AstrometrynetHost = Properties.Settings.Default.AstrometrynetHost;
-            AstrometrynetKey = Properties.Settings.Default.AstrometrynetKey;
-            AAVSOFov = Properties.Settings.Default.AAVSOFov.ToString(CultureInfo.InvariantCulture);
-            AAVSOLimitMag = Properties.Settings.Default.AAVSOLimitMag.ToString(CultureInfo.InvariantCulture);
-            MagnificationN = Properties.Settings.Default.MagnificationN.ToString();
+            AstrometrynetHost = GlobalConfig.Instance.AstrometrynetHost;
+            AstrometrynetKey = GlobalConfig.Instance.AstrometrynetKey;
+            AAVSOFov = GlobalConfig.Instance.AAVSOFov.ToString(CultureInfo.InvariantCulture);
+            AAVSOLimitMag = GlobalConfig.Instance.AAVSOLimitMag.ToString(CultureInfo.InvariantCulture);
+            MagnificationN = GlobalConfig.Instance.MagnificationN.ToString();
+            FilterDatabasePath = GlobalConfig.Instance.FilterDatabasePath;
         }
 
         #endregion
