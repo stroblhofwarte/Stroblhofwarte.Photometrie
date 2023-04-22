@@ -234,6 +234,23 @@ namespace Stroblhofwarte.Image
         {
             return _imageData.GetFocalRatio();
         }
+        public double GetSensorSetTemp()
+        {
+            return _imageData.GetSensorSetTemp();
+        }
+        public double GetSensorTemp()
+        {
+            return _imageData.GetSensorTemp();
+        }
+        public double GetSensorGain()
+        {
+            return _imageData.GetSensorGain();
+        }
+
+        public double GetSensorOffset()
+        {
+            return _imageData.GetSensorOffset();
+        }
         public string GetFilter()
         {
             return _imageData.GetFilter();

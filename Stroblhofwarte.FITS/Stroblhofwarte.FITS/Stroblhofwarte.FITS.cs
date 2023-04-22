@@ -140,6 +140,30 @@ namespace Stroblhofwarte.FITS
             if (_image == null) return DateTime.MinValue;
             return _image.GetObservationTime();
         }
+
+        public double GetSensorSetTemp()
+        {
+            if (_image == null) return double.MaxValue;
+            return _image.GetSensorSetTemp();
+        }
+
+        public double GetSensorTemp()
+        {
+            if (_image == null) return double.MaxValue;
+            return _image.GetSensorTemp();
+        }
+
+        public double GetSensorGain()
+        {
+            if (_image == null) return double.MinValue;
+            return _image.GetSensorGain();
+        }
+
+        public double GetSensorOffset()
+        {
+            if (_image == null) return double.MinValue;
+            return _image.GetSensorOffset();
+        }
     }
 
     internal class HDUValue

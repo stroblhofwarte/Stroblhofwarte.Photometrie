@@ -114,6 +114,7 @@ namespace Stroblhofwarte.AperturePhotometry
             {
                 double Z = ((Zmax - Zmin) / 2.0) + Zmin;
                 double mag = Magnitude(machineMag, Z);
+                if (double.IsNaN(mag)) return -999.0;
                 if (mag == -999.0) return 0.0;
                 double diff = mag - goal;
                 if(Math.Abs(diff) < 0.01)

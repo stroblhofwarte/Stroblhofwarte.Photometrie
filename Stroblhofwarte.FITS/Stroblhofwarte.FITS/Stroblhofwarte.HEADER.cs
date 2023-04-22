@@ -92,47 +92,80 @@ namespace Stroblhofwarte.FITS
 
         public double GetExposureTime()
         {
-            throw new NotImplementedException();
+            if (_image == null) return 0.0;
+            return _image.GetExposureTime();
         }
 
         public string GetInstrument()
         {
-            throw new NotImplementedException();
+            if (_image == null) return string.Empty;
+            return _image.GetInstrument().Trim();
         }
 
         public string GetTelescope()
         {
-            throw new NotImplementedException();
+            if (_image == null) return string.Empty;
+            return _image.GetTelescope().Trim();
         }
 
         public double GetFocalLength()
         {
-            throw new NotImplementedException();
+            if (_image == null) return 0.0;
+            return _image.GetFocalLength();
         }
 
         public double GetFocalRatio()
         {
-            throw new NotImplementedException();
+            if (_image == null) return 0.0;
+            return _image.GetFocalRatio();
         }
 
         public string GetFilter()
         {
-            throw new NotImplementedException();
+            if (_image == null) return string.Empty;
+            return _image.GetFilter().Trim();
         }
 
         public string GetObject()
         {
-            throw new NotImplementedException();
+            if (_image == null) return string.Empty;
+            return _image.GetObject().Trim();
         }
 
         public DateTime GetObservationTimeUTC()
         {
-            throw new NotImplementedException();
+            if (_image == null) return DateTime.MinValue;
+            return _image.GetObservationTimeUTC();
         }
 
         public DateTime GetObservationTime()
         {
-            throw new NotImplementedException();
+            if (_image == null) return DateTime.MinValue;
+            return _image.GetObservationTime();
+        }
+
+        public double GetSensorSetTemp()
+        {
+            if (_image == null) return double.MaxValue;
+            return _image.GetSensorSetTemp();
+        }
+
+        public double GetSensorTemp()
+        {
+            if (_image == null) return double.MaxValue;
+            return _image.GetSensorTemp();
+        }
+
+        public double GetSensorGain()
+        {
+            if (_image == null) return double.MinValue;
+            return _image.GetSensorGain();
+        }
+
+        public double GetSensorOffset()
+        {
+            if (_image == null) return double.MinValue;
+            return _image.GetSensorOffset();
         }
     }
 }

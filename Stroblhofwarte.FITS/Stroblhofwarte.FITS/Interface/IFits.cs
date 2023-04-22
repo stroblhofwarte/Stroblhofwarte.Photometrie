@@ -23,6 +23,10 @@ namespace Stroblhofwarte.FITS.Interface
         string GetTelescope();
         double GetFocalLength();
         double GetFocalRatio();
+        double GetSensorSetTemp();
+        double GetSensorTemp();
+        double GetSensorGain();
+        double GetSensorOffset();
         string GetFilter();
         string GetObject();
         DateTime GetObservationTimeUTC();

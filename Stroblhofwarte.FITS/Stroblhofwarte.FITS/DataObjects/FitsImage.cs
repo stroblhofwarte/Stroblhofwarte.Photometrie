@@ -9,6 +9,7 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using static System.Net.Mime.MediaTypeNames;
 using Stroblhofwarte.FITS.Extension;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Stroblhofwarte.FITS.DataObjects
 {
@@ -73,16 +74,20 @@ namespace Stroblhofwarte.FITS.DataObjects
             try
             {
                 var rawData = BitmapData.LockBits(new Rectangle(0, 0, BitmapData.Width, BitmapData.Height),ImageLockMode.ReadWrite, BitmapData.PixelFormat);
-                int ptr = 0;
+                Int32 ptr = 0;
+                Int32 bmpPtr = 0;
                 for (int y = 0; y < height; y++)
+                {
+                    bmpPtr = y * rawData.Stride;
                     for (int x = 0; x < width; x++)
                     {
-                        short pix = (short)((double)(data[ptr] - min) * f);
-                        System.Runtime.InteropServices.Marshal.WriteInt16(rawData.Scan0, ptr*6, pix);
-                        System.Runtime.InteropServices.Marshal.WriteInt16(rawData.Scan0, ptr*6 + 2 , pix);
-                        System.Runtime.InteropServices.Marshal.WriteInt16(rawData.Scan0, ptr*6 + 4 , pix);
+                        Int16 pix = (Int16)((double)(data[ptr] - min) * f);
+                        System.Runtime.InteropServices.Marshal.WriteInt16(rawData.Scan0, bmpPtr + (x * 6), pix);
+                        System.Runtime.InteropServices.Marshal.WriteInt16(rawData.Scan0, bmpPtr + (x * 6 + 2), pix);
+                        System.Runtime.InteropServices.Marshal.WriteInt16(rawData.Scan0, bmpPtr + (x * 6 + 4), pix);
                         ptr++;
                     }
+                }
                 BitmapData.UnlockBits(rawData);
                 _isValid = true;
             } catch (Exception ex)
@@ -127,7 +132,9 @@ namespace Stroblhofwarte.FITS.DataObjects
                 {
                     try
                     {
-                        return Convert.ToDouble(card.Value, CultureInfo.InvariantCulture);
+                        string val = card.Value;
+                        if (val.EndsWith(".")) val += "0";
+                        return Convert.ToDouble(val, CultureInfo.InvariantCulture);
                     }
                     catch(Exception)
                     {
@@ -138,7 +145,9 @@ namespace Stroblhofwarte.FITS.DataObjects
                 {
                     try
                     {
-                        return Convert.ToDouble(card.Value, CultureInfo.InvariantCulture);
+                        string val = card.Value;
+                        if (val.EndsWith(".")) val += "0";
+                        return Convert.ToDouble(val, CultureInfo.InvariantCulture);
                     }
                     catch (Exception)
                     {
@@ -195,7 +204,9 @@ namespace Stroblhofwarte.FITS.DataObjects
                 {
                     try
                     {
-                        return Convert.ToDouble(card.Value, CultureInfo.InvariantCulture);
+                        string val = card.Value;
+                        if (val.EndsWith(".")) val += "0";
+                        return Convert.ToDouble(val, CultureInfo.InvariantCulture);
                     }
                     catch (Exception)
                     {
@@ -213,7 +224,9 @@ namespace Stroblhofwarte.FITS.DataObjects
                 {
                     try
                     {
-                        return Convert.ToDouble(card.Value, CultureInfo.InvariantCulture);
+                        string val = card.Value;
+                        if (val.EndsWith(".")) val += "0";
+                        return Convert.ToDouble(val, CultureInfo.InvariantCulture);
                     }
                     catch (Exception)
                     {
@@ -222,6 +235,89 @@ namespace Stroblhofwarte.FITS.DataObjects
                 }
             }
             return 0.0;
+        }
+
+        public double GetSensorSetTemp()
+        {
+            foreach (FITSHeaderCard card in _header.HeaderCards)
+            {
+                if (card.Key == "SET-TEMP")
+                {
+                    try
+                    {
+                        string val = card.Value;
+                        if (val.EndsWith(".")) val += "0";
+                        return Convert.ToDouble(val, CultureInfo.InvariantCulture);
+                    }
+                    catch (Exception)
+                    {
+                        return double.MaxValue;
+                    }
+                }
+            }
+            return double.MaxValue;
+        }
+
+        public double GetSensorTemp()
+        {
+            foreach (FITSHeaderCard card in _header.HeaderCards)
+            {
+                if (card.Key == "CCD-TEMP")
+                {
+                    try
+                    {
+                        string val = card.Value;
+                        if (val.EndsWith(".")) val += "0";
+                        return Convert.ToDouble(val, CultureInfo.InvariantCulture);
+                    }
+                    catch (Exception)
+                    {
+                        return double.MaxValue;
+                    }
+                }
+            }
+            return double.MaxValue;
+        }
+
+        public double GetSensorGain()
+        {
+            foreach (FITSHeaderCard card in _header.HeaderCards)
+            {
+                if (card.Key == "GAIN")
+                {
+                    try
+                    {
+                        string val = card.Value;
+                        if (val.EndsWith(".")) val += "0";
+                        return Convert.ToDouble(val, CultureInfo.InvariantCulture);
+                    }
+                    catch (Exception)
+                    {
+                        return int.MinValue;
+                    }
+                }
+            }
+            return int.MinValue;
+        }
+        public double GetSensorOffset()
+        {
+            foreach (FITSHeaderCard card in _header.HeaderCards)
+            {
+                if (card.Key == "OFFSET")
+                {
+                    try
+                    {
+                        string val = card.Value;
+                        if (val.EndsWith(".")) val += "0";
+                        return Convert.ToDouble(val, CultureInfo.InvariantCulture);
+                    }
+                    catch (Exception)
+                    {
+                        return int.MinValue;
+                    }
+                }
+            }
+            return int.MinValue;
         }
         public string GetFilter()
         {

@@ -37,7 +37,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                     bitmapimage.BeginInit();
                     bitmapimage.StreamSource = memory;
                     bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
-                    //bitmapimage.DecodePixelWidth = _fitsImage.Width();
+                    bitmapimage.DecodePixelWidth = StroblhofwarteImage.Instance.Width;
                     bitmapimage.EndInit();
 
                     return bitmapimage;

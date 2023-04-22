@@ -7,12 +7,12 @@
         xmlns:local="clr-namespace:Stroblhofwarte.Photometrie.Dialogs"
         xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
         mc:Ignorable="d"
-        Title="DialogInstrumentView" Height="648" Width="940">
+        Title="DialogInstrumentView" Height="648" Width="943">
     <Grid>
-        <ListView Margin="0,0,0,86">
+        <ListView Margin="0,0,0,86" ItemsSource="{Binding InstrumentsList}">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Instrument" DisplayMemberBinding="{Binding AAVSOName}" Width="130" />
+                    <GridViewColumn Header="Instrument" DisplayMemberBinding="{Binding Instrument}" Width="130" />
                     <GridViewColumn Width="100">
                         <GridViewColumn.Header>
                             <TextBlock Text="CAMERA GAIN" />
@@ -22,20 +22,33 @@
                                 <TextBox
                                     Width="80"  
                                     HorizontalAlignment="Center"
-                                    Text="{Binding Path=Filter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    Text="{Binding Path=Gain, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="150">
+                        <GridViewColumn.Header>
+                            <TextBlock Text="CAMERA OFFSET [ADU]" />
+                        </GridViewColumn.Header>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox
+                                    Width="130"  
+                                    HorizontalAlignment="Center"
+                                    Text="{Binding Path=Offset, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn Width="110">
                         <GridViewColumn.Header>
-                            <TextBlock Text="CAMERA OFFSET" />
+                            <TextBlock Text="SENSOR SET TEMP." />
                         </GridViewColumn.Header>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBox
                                     Width="90"  
                                     HorizontalAlignment="Center"
-                                    Text="{Binding Path=Filter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    Text="{Binding Path=SetTemp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -48,7 +61,7 @@
                                 <TextBox
                                     Width="80"  
                                     HorizontalAlignment="Center"
-                                    Text="{Binding Path=Filter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    Text="{Binding Path=Gain_e_ADU, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -61,7 +74,7 @@
                                 <TextBox
                                     Width="130"  
                                     HorizontalAlignment="Center"
-                                    Text="{Binding Path=Filter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    Text="{Binding Path=ReadoutNoise, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -74,20 +87,7 @@
                                 <TextBox
                                     Width="130"  
                                     HorizontalAlignment="Center"
-                                    Text="{Binding Path=Filter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Width="150">
-                        <GridViewColumn.Header>
-                            <TextBlock Text="ZERO POINT [ADU]" />
-                        </GridViewColumn.Header>
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBox
-                                    Width="130"  
-                                    HorizontalAlignment="Center"
-                                    Text="{Binding Path=Filter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    Text="{Binding Path=DarkCurrent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -95,7 +95,7 @@
             </ListView.View>
         </ListView>
         <Button Width="55"
-        Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding OpenCommand}" Height="55" VerticalAlignment="Bottom" HorizontalAlignment="Left" ToolTip="Switch Coordinates Grid on or off" Margin="9,0,0,9">
+        Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding SaveCommand}" Height="55" VerticalAlignment="Bottom" HorizontalAlignment="Left" ToolTip="Switch Coordinates Grid on or off" Margin="9,0,0,9">
             <StackPanel Orientation="Vertical">
                 <icon:PackIconMaterial Width="30" Height="30" Kind="ContentSaveOutline" HorizontalAlignment="Center"/>
             </StackPanel>
