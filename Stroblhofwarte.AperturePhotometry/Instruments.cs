@@ -72,10 +72,10 @@ namespace Stroblhofwarte.AperturePhotometry
                         Instrument = fields[0],
                         Gain = Convert.ToInt32(fields[1]),
                         Offset = Convert.ToInt32(fields[2]),
-                        SetTemp = Convert.ToDouble(fields[3]),
-                        Gain_e_ADU = Convert.ToDouble(fields[4]),
-                        ReadOutNoise = Convert.ToDouble(fields[5]),
-                        DarkCurrent = Convert.ToDouble(fields[6])
+                        SetTemp = Convert.ToDouble(fields[3], CultureInfo.InvariantCulture),
+                        Gain_e_ADU = Convert.ToDouble(fields[4], CultureInfo.InvariantCulture),
+                        ReadOutNoise = Convert.ToDouble(fields[5], CultureInfo.InvariantCulture),
+                        DarkCurrent = Convert.ToDouble(fields[6], CultureInfo.InvariantCulture)
                     };
                     if(!_hashCache.ContainsKey(Hash(obj)))
                     {

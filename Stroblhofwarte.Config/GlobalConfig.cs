@@ -30,6 +30,7 @@ namespace Stroblhofwarte.Config
             set
             {
                 Stroblhofwarte.Config.Settings.Default.AstrometrynetHost = value;
+                Stroblhofwarte.Config.Settings.Default.Save();
             }
         }
 
@@ -39,6 +40,7 @@ namespace Stroblhofwarte.Config
             set
             {
                 Stroblhofwarte.Config.Settings.Default.AstrometrynetKey = value;
+                Stroblhofwarte.Config.Settings.Default.Save();
             }
         }
 
@@ -48,6 +50,7 @@ namespace Stroblhofwarte.Config
             set
             {
                 Stroblhofwarte.Config.Settings.Default.AAVSOFov = value;
+                Stroblhofwarte.Config.Settings.Default.Save();
             }
         }
 
@@ -57,6 +60,7 @@ namespace Stroblhofwarte.Config
             set
             {
                 Stroblhofwarte.Config.Settings.Default.AAVSOLimitMag = value;
+                Stroblhofwarte.Config.Settings.Default.Save();
             }
         }
 
@@ -66,6 +70,7 @@ namespace Stroblhofwarte.Config
             set
             {
                 Stroblhofwarte.Config.Settings.Default.MagnificationN = value;
+                Stroblhofwarte.Config.Settings.Default.Save();
             }
         }
         public string FilterDatabasePath
@@ -74,6 +79,7 @@ namespace Stroblhofwarte.Config
             set
             {
                 Stroblhofwarte.Config.Settings.Default.FilterDatabasePath = value;
+                Stroblhofwarte.Config.Settings.Default.Save();
             }
         }
 
