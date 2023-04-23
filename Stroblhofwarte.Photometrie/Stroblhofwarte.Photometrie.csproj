@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <None Remove="circle.gif" />
+    <None Remove="splash.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,6 +38,10 @@
 
   <ItemGroup>
     <Resource Include="circle.gif" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <SplashScreen Include="splash.png" />
   </ItemGroup>
 
   <ItemGroup>
