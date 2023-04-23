@@ -10,6 +10,7 @@ namespace Stroblhofwarte.VSPAPI.Data
     {
         #region Properties
 
+        public string ChartId { get; set; }
         public Star Var { get; private set; }
         public List<Star> ReferenceStars { get; private set; }
 

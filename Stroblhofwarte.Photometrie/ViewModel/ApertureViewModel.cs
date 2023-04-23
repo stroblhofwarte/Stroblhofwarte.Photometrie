@@ -196,8 +196,20 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 OnPropertyChanged("VarErrorStr");
             }
         }
-
         public string VarErrorStr { get { return _varError.ToString("0.#####", CultureInfo.InvariantCulture); } }
+        private double _compError;
+        public double CompError
+        {
+            get { return _compError; }
+            set
+            {
+                _compError = value;
+                OnPropertyChanged("CompError");
+                OnPropertyChanged("CompErrorStr");
+            }
+        }
+
+        public string CompErrorStr { get { return _compError.ToString("0.#####", CultureInfo.InvariantCulture); } }
 
         private double _compMag;
         public double CompMag
@@ -239,7 +251,8 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 VarMag = measure.Magnitude(_measVar, Z);
                 CheckMag = measure.Magnitude(_measCheck, Z);
                 CompMag = measure.Magnitude(_measComp, Z);
-                VarError = CheckMag - (double)(CheckReferenceMag);
+                VarError = measure.Uncertenty(_measVar);
+                CompError = measure.Uncertenty(_measComp);
                 OnPropertyChanged("ReferenceMag");
             }
         }
@@ -554,7 +567,8 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         {
             AAVSOExtendedFileFormat.Instance.Add(StarDataRelay.Instance.Name,
                 StroblhofwarteImage.Instance.GetJD().ToString(CultureInfo.InvariantCulture),
-                VarMag.ToString("0.##", CultureInfo.InvariantCulture), "na",
+                VarMag.ToString("0.##", CultureInfo.InvariantCulture), 
+                VarError.ToString("0.####", CultureInfo.InvariantCulture),
                 Stroblhofwarte.AperturePhotometry.Filter.Instance.TranslateToAAVSOFilter(StroblhofwarteImage.Instance.GetFilter()),
                 "NO",
                 "STD",
@@ -564,7 +578,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 StarDataRelay.Instance.CheckMag.ToString(CultureInfo.InvariantCulture),
                 "na",
                 "na",
-                "na",
+                StarDataRelay.Instance.ChartId,
                 "na");
             PhotoState = enumPhotoState.VAR;
 

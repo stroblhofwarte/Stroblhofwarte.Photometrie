@@ -34,6 +34,7 @@ namespace Stroblhofwarte.VSPAPI
                 json["auid"].ToString(), 
                 json["fov"].ToString(), 
                 json["maglimit"].ToString()));
+            varStar.ChartId = json["chartid"].ToString();
 
             var references = json["photometry"];
             foreach(var refstar in references)

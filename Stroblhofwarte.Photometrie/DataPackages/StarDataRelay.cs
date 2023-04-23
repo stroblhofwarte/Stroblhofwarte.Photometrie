@@ -102,5 +102,19 @@ namespace Stroblhofwarte.Photometrie.DataPackages
             get { return _name; }
         }
 
+        private string _chartId;
+        public string ChartId
+        {
+            set
+            {
+                _chartId = value;
+                if (StarChanged != null)
+                {
+                    StarChanged(this, null);
+                }
+            }
+            get { return _chartId; }
+        }
+
     }
 }

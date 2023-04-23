@@ -98,6 +98,34 @@ namespace Stroblhofwarte.AperturePhotometry
             return SoftApertureMagnitude;
         }
 
+        public double Uncertenty(MeasurementResult meas)
+        {
+            double SoftApertureSigma = 0.0;
+            if (meas == null) return 999.0;
+            InstrumentObject instr = Instruments.Instance.Get(StroblhofwarteImage.Instance.GetInstrument(),
+                (int)StroblhofwarteImage.Instance.GetSensorGain(),
+                (int)StroblhofwarteImage.Instance.GetSensorOffset(),
+                StroblhofwarteImage.Instance.GetSensorSetTemp());
+            if (instr == null) return 999.0;
+            double Nsky = instr.Gain_e_ADU * (meas.SkyADU / meas.SkyPixels);
+            double Ndark = instr.DarkCurrent;
+            double Nron2 = instr.ReadOutNoise * instr.ReadOutNoise;
+            double PixRatio = 1 + (meas.StarPixels / meas.SkyPixels);
+            double Gsig2 = (0.289 * instr.Gain_e_ADU) * (0.289 * instr.Gain_e_ADU);
+            
+            double NStarMinusSkyElectrons = instr.Gain_e_ADU * (meas.StarPixels * ((meas.StarADU / meas.StarPixels) - (meas.SkyADU / meas.SkyPixels)));
+            double NoiseRMSElectrons = Math.Sqrt(NStarMinusSkyElectrons + meas.StarPixels * PixRatio * (Nsky + Ndark + Nron2 + Gsig2));
+            if(NoiseRMSElectrons > 0)
+            {
+                double Snr = NStarMinusSkyElectrons / NoiseRMSElectrons;
+                if(Snr > 1.11)
+                {
+                    SoftApertureSigma = 2.5 * Math.Log10(1 / (1 - 1 / Snr)) / 2.302585;
+                }
+            }
+            return SoftApertureSigma;
+        }
+
         private int DataPtr(int x, int y)
         {
             return (y * ((_searchRadius * 2) + 4)) + x;

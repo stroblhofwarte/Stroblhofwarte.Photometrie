@@ -279,6 +279,8 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                     StarDataRelay.Instance.CompName = (o as Stroblhofwarte.Photometrie.ViewModel.ReferenceStar).AUID;
                 else
                     StarDataRelay.Instance.CompName = (o as Stroblhofwarte.Photometrie.ViewModel.ReferenceStar).Name;
+
+                StarDataRelay.Instance.ChartId = _varStar.ChartId;
             }
         }
 
