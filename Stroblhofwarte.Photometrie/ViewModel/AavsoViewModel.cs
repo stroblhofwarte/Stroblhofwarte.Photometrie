@@ -2,6 +2,7 @@
 using Stroblhofwarte.FITS;
 using Stroblhofwarte.FITS.DataObjects;
 using Stroblhofwarte.Image;
+using Stroblhofwarte.Photometrie.DataPackages;
 using Stroblhofwarte.Photometrie.Dialogs;
 using Stroblhofwarte.VSPAPI;
 using Stroblhofwarte.VSPAPI.Data;
@@ -111,6 +112,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             set
             {
                 _name = value;
+                StarDataRelay.Instance.Name = _name;
                 OnPropertyChanged("Name");
             }
         }
@@ -248,6 +250,66 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
             });
 
+        }
+
+        private RelayCommand commandAddCompStar;
+        public ICommand CommandAddCompStar
+        {
+            get
+            {
+                if (commandAddCompStar == null)
+                {
+                    commandAddCompStar = new RelayCommand(param => this.AddCompStar(param), param => this.CanAddCompStar());
+                }
+                return commandAddCompStar;
+            }
+        }
+
+        private bool CanAddCompStar()
+        {
+            return true;
+        }
+
+        private void AddCompStar(object o)
+        {
+            if(o is Stroblhofwarte.Photometrie.ViewModel.ReferenceStar)
+            {
+                StarDataRelay.Instance.CompMag = (o as Stroblhofwarte.Photometrie.ViewModel.ReferenceStar).MAG;
+                if ((o as Stroblhofwarte.Photometrie.ViewModel.ReferenceStar).AUID != String.Empty)
+                    StarDataRelay.Instance.CompName = (o as Stroblhofwarte.Photometrie.ViewModel.ReferenceStar).AUID;
+                else
+                    StarDataRelay.Instance.CompName = (o as Stroblhofwarte.Photometrie.ViewModel.ReferenceStar).Name;
+            }
+        }
+
+        private RelayCommand commandAddCheckStar;
+        public ICommand CommandAddCheckStar
+        {
+            get
+            {
+                if (commandAddCheckStar == null)
+                {
+                    commandAddCheckStar = new RelayCommand(param => this.AddCheckStar(param), param => this.CanAddCheckStar());
+                }
+                return commandAddCheckStar;
+            }
+        }
+
+        private bool CanAddCheckStar()
+        {
+            return true;
+        }
+
+        private void AddCheckStar(object o)
+        {
+            if (o is Stroblhofwarte.Photometrie.ViewModel.ReferenceStar)
+            {
+                StarDataRelay.Instance.CheckMag = (o as Stroblhofwarte.Photometrie.ViewModel.ReferenceStar).MAG;
+                if ((o as Stroblhofwarte.Photometrie.ViewModel.ReferenceStar).AUID != String.Empty)
+                    StarDataRelay.Instance.CheckName = (o as Stroblhofwarte.Photometrie.ViewModel.ReferenceStar).AUID;
+                else
+                    StarDataRelay.Instance.CheckName = (o as Stroblhofwarte.Photometrie.ViewModel.ReferenceStar).Name;
+            }
         }
         #endregion
 

@@ -106,6 +106,7 @@
         <Label Content="{Binding CompMagStr}" HorizontalAlignment="Left" Margin="290,0,0,120" Foreground="#FFADADAD" Height="26" VerticalAlignment="Bottom"/>
         <TextBox HorizontalAlignment="Left" Margin="367,0,0,120" TextWrapping="Wrap" Text="{Binding CheckReferenceMag}" Width="61" Height="26" VerticalAlignment="Bottom" ToolTip="Enter reference magnitude in m*10, e.g. 10.5 -&gt; 105"/>
         <Label Content="m" HorizontalAlignment="Left" Margin="428,0,0,130" Foreground="#FFADADAD" Height="26" VerticalAlignment="Bottom" FontSize="9"/>
+        <Button Content="Report" Command="{Binding CommandReport}" HorizontalAlignment="Left" Margin="520,0,0,119" Height="27" VerticalAlignment="Bottom"/>
 
     </Grid>
 </UserControl>

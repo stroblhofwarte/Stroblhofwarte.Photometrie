@@ -20,5 +20,11 @@
     <Setting Name="FilterDatabasePath" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="OBSCODE" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="OBSTYPE" Type="System.String" Scope="User">
+      <Value Profile="(Default)">CCD</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

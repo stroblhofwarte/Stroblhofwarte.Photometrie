@@ -98,6 +98,40 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
             }
         }
 
+        public string OBSCODE
+        {
+            get { return GlobalConfig.Instance.OBSCODE; }
+            set
+            {
+                try
+                {
+                    GlobalConfig.Instance.OBSCODE = value;
+                }
+                catch (Exception ex)
+                {
+                    GlobalConfig.Instance.OBSCODE = "";
+                }
+                OnPropertyChanged("OBSCODE");
+            }
+        }
+
+        public string OBSTYPE
+        {
+            get { return GlobalConfig.Instance.OBSTYPE; }
+            set
+            {
+                try
+                {
+                    GlobalConfig.Instance.OBSTYPE = value;
+                }
+                catch (Exception ex)
+                {
+                    GlobalConfig.Instance.OBSTYPE = "";
+                }
+                OnPropertyChanged("OBSTYPE");
+            }
+        }
+
         #endregion
 
         #region Commands

@@ -27,6 +27,20 @@
                     <GridViewColumn Header="AUID" DisplayMemberBinding="{Binding AUID}" Width="120"/>
                     <GridViewColumn Header="Position" DisplayMemberBinding="{Binding Coor}" Width="250"/>
                     <GridViewColumn Header="Magnitude" DisplayMemberBinding="{Binding MAG}" Width="80"/>
+                    <GridViewColumn Header="Comp" Width="50">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button  Content="C" Command="{Binding Path=DataContext.CommandAddCompStar, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" CommandParameter="{Binding}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Chk." Width="50">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button  Content="K" Command="{Binding Path=DataContext.CommandAddCheckStar, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" CommandParameter="{Binding}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                     <GridViewColumn Header="Comment" DisplayMemberBinding="{Binding Comment}" Width="300"/>
                 </GridView>
             </ListView.View>

@@ -15,6 +15,8 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using static System.Net.WebRequestMethods;
+using Stroblhofwarte.Photometrie.DataPackages;
+using Stroblhofwarte.Photometrie.FileFormats;
 
 namespace Stroblhofwarte.Photometrie.ViewModel
 {
@@ -527,6 +529,48 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             OnPropertyChanged("ImageSource");
         }
         #endregion
+
+        #region commandReport
+        private RelayCommand commandReport;
+        public ICommand CommandReport
+        {
+            get
+            {
+                if (commandReport == null)
+                {
+                    commandReport = new RelayCommand(param => this.Report(), param => this.CanReport());
+                }
+                return commandReport;
+            }
+        }
+
+        private bool CanReport()
+        {
+            if (PhotoState == enumPhotoState.CHECK) return true;
+            return false;
+        }
+
+        private void Report()
+        {
+            AAVSOExtendedFileFormat.Instance.Add(StarDataRelay.Instance.Name,
+                StroblhofwarteImage.Instance.GetJD().ToString(CultureInfo.InvariantCulture),
+                VarMag.ToString("0.##", CultureInfo.InvariantCulture), "na",
+                Stroblhofwarte.AperturePhotometry.Filter.Instance.TranslateToAAVSOFilter(StroblhofwarteImage.Instance.GetFilter()),
+                "NO",
+                "STD",
+                StarDataRelay.Instance.CompName,
+                StarDataRelay.Instance.CompMag.ToString(CultureInfo.InvariantCulture),
+                StarDataRelay.Instance.CheckName,
+                StarDataRelay.Instance.CheckMag.ToString(CultureInfo.InvariantCulture),
+                "na",
+                "na",
+                "na",
+                "na");
+            PhotoState = enumPhotoState.VAR;
+
+
+        }
+        #endregion
         #region ctor
 
         public ApertureViewModel()
@@ -536,6 +580,18 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             AutoCentroid = true;
             PhotoState = enumPhotoState.VAR;
             Z = 21.1;
+            StarDataRelay.Instance.CheckStarChanged += Instance_CheckStarChanged;
+            StarDataRelay.Instance.CompStarChanged += Instance_CompStarChanged;
+        }
+
+        private void Instance_CompStarChanged(object? sender, EventArgs e)
+        {
+            ReferenceMag = StarDataRelay.Instance.CompMag;
+        }
+
+        private void Instance_CheckStarChanged(object? sender, EventArgs e)
+        {
+            CheckReferenceMag = StarDataRelay.Instance.CheckMag;
         }
 
         private void Instance_NewImageLoaded(object? sender, EventArgs e)

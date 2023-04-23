@@ -83,6 +83,26 @@ namespace Stroblhofwarte.Config
             }
         }
 
+        public string OBSCODE
+        {
+            get { return Stroblhofwarte.Config.Settings.Default.OBSCODE; }
+            set
+            {
+                Stroblhofwarte.Config.Settings.Default.OBSCODE = value;
+                Stroblhofwarte.Config.Settings.Default.Save();
+            }
+        }
+
+        public string OBSTYPE
+        {
+            get { return Stroblhofwarte.Config.Settings.Default.OBSTYPE; }
+            set
+            {
+                Stroblhofwarte.Config.Settings.Default.OBSTYPE = value;
+                Stroblhofwarte.Config.Settings.Default.Save();
+            }
+        }
+
         #endregion
         #region Ctor
 

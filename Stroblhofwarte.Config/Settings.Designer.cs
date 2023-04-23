@@ -94,5 +94,29 @@ namespace Stroblhofwarte.Config {
                 this["FilterDatabasePath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string OBSCODE {
+            get {
+                return ((string)(this["OBSCODE"]));
+            }
+            set {
+                this["OBSCODE"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("CCD")]
+        public string OBSTYPE {
+            get {
+                return ((string)(this["OBSTYPE"]));
+            }
+            set {
+                this["OBSTYPE"] = value;
+            }
+        }
     }
 }

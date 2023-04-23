@@ -19,6 +19,35 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        
+        <ListView ItemsSource="{Binding Values}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Del." Width="40">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button  Content="X" Command="{Binding Path=DataContext.CommandDel, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" CommandParameter="{Binding}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="NAME" DisplayMemberBinding="{Binding NAME}" Width="50" />
+                    <GridViewColumn Header="DATE" DisplayMemberBinding="{Binding DATE}" Width="50" />
+                    <GridViewColumn Header="MAG" DisplayMemberBinding="{Binding MAG}" Width="50" />
+                    <GridViewColumn Header="MERR" DisplayMemberBinding="{Binding MERR}" Width="50" />
+                    <GridViewColumn Header="FILT" DisplayMemberBinding="{Binding FILT}" Width="50" />
+                    <GridViewColumn Header="TRANS" DisplayMemberBinding="{Binding TRANS}" Width="50" />
+                    <GridViewColumn Header="MTYPE" DisplayMemberBinding="{Binding MTYPE}" Width="50" />
+                    <GridViewColumn Header="CNAME" DisplayMemberBinding="{Binding CNAME}" Width="50" />
+                    <GridViewColumn Header="CMAG" DisplayMemberBinding="{Binding CMAG}" Width="50" />
+                    <GridViewColumn Header="KNAME" DisplayMemberBinding="{Binding KNAME}" Width="50" />
+                    <GridViewColumn Header="KMAG" DisplayMemberBinding="{Binding KMAG}" Width="50" />
+                    <GridViewColumn Header="AMASS" DisplayMemberBinding="{Binding AMASS}" Width="50" />
+                    <GridViewColumn Header="GROUP" DisplayMemberBinding="{Binding GROUP}" Width="50" />
+                    <GridViewColumn Header="CHART" DisplayMemberBinding="{Binding CHART}" Width="50" />
+                    <GridViewColumn Header="NOTES" DisplayMemberBinding="{Binding NOTES}" Width="250" />
+                    <GridViewColumn Header="ID" DisplayMemberBinding="{Binding ID}" Width="250" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+
     </Grid>
 </UserControl>
