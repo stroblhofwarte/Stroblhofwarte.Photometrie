@@ -63,6 +63,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 _values.Add(l);
             }
             AAVSOExtendedFileFormat.Instance.DatabaseChanged += Instance_DatabaseChanged;
+            ContentId = "ReportViewModel";
         }
 
         private void Instance_DatabaseChanged(object? sender, EventArgs e)

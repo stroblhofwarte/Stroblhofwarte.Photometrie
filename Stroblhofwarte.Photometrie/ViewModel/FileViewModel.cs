@@ -261,6 +261,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         public FileViewModel()
         {
             _files = new ObservableCollection<FitsFileModel>();
+            ContentId = "FileViewModel";
         }
 
         #endregion

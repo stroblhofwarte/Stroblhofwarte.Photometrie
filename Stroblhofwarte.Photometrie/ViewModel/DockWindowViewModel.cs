@@ -70,11 +70,29 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         }
       }
     }
-    #endregion
+        #endregion
 
-    #endregion
+        #region ContentId
 
-    public DockWindowViewModel()
+        private string _contentId = null;
+        public string ContentId
+        {
+            get { return _contentId; }
+            set
+            {
+                if (_contentId != value)
+                {
+                    _contentId = value;
+                    OnPropertyChanged("ContentId");
+                }
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        public DockWindowViewModel()
     {
       this.CanClose = true;
       this.IsClosed = false;

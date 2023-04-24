@@ -321,6 +321,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         {
             _refStars = new ObservableCollection<ReferenceStar>();
             StroblhofwarteImage.Instance.NewImageLoaded += Instance_NewImageLoaded;
+            ContentId = "AavsoViewModel";
         }
 
         private void Instance_NewImageLoaded(object? sender, EventArgs e)

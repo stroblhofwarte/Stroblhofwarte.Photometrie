@@ -17,46 +17,52 @@ namespace Stroblhofwarte.VSPAPI
 
         public async Task<VariableStar> GetAAVSOData(string name, string fov, string maglimit)
         {
-            AAVSOChartRequestParameter p = new AAVSOChartRequestParameter();
-            p.Star = name;
-            p.Fov = fov;
-            p.Maglimit = maglimit;
-
-            string jsonStr = RESTRequest(p);
-            JObject json = JObject.Parse(jsonStr);
-            if (json["error"] != null)
+            try
             {
-                return null;
-            }
-            VariableStar varStar = new VariableStar(new Star(json["ra"].ToString(), 
-                json["dec"].ToString(), 
-                json["star"].ToString(), 
-                json["auid"].ToString(), 
-                json["fov"].ToString(), 
-                json["maglimit"].ToString()));
-            varStar.ChartId = json["chartid"].ToString();
+                AAVSOChartRequestParameter p = new AAVSOChartRequestParameter();
+                p.Star = name;
+                p.Fov = fov;
+                p.Maglimit = maglimit;
 
-            var references = json["photometry"];
-            foreach(var refstar in references)
-            {
-                Star refStar = new Star(refstar["ra"].ToString(),
-                refstar["dec"].ToString(),
-                refstar["label"].ToString(),
-                refstar["auid"].ToString(), 
-                "", 
-                "");
-                refStar.Comment = refstar["comments"].ToString();
-                var bands = refstar["bands"];
-                foreach (var item in bands)
+                string jsonStr = RESTRequest(p);
+                JObject json = JObject.Parse(jsonStr);
+                if (json["error"] != null)
                 {
-                    Mag band = new Mag(item["band"].ToString(),
-                        item["mag"].ToString(),
-                        item["error"].ToString());
-                    refStar.AddMagnitude(band);
+                    return null;
                 }
-                varStar.AddReferenceStar(refStar);
+                VariableStar varStar = new VariableStar(new Star(json["ra"].ToString(),
+                    json["dec"].ToString(),
+                    json["star"].ToString(),
+                    json["auid"].ToString(),
+                    json["fov"].ToString(),
+                    json["maglimit"].ToString()));
+                varStar.ChartId = json["chartid"].ToString();
+
+                var references = json["photometry"];
+                foreach (var refstar in references)
+                {
+                    Star refStar = new Star(refstar["ra"].ToString(),
+                    refstar["dec"].ToString(),
+                    refstar["label"].ToString(),
+                    refstar["auid"].ToString(),
+                    "",
+                    "");
+                    refStar.Comment = refstar["comments"].ToString();
+                    var bands = refstar["bands"];
+                    foreach (var item in bands)
+                    {
+                        Mag band = new Mag(item["band"].ToString(),
+                            item["mag"].ToString(),
+                            item["error"].ToString());
+                        refStar.AddMagnitude(band);
+                    }
+                    varStar.AddReferenceStar(refStar);
+                }
+                return varStar;
+            } catch (Exception ex)
+            {
+                return new VariableStar();
             }
-            return varStar;
         }
 
         public async Task<VariableStar> GetAAVSOData(double ra, double dec, string fov, string maglimit)

@@ -45,6 +45,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         public MagnificationViewModel()
         {
             StroblhofwarteImage.Instance.NewCursorPosition += Instance_NewCursorPosition;
+            ContentId = "MagnificationViewModel";
         }
 
         private void Instance_NewCursorPosition(object? sender, EventArgs e)

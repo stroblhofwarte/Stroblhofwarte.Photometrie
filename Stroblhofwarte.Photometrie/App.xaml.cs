@@ -19,11 +19,11 @@ namespace Stroblhofwarte.Photometrie
             /* create the window */
             var mainWindow = new MainWindow();
             this.MainWindow = mainWindow;
-            mainWindow.Show();
 
             /* attach the mainViewModel */
             var mainViewModel = new MainViewModel();
             mainWindow.DataContext = mainViewModel;
+            mainWindow.Show();
         }
     }
 }

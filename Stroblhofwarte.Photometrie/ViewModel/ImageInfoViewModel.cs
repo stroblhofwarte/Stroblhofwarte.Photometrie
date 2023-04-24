@@ -37,6 +37,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         {
             Info = new ObservableCollection<ImageInfoEntry>();
             StroblhofwarteImage.Instance.NewImageLoaded += Instance_NewImageLoaded;
+            ContentId = "ImageInfoViewModel";
         }
 
         private void Instance_NewImageLoaded(object? sender, EventArgs e)

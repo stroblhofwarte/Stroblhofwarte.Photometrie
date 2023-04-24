@@ -10,6 +10,7 @@
         xmlns:dock="https://github.com/Dirkster99/AvalonDock"
         xmlns:dockctrl="clr-namespace:AvalonDock.Controls;assembly=AvalonDock"
         xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:AVBehav="clr-namespace:Stroblhofwarte.Photometrie.Behavior"
         mc:Ignorable="d"
         Title="MainWindow" Height="768" Width="1024"
         >
@@ -36,10 +37,14 @@
                 <icon:PackIconFeatherIcons Width="20" Height="20" Kind="Settings" HorizontalAlignment="Center" ToolTip="Application settings"/>
             </StackPanel>
         </Button>
-        <dock:DockingManager Grid.Row="1"
+
+        <dock:DockingManager Grid.Row="1" x:Name="dockManager"
                          DataContext="{Binding DockManagerViewModel}"
                          DocumentsSource="{Binding Documents}"
-                         AnchorablesSource="{Binding Anchorables}" Margin="0,48,0,0" >
+                         AnchorablesSource="{Binding Anchorables}" Margin="0,48,0,0" 
+                    
+                         AVBehav:AvalonDockLayoutSerializer.LoadLayoutCommand="{Binding LoadLayoutCommand}"
+                         AVBehav:AvalonDockLayoutSerializer.SaveLayoutCommand="{Binding SaveLayoutCommand}">
             <dock:DockingManager.Theme>
                 <dock:Vs2013DarkTheme>
 
@@ -82,6 +87,7 @@
                     <Setter Property="Title" Value="{Binding Model.Title}" />
                     <Setter Property="CloseCommand" Value="{Binding Model.CloseCommand}" />
                     <Setter Property="CanClose" Value="{Binding Model.CanClose}" />
+                    <Setter Property="ContentId" Value="{Binding Model.ContentId}" />
                 </Style>
             </dock:DockingManager.LayoutItemContainerStyle>
 

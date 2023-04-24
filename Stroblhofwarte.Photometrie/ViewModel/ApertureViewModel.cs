@@ -596,6 +596,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             Z = 21.1;
             StarDataRelay.Instance.CheckStarChanged += Instance_CheckStarChanged;
             StarDataRelay.Instance.CompStarChanged += Instance_CompStarChanged;
+            ContentId = "ApertureViewModel";
         }
 
         private void Instance_CompStarChanged(object? sender, EventArgs e)

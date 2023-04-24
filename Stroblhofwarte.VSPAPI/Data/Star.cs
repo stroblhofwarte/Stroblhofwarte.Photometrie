@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Stroblhofwarte.VSPAPI.Data
 {
@@ -35,6 +36,15 @@ namespace Stroblhofwarte.VSPAPI.Data
 
         #region Ctor
 
+        public Star()
+        {
+            Magnitudes = new List<Mag>();
+            StarCoordinates = new Coordinates(0, 0, Epoch.B1950, Coordinates.RAType.Hours);
+            Name = string.Empty;
+            Auid = string.Empty;
+            Fov = double.NaN;
+            Maglimit = double.NaN;
+        }
         public Star(string ra, string dec, string name, string auid, string fov, string maglimit)
         {
             Magnitudes = new List<Mag>();

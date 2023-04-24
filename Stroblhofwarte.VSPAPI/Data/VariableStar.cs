@@ -24,6 +24,12 @@ namespace Stroblhofwarte.VSPAPI.Data
             ReferenceStars = new List<Star>();
         }
 
+        public VariableStar()
+        {
+            Var = new Star();
+            ReferenceStars = new List<Star>();
+        }
+
         #endregion
 
         public void AddReferenceStar(Star star)
