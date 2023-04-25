@@ -10,6 +10,7 @@ using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Windows.Shapes;
 using static System.Net.WebRequestMethods;
 
 namespace Stroblhofwarte.Photometrie.FileFormats
@@ -52,18 +53,28 @@ namespace Stroblhofwarte.Photometrie.FileFormats
             Header = new AAVSOHeader() { OBSCODE = Stroblhofwarte.Config.GlobalConfig.Instance.OBSCODE, OBSTYPE = Stroblhofwarte.Config.GlobalConfig.Instance.OBSTYPE };
             Load();
         }
+
+        public AAVSOExtendedFileFormat(string filename)
+        {
+            Header = new AAVSOHeader() { OBSCODE = Stroblhofwarte.Config.GlobalConfig.Instance.OBSCODE, OBSTYPE = Stroblhofwarte.Config.GlobalConfig.Instance.OBSTYPE };
+            Load(filename);
+        }
         #endregion
 
         public bool Load()
         {
+            return Load(FILENAME);
+        }
+
+        public bool Load(string filename)
+        {
             try
             {
-
+                string path = filename;
                 Values = new List<AAVSOList>();
-                string filename = FILENAME;
                 if (Stroblhofwarte.Config.GlobalConfig.Instance.FilterDatabasePath != string.Empty)
-                    filename = Stroblhofwarte.Config.GlobalConfig.Instance.FilterDatabasePath + "\\" + FILENAME;
-                string[] lines = System.IO.File.ReadAllLines(filename);
+                    path = Stroblhofwarte.Config.GlobalConfig.Instance.FilterDatabasePath + "\\" + filename;
+                string[] lines = System.IO.File.ReadAllLines(path);
 
                 foreach (string line in lines)
                 {
@@ -99,12 +110,17 @@ namespace Stroblhofwarte.Photometrie.FileFormats
 
         public bool Save()
         {
+            return Save(FILENAME);
+        }
+
+        public bool Save(string filename)
+        {
             try
             {
-                string filename = FILENAME;
+                string path = filename;
                 if (Stroblhofwarte.Config.GlobalConfig.Instance.FilterDatabasePath != string.Empty)
-                    filename = Stroblhofwarte.Config.GlobalConfig.Instance.FilterDatabasePath + "\\" + FILENAME;
-                using (StreamWriter writetext = new StreamWriter(filename))
+                    path = Stroblhofwarte.Config.GlobalConfig.Instance.FilterDatabasePath + "\\" + filename;
+                using (StreamWriter writetext = new StreamWriter(path))
                 {
                     writetext.WriteLine("#TYPE=" + Header.TYPE);
                     writetext.WriteLine("#OBSCODE=" + Header.OBSCODE);
