@@ -22,11 +22,9 @@ namespace Stroblhofwarte.Photometrie
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
-        private Window _workAroundForMissingUnloadEvent;
         public MainWindow()
         {
             InitializeComponent();
-            _workAroundForMissingUnloadEvent = new Window();
         }
     }
 }

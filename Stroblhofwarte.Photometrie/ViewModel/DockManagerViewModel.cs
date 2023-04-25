@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.IO;
+using System.Windows;
 
 namespace Stroblhofwarte.Photometrie.ViewModel
 {
@@ -22,6 +23,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
     public ObservableCollection<object> Anchorables { get; private set; }
 
+    private Dictionary<string, DockWindowViewModel> _dockCache = new Dictionary<string, DockWindowViewModel>();
     /// <summary>
     /// Implement a command to load the layout of an AvalonDock-DockingManager instance.
     /// This layout defines the position and shape of each document and tool window
@@ -91,6 +93,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
       foreach (var document in dockWindowViewModels)
       {
+        _dockCache.Add(document.GetType().Name, document);
         document.PropertyChanged += DockWindowViewModel_PropertyChanged;
         if (!document.IsClosed)
           this.Documents.Add(document);
@@ -131,87 +134,15 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         {
             // This can happen if the previous session was loading a file
             // but was unable to initialize the view ...
-            if(args.Model.ContentId == "AavsoViewModel")
+            foreach(KeyValuePair<string, DockWindowViewModel> T in _dockCache)
             {
-                foreach(DockWindowViewModel c in Documents)
+                if(args.Model.ContentId == T.Key)
                 {
-                    if((c as AavsoViewModel) != null)
-                    {
-                        args.Content = c;
-                        break;
-                    }
-                } 
-            }
-            else if (args.Model.ContentId == "ApertureViewModel")
-            {
-                foreach (DockWindowViewModel c in Documents)
-                {
-                    if ((c as ApertureViewModel) != null)
-                    {
-                        args.Content = c;
-                        break;
-                    }
+                    args.Content = T.Value;
+                    return;
                 }
             }
-            else if (args.Model.ContentId == "FileViewModel")
-            {
-                foreach (DockWindowViewModel c in Documents)
-                {
-                    if ((c as FileViewModel) != null)
-                    {
-                        args.Content = c;
-                        break;
-                    }
-                }
-            }
-            else if (args.Model.ContentId == "ImageInfoViewModel")
-            {
-                foreach (DockWindowViewModel c in Documents)
-                {
-                    if ((c as ImageInfoViewModel) != null)
-                    {
-                        args.Content = c;
-                        break;
-                    }
-                }
-            }
-            else if (args.Model.ContentId == "ImageViewModel")
-            {
-                foreach (DockWindowViewModel c in Documents)
-                {
-                    if ((c as ImageViewModel) != null)
-                    {
-                        args.Content = c;
-                        break;
-                    }
-                }
-            }
-            else if (args.Model.ContentId == "MagnificationViewModel")
-            {
-                foreach (DockWindowViewModel c in Documents)
-                {
-                    if ((c as MagnificationViewModel) != null)
-                    {
-                        args.Content = c;
-                        break;
-                    }
-                }
-            }
-            else if (args.Model.ContentId == "ReportViewModel")
-            {
-                foreach (DockWindowViewModel c in Documents)
-                {
-                    if ((c as ReportViewModel) != null)
-                    {
-                        args.Content = c;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                args.Cancel = true;
-            }
+            args.Cancel = true;
         };
 
         layoutSerializer.Deserialize(layoutFileName);
@@ -229,7 +160,12 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         string fileName = "layout.dat";
 
         File.WriteAllText(fileName, xmlLayout);
-    }
+        // Shutdown mode is set to Explicite call Shutdown in the App.xaml. 
+        // This is required, otherwise the Unload event is never called.
+        // To end the application, a call to Shutdown is required!
+        // This is done here after saving the docker layout.
+        System.Windows.Application.Current.Shutdown();
+     }
     #endregion SaveLayout
     #endregion methods
     }
