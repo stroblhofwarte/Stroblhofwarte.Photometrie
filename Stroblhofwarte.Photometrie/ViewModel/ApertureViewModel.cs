@@ -28,6 +28,8 @@ namespace Stroblhofwarte.Photometrie.ViewModel
     }
     public class ApertureViewModel : DockWindowViewModel
     {
+        private string PERMADB = "mymeasurements.db";
+
         #region Properties
         private MeasurementResult _measVar;
         private MeasurementResult _measComp;
@@ -565,6 +567,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
         private void Report()
         {
+            AAVSOList newElement;
             AAVSOExtendedFileFormat.Instance.Add(StarDataRelay.Instance.Name,
                 StroblhofwarteImage.Instance.GetJD().ToString(CultureInfo.InvariantCulture),
                 VarMag.ToString("0.##", CultureInfo.InvariantCulture), 
@@ -579,9 +582,12 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 "na",
                 "na",
                 StarDataRelay.Instance.ChartId,
-                "na");
+                "na", out newElement);
             PhotoState = enumPhotoState.VAR;
 
+            // Store reported measurments also in the permanent db:
+            AAVSOExtendedFileFormat permanentDb = new AAVSOExtendedFileFormat(PERMADB);
+            permanentDb.Add(newElement);
 
         }
         #endregion

@@ -56,8 +56,9 @@ namespace Stroblhofwarte.Photometrie.FileFormats
 
         public AAVSOExtendedFileFormat(string filename)
         {
+            FILENAME = filename;
             Header = new AAVSOHeader() { OBSCODE = Stroblhofwarte.Config.GlobalConfig.Instance.OBSCODE, OBSTYPE = Stroblhofwarte.Config.GlobalConfig.Instance.OBSTYPE };
-            Load(filename);
+            Load();
         }
         #endregion
 
@@ -145,8 +146,9 @@ namespace Stroblhofwarte.Photometrie.FileFormats
             }
         }
 
-        public bool Add(string name, string date, string mag, string merr, string filt, string trans, string mtype, string cname, string cmag, string kname, string kmag, string amass, string group, string chart, string notes)
+        public bool Add(string name, string date, string mag, string merr, string filt, string trans, string mtype, string cname, string cmag, string kname, string kmag, string amass, string group, string chart, string notes, out AAVSOList newElement)
         {
+            newElement = new AAVSOList();
             AAVSOList e = new AAVSOList()
             {
                 NAME = name,
@@ -166,6 +168,15 @@ namespace Stroblhofwarte.Photometrie.FileFormats
                 NOTES = notes
             };
             Values.Add(e);
+            newElement = e;
+            if (DatabaseChanged != null)
+                DatabaseChanged(this, null);
+            return Save();
+        }
+
+        public bool Add(AAVSOList newElement)
+        {
+            Values.Add(newElement);
             if (DatabaseChanged != null)
                 DatabaseChanged(this, null);
             return Save();
