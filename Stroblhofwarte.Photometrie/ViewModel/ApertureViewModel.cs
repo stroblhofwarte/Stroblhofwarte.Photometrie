@@ -409,6 +409,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 InstrumentObject instr = Instruments.Instance.Get(StroblhofwarteImage.Instance.GetTelescope(), StroblhofwarteImage.Instance.GetInstrument(),
                 (int)StroblhofwarteImage.Instance.GetSensorGain(),
                 (int)StroblhofwarteImage.Instance.GetSensorOffset(),
+                StroblhofwarteImage.Instance.GetBinning(),
                 StroblhofwarteImage.Instance.GetSensorSetTemp());
                 instr.Aperture = _apertureSize;
                 instr.InnerAnnulus = _annulusInnerRadius;
@@ -663,6 +664,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 InstrumentObject instr = Instruments.Instance.Get(StroblhofwarteImage.Instance.GetTelescope(), StroblhofwarteImage.Instance.GetInstrument(),
                         (int)StroblhofwarteImage.Instance.GetSensorGain(),
                         (int)StroblhofwarteImage.Instance.GetSensorOffset(),
+                        StroblhofwarteImage.Instance.GetBinning(),
                         StroblhofwarteImage.Instance.GetSensorSetTemp());
                 ApertureSize = (int)instr.Aperture;
                 AnnulusInnerRadius = (int)instr.InnerAnnulus;

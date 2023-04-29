@@ -67,6 +67,7 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                         Instrument = f.Instrument,
                         Gain = Convert.ToInt32(f.Gain, CultureInfo.InvariantCulture),
                         Offset = Convert.ToInt32(f.Offset, CultureInfo.InvariantCulture),
+                        Binning = f.Binning,
                         SetTemp = Convert.ToDouble(f.SetTemp, CultureInfo.InvariantCulture),
                     };
                     string hash = Stroblhofwarte.AperturePhotometry.Instruments.Instance.Hash(obj);
@@ -103,6 +104,7 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                 string newInstrument = StroblhofwarteImage.Instance.GetInstrument();
                 double newGain = StroblhofwarteImage.Instance.GetSensorGain();
                 double newOffset = StroblhofwarteImage.Instance.GetSensorOffset();
+                string newBinning = StroblhofwarteImage.Instance.GetBinning();
                 double newSetTemp = StroblhofwarteImage.Instance.GetSensorSetTemp();
                 InstrumentObject newobj = new InstrumentObject()
                 {
@@ -110,6 +112,7 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                     Instrument = newInstrument,
                     Gain = newGain,
                     Offset = newOffset,
+                    Binning = newBinning,
                     SetTemp = newSetTemp
                 };
                 string hash = Stroblhofwarte.AperturePhotometry.Instruments.Instance.Hash(newobj);
@@ -132,6 +135,7 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                     Instrument = f.Instrument,
                     Gain = f.Gain.ToString(CultureInfo.InvariantCulture),
                     Offset = f.Offset.ToString(CultureInfo.InvariantCulture),
+                    Binning = f.Binning,
                     SetTemp = f.SetTemp.ToString(CultureInfo.InvariantCulture),
                     Gain_e_ADU = f.Gain_e_ADU.ToString(CultureInfo.InvariantCulture),
                     ReadoutNoise = f.ReadOutNoise.ToString(CultureInfo.InvariantCulture),
@@ -195,6 +199,18 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
             {
                 _offset = value;
                 OnPropertyChanged("Offset");
+            }
+        }
+
+        private string _binning;
+
+        public string Binning
+        {
+            get { return _binning; }
+            set
+            {
+                _binning = value;
+                OnPropertyChanged("Binning");
             }
         }
 

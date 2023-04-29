@@ -105,6 +105,7 @@ namespace Stroblhofwarte.AperturePhotometry
             InstrumentObject instr = Instruments.Instance.Get(StroblhofwarteImage.Instance.GetTelescope(), StroblhofwarteImage.Instance.GetInstrument(),
                 (int)StroblhofwarteImage.Instance.GetSensorGain(),
                 (int)StroblhofwarteImage.Instance.GetSensorOffset(),
+                StroblhofwarteImage.Instance.GetBinning(),
                 StroblhofwarteImage.Instance.GetSensorSetTemp());
             if (instr == null) return 999.0;
             double Nsky = instr.Gain_e_ADU * (meas.SkyADU / meas.SkyPixels);

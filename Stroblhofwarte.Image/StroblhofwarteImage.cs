@@ -147,7 +147,7 @@ namespace Stroblhofwarte.Image
                 Bitmap bmp =(Bitmap) _imageData.GetImage().Clone();
                 Graphics g = Graphics.FromImage(bmp);
                 if(_font == null)
-                    _font = new Font("Segoe UI", (float)(24.0 * AnnotateScale));
+                    _font = new Font("Segoe UI", (float)(10.0 * AnnotateScale));
                 foreach (Annotation a in _annotations)
                 {
                     System.Windows.Point p = WCS.GetCoordinates(a.Coor);
@@ -156,8 +156,8 @@ namespace Stroblhofwarte.Image
                         (int)p.Y + (int)(10* AnnotateScale),
                         (int)p.X+(int)(20 * AnnotateScale),
                         (int)p.Y+(int)(20 * AnnotateScale));*/
-                    TextRenderer.DrawText(g, a.Name, _font, new System.Drawing.Point((int)p.X + (int)(30 * AnnotateScale),
-                        (int)p.Y + (int)(30 * AnnotateScale)), System.Drawing.Color.Yellow);
+                    TextRenderer.DrawText(g, a.Name, _font, new System.Drawing.Point((int)p.X + (int)(5 * AnnotateScale),
+                        (int)p.Y + (int)(5 * AnnotateScale)), System.Drawing.Color.Yellow);
                 }   
                 return bmp;
             }
@@ -254,6 +254,11 @@ namespace Stroblhofwarte.Image
         public string GetFilter()
         {
             return _imageData.GetFilter();
+        }
+
+        public string GetBinning()
+        {
+            return _imageData.GetBinningId();
         }
         public string GetObject()
         {

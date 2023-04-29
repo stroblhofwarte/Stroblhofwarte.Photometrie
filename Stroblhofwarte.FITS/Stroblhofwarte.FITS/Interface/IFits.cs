@@ -29,6 +29,7 @@ namespace Stroblhofwarte.FITS.Interface
         double GetSensorOffset();
         string GetFilter();
         string GetObject();
+        string GetBinningId();
         DateTime GetObservationTimeUTC();
         DateTime GetObservationTime();
     }

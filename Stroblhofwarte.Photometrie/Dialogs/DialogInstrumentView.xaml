@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:Stroblhofwarte.Photometrie.Dialogs"
         xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
         mc:Ignorable="d"
-        Title="Instruments" Height="826" Width="1288">
+        Title="Instruments" Height="826" Width="1376">
     <Grid>
         <ListView Margin="0,0,0,86" ItemsSource="{Binding InstrumentsList}">
             <ListView.View>
@@ -40,6 +40,7 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
+                    <GridViewColumn Header="Binning" DisplayMemberBinding="{Binding Binning}" Width="80" />
                     <GridViewColumn Width="110">
                         <GridViewColumn.Header>
                             <TextBlock Text="SENSOR SET TEMP." />

@@ -167,5 +167,10 @@ namespace Stroblhofwarte.FITS
             if (_image == null) return double.MinValue;
             return _image.GetSensorOffset();
         }
+        public string GetBinningId()
+        {
+            if (_image == null) return string.Empty;
+            return _image.GetBinningId();
+        }
     }
 }

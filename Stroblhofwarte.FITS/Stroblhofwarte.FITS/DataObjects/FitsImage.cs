@@ -279,6 +279,42 @@ namespace Stroblhofwarte.FITS.DataObjects
             return double.MaxValue;
         }
 
+        public string GetBinningId()
+        {
+            int xb = 0;
+            int yb = 0;
+            foreach (FITSHeaderCard card in _header.HeaderCards)
+            {
+                if (card.Key == "XBINNING")
+                {
+                    try
+                    {
+                        string val = card.Value;
+                        val = val.Replace(".", "");
+                        xb = Convert.ToInt32(val, CultureInfo.InvariantCulture);
+                    }
+                    catch (Exception)
+                    {
+                        xb = 0;
+                    }
+                }
+                if (card.Key == "YBINNING")
+                {
+                    try
+                    {
+                        string val = card.Value;
+                        val = val.Replace(".", "");
+                        yb = Convert.ToInt32(val, CultureInfo.InvariantCulture);
+                    }
+                    catch (Exception)
+                    {
+                        yb = 0;
+                    }
+                }
+            }
+            return xb.ToString() + "x" + yb.ToString();
+        }
+
         public double GetSensorGain()
         {
             foreach (FITSHeaderCard card in _header.HeaderCards)
