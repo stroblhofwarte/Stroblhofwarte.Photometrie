@@ -67,7 +67,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             }
         }
 
-        private int _centroidSearchRadius = 100;
+        private int _centroidSearchRadius = 30;
 
         private Point _starCentroid = new Point(0, 0);
 
@@ -80,6 +80,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 using (MemoryStream memory = new MemoryStream())
                 {
                     int magN = Properties.Settings.Default.MagnificationN;
+                    ushort[] raw = StroblhofwarteImage.Instance.GetSubimagRaw(_starCentroid, magN, magN);
                     Bitmap bitmap = StroblhofwarteImage.Instance.GetSubimage(_starCentroid, magN, magN);
                     Graphics g = Graphics.FromImage(bitmap);
                     g.DrawEllipse(new System.Drawing.Pen(System.Drawing.Brushes.Green, 1.0f),
@@ -97,6 +98,29 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                         (int)(magN / 2 - AnnulusOuterRadius),
                         (int)(2 * AnnulusOuterRadius),
                         (int)(2 * AnnulusOuterRadius));
+
+                    if (_showProfile)
+                    {
+                        // Draw star profile x:
+                        int max = 0;
+                        int min = int.MaxValue;
+                        for (int x = magN / 2 - 20; x < magN / 2 + 20; x++)
+                        {
+                            int y = raw[(magN / 2) * magN + x];
+                            if (y > max) max = y;
+                            if (y < min) min = y;
+                        }
+                        double f = (max - min) / ((magN / 2) - 50);
+                        double oldY = 0.0;
+                        Pen p = new System.Drawing.Pen(System.Drawing.Brushes.Yellow, 1.0f);
+                        for (int x = magN / 2 - 20; x < magN / 2 + 20; x++)
+                        {
+                            double y = (double)raw[(magN / 2) * magN + x];
+                            y = (y - min) / f;
+                            g.DrawLine(p, x - 1, (magN - 20) - (int)oldY, x, (magN - 20) - (int)y);
+                            oldY = y;
+                        }
+                    }
                     bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
                     memory.Position = 0;
                     BitmapImage bitmapimage = new BitmapImage();
@@ -111,15 +135,16 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             }
         }
 
-        private bool _apertureEdit;
-        public bool ApertureEdit
+        private bool _showProfile;
+        public bool ShowProfile
 
         {
-            get { return _apertureEdit; }
+            get { return _showProfile; }
             set
             {
-                _apertureEdit = value;
-                OnPropertyChanged("ApertureEdit");
+                _showProfile = value;
+                OnPropertyChanged("ShowProfile");
+                OnPropertyChanged("ImageSource");
             }
         }
 
@@ -271,20 +296,6 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             }
         }
 
-
-        private bool _autoCentroid;
-        public bool AutoCentroid
-
-        {
-            get { return _autoCentroid; }
-            set
-            {
-                _autoCentroid = value;
-                ApertureEdit = !value;
-                OnPropertyChanged("AutoCentroid");
-            }
-        }
-
         private double _mag;
         public double Mag
         {
@@ -310,19 +321,9 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             set
             {
                 _apertureSize = value;
+                if (AnnulusInnerRadius <= value) AnnulusInnerRadius = value + 1;
                 UpdateApertureMeasurement();
-                if(PhotoState == enumPhotoState.VAR)
-                {
-                    VarMag = Mag;
-                }
-                if (PhotoState == enumPhotoState.COMP)
-                {
-                    CompMag = Mag;
-                }
-                if (PhotoState == enumPhotoState.CHECK)
-                {
-                    CheckMag = Mag;
-                }
+                PhotoState = enumPhotoState.VAR;
                 OnPropertyChanged("ApertureSize");
                 OnPropertyChanged("ImageSource");
             }
@@ -335,6 +336,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             set
             {
                 _annulusInnerRadius = value;
+                if (AnnulusOuterRadius <= value) AnnulusOuterRadius = value + 1;
                 OnPropertyChanged("AnnulusInnerRadius");
             }
         }
@@ -393,8 +395,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
         private bool CanAperturePlus()
         {
-            if (!AutoCentroid && ApertureSize < 30) return true;
-            return false;
+            return true;
         }
 
         private void AperturePlus()
@@ -421,8 +422,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
         private bool CanApertureMinus()
         {
-            if (!AutoCentroid && ApertureSize > 3) return true;
-            return false;
+            return true;
         }
 
         private void ApertureMinus()
@@ -433,113 +433,109 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         }
         #endregion
 
-        #region CommandCentroidXPlus
-        private RelayCommand commandCentroidXPlus;
-        public ICommand CommandCentroidXPlus
+        #region commandInnerPlus
+        private RelayCommand commandInnerPlus;
+        public ICommand CommandInnerPlus
         {
             get
             {
-                if (commandCentroidXPlus == null)
+                if (commandInnerPlus == null)
                 {
-                    commandCentroidXPlus = new RelayCommand(param => this.CentroidXPlus(), param => this.CanCentroidXPlus());
+                    commandInnerPlus = new RelayCommand(param => this.InnerPlus(), param => this.CanInnerPlus());
                 }
-                return commandCentroidXPlus;
+                return commandInnerPlus;
             }
         }
 
-        private bool CanCentroidXPlus()
+        private bool CanInnerPlus()
         {
-            if (!AutoCentroid) return true;
-            return false;
+            return true;
         }
 
-        private void CentroidXPlus()
+        private void InnerPlus()
         {
-            _starCentroid.X++;
+            AnnulusInnerRadius++;
             UpdateApertureMeasurement();
             OnPropertyChanged("ImageSource");
         }
         #endregion
 
-        #region commandCentroidYPlus
-        private RelayCommand commandCentroidYPlus;
-        public ICommand CommandCentroidYPlus
+        #region commandInnerMinus
+        private RelayCommand commandInnerMinus;
+        public ICommand CommandInnerMinus
         {
             get
             {
-                if (commandCentroidYPlus == null)
+                if (commandInnerMinus == null)
                 {
-                    commandCentroidYPlus = new RelayCommand(param => this.CentroidYPlus(), param => this.CanCentroidYPlus());
+                    commandInnerMinus = new RelayCommand(param => this.InnerMinus(), param => this.CanInnerMinus());
                 }
-                return commandCentroidYPlus;
+                return commandInnerMinus;
             }
         }
 
-        private bool CanCentroidYPlus()
+        private bool CanInnerMinus()
         {
-            if (!AutoCentroid) return true;
-            return false;
+            return true;
         }
 
-        private void CentroidYPlus()
+        private void InnerMinus()
         {
-            _starCentroid.Y++;
+            AnnulusInnerRadius--;
             UpdateApertureMeasurement();
             OnPropertyChanged("ImageSource");
         }
         #endregion
 
-        #region CommandCentroidXMinus
-        private RelayCommand commandCentroidXMinus;
-        public ICommand CommandCentroidXMinus
+        #region commandOuterPlus
+        private RelayCommand commandOuterPlus;
+        public ICommand CommandOuterPlus
         {
             get
             {
-                if (commandCentroidXMinus == null)
+                if (commandOuterPlus == null)
                 {
-                    commandCentroidXMinus = new RelayCommand(param => this.CentroidXMinus(), param => this.CanCentroidXMinus());
+                    commandOuterPlus = new RelayCommand(param => this.OuterPlus(), param => this.CanOuterPlus());
                 }
-                return commandCentroidXMinus;
+                return commandOuterPlus;
             }
         }
 
-        private bool CanCentroidXMinus()
+        private bool CanOuterPlus()
         {
-            if (!AutoCentroid) return true;
-            return false;
+            return true;
         }
 
-        private void CentroidXMinus()
+        private void OuterPlus()
         {
-            _starCentroid.X--;
+            AnnulusOuterRadius++;
             UpdateApertureMeasurement();
             OnPropertyChanged("ImageSource");
         }
         #endregion
 
-        #region commandCentroidYMinus
-        private RelayCommand commandCentroidYMinus;
-        public ICommand CommandCentroidYMinus
+        #region commandOuterMinus
+        private RelayCommand commandOuterMinus;
+        public ICommand CommandOuterMinus
         {
             get
             {
-                if (commandCentroidYMinus == null)
+                if (commandOuterMinus == null)
                 {
-                    commandCentroidYMinus = new RelayCommand(param => this.CentroidYMinus(), param => this.CanCentroidYMinus());
+                    commandOuterMinus = new RelayCommand(param => this.OuterMinus(), param => this.CanOuterMinus());
                 }
-                return commandCentroidYMinus;
+                return commandOuterMinus;
             }
         }
 
-        private bool CanCentroidYMinus()
+        private bool CanOuterMinus()
         {
-            if (!AutoCentroid) return true;
-            return false;
+            return true;
         }
 
-        private void CentroidYMinus()
+        private void OuterMinus()
         {
-            _starCentroid.Y--;
+            AnnulusOuterRadius--;
             UpdateApertureMeasurement();
             OnPropertyChanged("ImageSource");
         }
@@ -597,12 +593,12 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         {
             StroblhofwarteImage.Instance.NewCursorClickPosition += Instance_NewCursorClickPosition;
             StroblhofwarteImage.Instance.NewImageLoaded += Instance_NewImageLoaded;
-            AutoCentroid = true;
             PhotoState = enumPhotoState.VAR;
             Z = 21.1;
             StarDataRelay.Instance.CheckStarChanged += Instance_CheckStarChanged;
             StarDataRelay.Instance.CompStarChanged += Instance_CompStarChanged;
             ContentId = "ApertureViewModel";
+            _centroidSearchRadius = Properties.Settings.Default.MagnificationN / 8;
         }
 
         private void Instance_CompStarChanged(object? sender, EventArgs e)
@@ -624,15 +620,8 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         {
             try
             {
-                if (AutoCentroid)
-                {
-                    AutodetectAperture();
-                }
-                else
-                {
-                    _starCentroid = StroblhofwarteImage.Instance.CursorClickPosition;
-                    ManualAperture();
-                }
+                AutodetectAperture();
+                UpdateApertureMeasurement();
                 if (PhotoState == enumPhotoState.VAR)
                 {
                     PhotoState = enumPhotoState.COMP;
@@ -654,26 +643,6 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             }
         }
 
-        private void ManualAperture()
-        {
-            try
-            {
-                Stroblhofwarte.AperturePhotometry.Radius radius = new Radius();
-              
-                double apertureR = 0.0;
-                double outerAnnulusR = 0.0;
-                double innerAnnulusR = 0.0;
-                radius.CalculateRadius(_starCentroid.X, _starCentroid.Y, _centroidSearchRadius, out apertureR, out innerAnnulusR, out outerAnnulusR);
-                AnnulusInnerRadius = innerAnnulusR;
-                AnnulusOuterRadius = outerAnnulusR;
-                ApertureSize = (int)apertureR;
-            }
-            catch (Exception ex)
-            {
-                // Centroid is outside the search region. 
-            }
-        }
-
         private void AutodetectAperture()
         {
             try
@@ -681,14 +650,6 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 Stroblhofwarte.AperturePhotometry.Centroid photometer = new Centroid(_centroidSearchRadius);
                 Stroblhofwarte.AperturePhotometry.Radius radius = new Radius();
                 _starCentroid = photometer.GetCentroid(StroblhofwarteImage.Instance.CursorClickPosition.X, StroblhofwarteImage.Instance.CursorClickPosition.Y);
-
-                double apertureR = 0.0;
-                double outerAnnulusR = 0.0;
-                double innerAnnulusR = 0.0;
-                radius.CalculateRadius(_starCentroid.X, _starCentroid.Y, _centroidSearchRadius, out apertureR, out innerAnnulusR, out outerAnnulusR);
-                AnnulusInnerRadius = innerAnnulusR;
-                AnnulusOuterRadius = outerAnnulusR;
-                ApertureSize = (int)apertureR;
             }
             catch (Exception ex)
             {
@@ -704,9 +665,6 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 Stroblhofwarte.AperturePhotometry.Radius radius = new Radius();
                 double inner = 0.0;
                 double outer = 0.0;
-                radius.CalculateCircles((double)ApertureSize, out inner, out outer);
-                AnnulusOuterRadius = outer;
-                AnnulusInnerRadius = inner;
                 MeasurementResult meas = measure.Measure(_starCentroid.X, _starCentroid.Y, _centroidSearchRadius, (double)ApertureSize, AnnulusInnerRadius, AnnulusOuterRadius);
                 if (PhotoState == enumPhotoState.VAR) _measVar = meas;
                 if (PhotoState == enumPhotoState.COMP) _measComp = meas;

@@ -6,8 +6,7 @@
       xmlns:local="clr-namespace:Stroblhofwarte.Photometrie.View"
       xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
       xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls" x:Class="Stroblhofwarte.Photometrie.View.ApertureView"
-      mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800">
+      mc:Ignorable="d" d:DesignWidth="800" Height="704">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -21,93 +20,95 @@
     </UserControl.Resources>
     <Grid>
         <Image  Source="{Binding ImageSource}" Margin="0,0,0,267" />
-        <Label Content="{Binding MagString}" Margin="307,24,342,396" FontSize="16" FontWeight="Bold" Foreground="#FFFDF534"/>
-        <Button
-        Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding CommandCentroidXPlus}" ToolTip="Solve all images without WCS via Astronomy.net..." Margin="0,0,25,281" HorizontalAlignment="Right" Width="26" Height="24" VerticalAlignment="Bottom">
-            <StackPanel Orientation="Vertical">
-                <icon:PackIconMaterial Width="15" Height="15" Kind="ArrowCollapseRight" HorizontalAlignment="Center"/>
-            </StackPanel>
-        </Button>
-        <Button Width="25"
-            Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding CommandCentroidYPlus}" HorizontalAlignment="Left" ToolTip="Solve all images without WCS via Astronomy.net..." Margin="10,11,0,0" Height="25" VerticalAlignment="Top">
-            <StackPanel Orientation="Vertical">
-                <icon:PackIconMaterial Width="15" Height="15" Kind="ArrowCollapseUp"/>
-            </StackPanel>
-        </Button>
-        <Label Content="Aperture Size:" HorizontalAlignment="Left" Margin="172,0,0,231" VerticalAlignment="Bottom"/>
-        <mah:ToggleSwitch IsOn="{Binding AutoCentroid, Mode=TwoWay}" Height="58"  Header="Auto Centroid:" Margin="334,0,0,196" Width="250" FontSize="12" VerticalAlignment="Bottom"/>
-        <Button Width="25"
-            Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding CommandCentroidYMinus}" HorizontalAlignment="Left" ToolTip="Solve all images without WCS via Astronomy.net..." Margin="10,0,0,310" Height="24" VerticalAlignment="Bottom">
-            <StackPanel Orientation="Vertical">
-                <icon:PackIconMaterial Width="15" Height="15" Kind="ArrowCollapseDown"/>
-            </StackPanel>
-        </Button>
-        <Button
-            Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding CommandCentroidXMinus}" ToolTip="Solve all images without WCS via Astronomy.net..." Margin="32,0,0,281" HorizontalAlignment="Left" Width="26" Height="24" VerticalAlignment="Bottom">
-            <StackPanel Orientation="Vertical">
-                <icon:PackIconMaterial Width="15" Height="15" Kind="ArrowCollapseLeft" HorizontalAlignment="Center"/>
-            </StackPanel>
-        </Button>
-        <TextBox HorizontalAlignment="Left" IsEnabled="{Binding ApertureEdit}" Margin="194,0,0,200" TextWrapping="Wrap" Text="{Binding ApertureSize}" Width="61" Height="26" VerticalAlignment="Bottom"/>
-        <Button
-            Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding CommandApertureMinus}" ToolTip="Solve all images without WCS via Astronomy.net..." Margin="168,0,0,201" HorizontalAlignment="Left" Width="26" Height="24" VerticalAlignment="Bottom">
-            <StackPanel Orientation="Vertical">
-                <icon:PackIconMaterial Width="15" Height="15" Kind="Minus" HorizontalAlignment="Center"/>
-            </StackPanel>
-        </Button>
-        <Button
-            Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding CommandAperturePlus}" ToolTip="Solve all images without WCS via Astronomy.net..." Margin="255,0,0,201" HorizontalAlignment="Left" Width="26" Height="24" VerticalAlignment="Bottom">
-            <StackPanel Orientation="Vertical">
-                <icon:PackIconMaterial Width="15" Height="15" Kind="Plus" HorizontalAlignment="Center"/>
-            </StackPanel>
-        </Button>
-        <Label Content="Variable [mag]"  Foreground="{Binding VarStatColor}" HorizontalAlignment="Left" Margin="102,0,0,153"  Height="26" VerticalAlignment="Bottom"/>
-        <Label Content="Comparison [mag]" Foreground="{Binding CompStatColor}" HorizontalAlignment="Left" Margin="239,0,0,153"  Height="26" VerticalAlignment="Bottom"/>
-        <Label Content="Check [mag]" Foreground="{Binding CheckStatColor}" HorizontalAlignment="Left" Margin="385,0,0,153"  Height="26" VerticalAlignment="Bottom"/>
-        <Separator HorizontalAlignment="Left" Margin="79,0,0,151" VerticalAlignment="Bottom" Height="6" Width="458"/>
-        <Separator HorizontalAlignment="Left" Margin="149,0,0,117" Width="96" RenderTransformOrigin="0.5,0.5" Height="17" VerticalAlignment="Bottom">
-            <Separator.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform Angle="90"/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </Separator.RenderTransform>
-        </Separator>
-        <Separator HorizontalAlignment="Left" Margin="307,0,0,117" Width="96" RenderTransformOrigin="0.5,0.5" Height="17" VerticalAlignment="Bottom">
-            <Separator.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform Angle="90"/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </Separator.RenderTransform>
-        </Separator>
-        <Separator HorizontalAlignment="Left" Margin="457,0,0,117" Width="96" RenderTransformOrigin="0.5,0.5" Height="17" VerticalAlignment="Bottom">
-            <Separator.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform Angle="90"/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </Separator.RenderTransform>
-        </Separator>
-        <TextBox HorizontalAlignment="Left" Margin="208,0,0,120" TextWrapping="Wrap" Text="{Binding ReferenceMag}" Width="62" Height="26" VerticalAlignment="Bottom" ToolTip="Enter reference magnitude in m*10, e.g. 10.5 -> 105"/>
-        <Label Content="m" HorizontalAlignment="Left" Margin="270,0,0,130" Foreground="#FFADADAD" Height="26" VerticalAlignment="Bottom" FontSize="9"/>
-        <Label Content="{Binding VarMagStr}" HorizontalAlignment="Left" Margin="102,0,0,122" Foreground="#FFADADAD" Height="26" VerticalAlignment="Bottom"/>
-        <Label Content="{Binding CheckMagStr}" HorizontalAlignment="Left" Margin="448,0,0,120" Foreground="#FFADADAD" Height="26" VerticalAlignment="Bottom"/>
-        <Label Content="Magnitude" HorizontalAlignment="Left" Margin="15,0,0,122" Foreground="#FFADADAD" Height="26" VerticalAlignment="Bottom"/>
-        <Label Content="Error" HorizontalAlignment="Left" Margin="47,0,0,91" Foreground="#FFADADAD" Height="26" VerticalAlignment="Bottom"/>
-        <Label Content="{Binding VarErrorStr}" HorizontalAlignment="Left" Margin="102,0,0,91" Foreground="#FFADADAD" Height="26" VerticalAlignment="Bottom"/>
-        <Label Content="{Binding CompErrorStr}" HorizontalAlignment="Left" Margin="214,0,0,91" Foreground="#FFADADAD" Height="26" VerticalAlignment="Bottom"/>
-        <Button Content="Reset" Command="{Binding CommandResetPhoto}" HorizontalAlignment="Left" Margin="532,0,0,40" Height="27" VerticalAlignment="Bottom"/>
-        <Label Content="{Binding CompMagStr}" HorizontalAlignment="Left" Margin="290,0,0,120" Foreground="#FFADADAD" Height="26" VerticalAlignment="Bottom"/>
-        <TextBox HorizontalAlignment="Left" Margin="367,0,0,120" TextWrapping="Wrap" Text="{Binding CheckReferenceMag}" Width="61" Height="26" VerticalAlignment="Bottom" ToolTip="Enter reference magnitude in m*10, e.g. 10.5 -&gt; 105"/>
-        <Label Content="m" HorizontalAlignment="Left" Margin="428,0,0,130" Foreground="#FFADADAD" Height="26" VerticalAlignment="Bottom" FontSize="9"/>
-        <Button Content="Report" Command="{Binding CommandReport}" HorizontalAlignment="Left" Margin="520,0,0,119" Height="27" VerticalAlignment="Bottom"/>
+        <Label Content="{Binding MagString}" Margin="117,24,0,0" FontSize="16" FontWeight="Bold" Foreground="#FFFDF534" Height="32" VerticalAlignment="Top" HorizontalAlignment="Left" Width="341"/>
+
+
+
+
+
+        <mah:MetroTabControl Margin="0,442,0,0" Style="{DynamicResource MahApps.Styles.TabControl.AnimatedSingleRow}">
+            <mah:MetroTabItem Header="Photometry">
+                <Grid>
+                    <Label Content="Variable [mag]:"  Foreground="{Binding VarStatColor}" HorizontalAlignment="Left" Margin="221,18,0,0" Height="26" VerticalAlignment="Top"/>
+                    <Label Content="{Binding VarMagStr}" HorizontalAlignment="Left" Margin="312,18,0,0" Foreground="#FFADADAD" RenderTransformOrigin="0.661,-2.513" Height="26" VerticalAlignment="Top"/>
+                    <Label Content="{Binding CompErrorStr}" HorizontalAlignment="Left" Margin="410,49,0,0" Foreground="#FFADADAD" Height="26" VerticalAlignment="Top"/>
+                    <Label Content="Comparison [mag]:" Foreground="{Binding CompStatColor}" HorizontalAlignment="Left" Margin="199,49,0,0" Height="26" VerticalAlignment="Top"/>
+                    <Label Content="Comp. Setpoint:" Foreground="#FFADADAD" HorizontalAlignment="Left" Margin="14,50,0,0" Height="26" VerticalAlignment="Top"/>
+                    <Label Content="Check. Setpoint:" Foreground="#FFADADAD" HorizontalAlignment="Left" Margin="14,80,0,0"  Height="26" VerticalAlignment="Top"/>
+                    <TextBox HorizontalAlignment="Left" Margin="109,49,0,0" TextWrapping="Wrap" Text="{Binding ReferenceMag}" Width="62" Height="26" VerticalAlignment="Top" ToolTip="Enter reference magnitude in m*10, e.g. 10.5 -> 105"/>
+                    <Label Content="m" HorizontalAlignment="Left" Margin="171,42,0,0" Foreground="#FFADADAD" Height="26" VerticalAlignment="Top" FontSize="9" RenderTransformOrigin="-0.732,-0.808"/>
+
+                    <Label Content="Check [mag]:" Foreground="{Binding CheckStatColor}" HorizontalAlignment="Left" Margin="231,80,0,0" Height="26" VerticalAlignment="Top"/>
+                    <Label Content="{Binding CompMagStr}" HorizontalAlignment="Left" Margin="312,49,0,0" Foreground="#FFADADAD" Height="26" VerticalAlignment="Top"/>
+                    <TextBox HorizontalAlignment="Left" Margin="110,80,0,0" TextWrapping="Wrap" Text="{Binding CheckReferenceMag}" Width="61" Height="26" VerticalAlignment="Top" ToolTip="Enter reference magnitude in m*10, e.g. 10.5 -&gt; 105"/>
+                    <Label Content="m" HorizontalAlignment="Left" Margin="171,73,0,0" Foreground="#FFADADAD" Height="26" VerticalAlignment="Top" FontSize="9"/>
+                    <Label Content="{Binding CheckMagStr}" HorizontalAlignment="Left" Margin="312,80,0,0" Foreground="#FFADADAD" Height="26" VerticalAlignment="Top"/>
+                    <Label Content="{Binding VarErrorStr}" HorizontalAlignment="Left" Margin="410,18,0,0" Foreground="#FFADADAD" Height="26" VerticalAlignment="Top"/>
+
+                    <Button Content="Report" Command="{Binding CommandReport}" HorizontalAlignment="Left" Margin="397,120,0,0" Height="27" VerticalAlignment="Top"/>
+                    <Button Content="Reset" Command="{Binding CommandResetPhoto}" Margin="0,10,10,0" Height="27" VerticalAlignment="Top" HorizontalAlignment="Right" Width="41"/>
+
+                </Grid>
+            </mah:MetroTabItem>
+            <mah:MetroTabItem Header="Aperture">
+                <Grid>
+                    <Label Content="Aperture Radius:" Foreground="#FFADADAD" Margin="61,22,0,0" Height="26" VerticalAlignment="Top" HorizontalAlignment="Left" Width="102"/>
+
+                    <TextBox HorizontalAlignment="Left" Margin="194,23,0,0" TextWrapping="Wrap" Text="{Binding ApertureSize}" Width="61" Height="26" VerticalAlignment="Top"/>
+                    <Button
+            Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding CommandApertureMinus}" ToolTip="Solve all images without WCS via Astronomy.net..." Margin="168,24,0,0" HorizontalAlignment="Left" Width="26" Height="24" VerticalAlignment="Top">
+                        <StackPanel Orientation="Vertical">
+                            <icon:PackIconMaterial Width="15" Height="15" Kind="Minus" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button
+            Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding CommandAperturePlus}" ToolTip="Solve all images without WCS via Astronomy.net..." Margin="255,24,0,0" HorizontalAlignment="Left" Width="26" Height="24" VerticalAlignment="Top">
+                        <StackPanel Orientation="Vertical">
+                            <icon:PackIconMaterial Width="15" Height="15" Kind="Plus" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+
+                    <Label Content="Inner Anulus Radius:" Foreground="#FFADADAD" Margin="40,54,0,0" Height="26" VerticalAlignment="Top" HorizontalAlignment="Left" Width="128"/>
+
+                    <TextBox HorizontalAlignment="Left" Margin="194,54,0,0" TextWrapping="Wrap" Text="{Binding AnnulusInnerRadius}" Width="61" Height="26" VerticalAlignment="Top"/>
+                    <Button
+            Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding CommandInnerMinus}" ToolTip="Solve all images without WCS via Astronomy.net..." Margin="168,55,0,0" HorizontalAlignment="Left" Width="26" Height="24" VerticalAlignment="Top">
+                        <StackPanel Orientation="Vertical">
+                            <icon:PackIconMaterial Width="15" Height="15" Kind="Minus" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button
+            Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding CommandInnerPlus}" ToolTip="Solve all images without WCS via Astronomy.net..." Margin="255,55,0,0" HorizontalAlignment="Left" Width="26" Height="24" VerticalAlignment="Top">
+                        <StackPanel Orientation="Vertical">
+                            <icon:PackIconMaterial Width="15" Height="15" Kind="Plus" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+
+                    <Label Content="Outer Anulus Radius:" Foreground="#FFADADAD" Margin="40,85,0,0" Height="26" VerticalAlignment="Top" HorizontalAlignment="Left" Width="128"/>
+
+                    <TextBox HorizontalAlignment="Left" Margin="194,85,0,0" TextWrapping="Wrap" Text="{Binding AnnulusOuterRadius}" Width="61" Height="26" VerticalAlignment="Top"/>
+                    <Button
+            Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding CommandOuterMinus}" ToolTip="Solve all images without WCS via Astronomy.net..." Margin="168,87,0,0" HorizontalAlignment="Left" Width="26" Height="24" VerticalAlignment="Top">
+                        <StackPanel Orientation="Vertical">
+                            <icon:PackIconMaterial Width="15" Height="15" Kind="Minus" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button
+            Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding CommandOuterPlus}" ToolTip="Solve all images without WCS via Astronomy.net..." Margin="255,86,0,0" HorizontalAlignment="Left" Width="26" Height="24" VerticalAlignment="Top">
+                        <StackPanel Orientation="Vertical">
+                            <icon:PackIconMaterial Width="15" Height="15" Kind="Plus" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+
+                    <Label Content="Show Star Profile:" Foreground="#FFADADAD" Margin="0,27,180,0" Height="26" VerticalAlignment="Top" HorizontalAlignment="Right" Width="102"/>
+                    <mah:ToggleSwitch IsOn="{Binding ShowProfile, Mode=TwoWay}"   Margin="0,24,10,0" Width="119" FontSize="12" VerticalAlignment="Top" Height="32" HorizontalAlignment="Right"/>
+
+                </Grid>
+            </mah:MetroTabItem>
+        </mah:MetroTabControl>
 
     </Grid>
 </UserControl>
