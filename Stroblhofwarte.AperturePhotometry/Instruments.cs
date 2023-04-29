@@ -66,16 +66,20 @@ namespace Stroblhofwarte.AperturePhotometry
                 {
                     if (line.StartsWith("#")) continue;
                     string[] fields = line.Split(";");
-                    if (fields.Length != 7) continue;
+                    if (fields.Length != 11) continue;
                     InstrumentObject obj = new InstrumentObject()
                     {
-                        Instrument = fields[0],
-                        Gain = Convert.ToInt32(fields[1]),
-                        Offset = Convert.ToInt32(fields[2]),
-                        SetTemp = Convert.ToDouble(fields[3], CultureInfo.InvariantCulture),
-                        Gain_e_ADU = Convert.ToDouble(fields[4], CultureInfo.InvariantCulture),
-                        ReadOutNoise = Convert.ToDouble(fields[5], CultureInfo.InvariantCulture),
-                        DarkCurrent = Convert.ToDouble(fields[6], CultureInfo.InvariantCulture)
+                        Telescope = fields[0],
+                        Instrument = fields[1],
+                        Gain = Convert.ToInt32(fields[2]),
+                        Offset = Convert.ToInt32(fields[3]),
+                        SetTemp = Convert.ToDouble(fields[4], CultureInfo.InvariantCulture),
+                        Gain_e_ADU = Convert.ToDouble(fields[5], CultureInfo.InvariantCulture),
+                        ReadOutNoise = Convert.ToDouble(fields[6], CultureInfo.InvariantCulture),
+                        DarkCurrent = Convert.ToDouble(fields[7], CultureInfo.InvariantCulture),
+                        Aperture = Convert.ToInt32(fields[8]),
+                        InnerAnnulus = Convert.ToInt32(fields[9]),
+                        OuterAnnulus = Convert.ToInt32(fields[10]),
                     };
                     if(!_hashCache.ContainsKey(Hash(obj)))
                     {
@@ -103,13 +107,17 @@ namespace Stroblhofwarte.AperturePhotometry
                 {
                     foreach (InstrumentObject instr in _hashCache.Values)
                     {
-                        string line = instr.Instrument + ";" +
+                        string line = instr.Telescope + ";" +
+                            instr.Instrument + ";" +
                             instr.Gain.ToString(CultureInfo.InvariantCulture) + ";" +
                             instr.Offset.ToString(CultureInfo.InvariantCulture) + ";" +
                             instr.SetTemp.ToString(CultureInfo.InvariantCulture) + ";" +
                             instr.Gain_e_ADU.ToString(CultureInfo.InvariantCulture) + ";" +
                             instr.ReadOutNoise.ToString(CultureInfo.InvariantCulture) + ";" +
-                            instr.DarkCurrent.ToString(CultureInfo.InvariantCulture);
+                            instr.DarkCurrent.ToString(CultureInfo.InvariantCulture) + ";" +
+                            instr.Aperture.ToString(CultureInfo.InvariantCulture) + ";" +
+                            instr.InnerAnnulus.ToString(CultureInfo.InvariantCulture) + ";" +
+                            instr.OuterAnnulus.ToString(CultureInfo.InvariantCulture);
 
                         writetext.WriteLine(line);
                     }
@@ -124,13 +132,14 @@ namespace Stroblhofwarte.AperturePhotometry
 
         public string Hash(InstrumentObject obj)
         {
-            return obj.Instrument + ":" + obj.Gain.ToString(CultureInfo.InvariantCulture) + ":" + obj.Offset.ToString(CultureInfo.InvariantCulture) + ":" + obj.SetTemp.ToString(CultureInfo.InvariantCulture);
+            return obj.Telescope + ":" + obj.Instrument + ":" + obj.Gain.ToString(CultureInfo.InvariantCulture) + ":" + obj.Offset.ToString(CultureInfo.InvariantCulture) + ":" + obj.SetTemp.ToString(CultureInfo.InvariantCulture);
         }
 
-        public InstrumentObject Get(string instrument, int gain, int offset, double settemp)
+        public InstrumentObject Get(string teleskope, string instrument, int gain, int offset, double settemp)
         {
             InstrumentObject obj = new InstrumentObject()
             {
+                Telescope = teleskope,
                 Instrument = instrument,
                 Gain = Convert.ToInt32(gain),
                 Offset = Convert.ToInt32(offset),
@@ -161,14 +170,30 @@ namespace Stroblhofwarte.AperturePhotometry
             return false;
         }
 
-        public bool Create(string instrument, int gain, int offset, double setTemp)
+        public bool Update(string hash, int aperture, int innerAnnulus, int outerAnnulus)
+        {
+            if (_hashCache.ContainsKey(hash))
+            {
+                _hashCache[hash].Aperture = aperture;
+                _hashCache[hash].InnerAnnulus = innerAnnulus;
+                _hashCache[hash].OuterAnnulus = outerAnnulus;
+                return true;
+            }
+            return false;
+        }
+
+        public bool Create(string teleskope, string instrument, int gain, int offset, double setTemp, int aperture, int innerAnnulus, int outerAnnulus)
         {
             InstrumentObject obj = new InstrumentObject()
             {
+                Telescope = teleskope,
                 Instrument = instrument,
                 Gain = Convert.ToInt32(gain),
                 Offset = Convert.ToInt32(offset),
-                SetTemp = Convert.ToDouble(setTemp)
+                SetTemp = Convert.ToDouble(setTemp),
+                Aperture = Convert.ToInt32(aperture),
+                InnerAnnulus = Convert.ToInt32(innerAnnulus),
+                OuterAnnulus = Convert.ToInt32(outerAnnulus)
             };
             string hash = Hash(obj);
             if (_hashCache.ContainsKey(hash))
@@ -182,10 +207,14 @@ namespace Stroblhofwarte.AperturePhotometry
         {
             InstrumentObject obj = new InstrumentObject()
             {
+                Telescope = instr.Telescope,
                 Instrument = instr.Instrument,
                 Gain = instr.Gain,
                 Offset = instr.Offset,
-                SetTemp = instr.SetTemp
+                SetTemp = instr.SetTemp,
+                Aperture = instr.Aperture,
+                InnerAnnulus = instr.InnerAnnulus,
+                OuterAnnulus = instr.OuterAnnulus
             };
             string hash = Hash(obj);
             if (_hashCache.ContainsKey(hash))
@@ -200,6 +229,7 @@ namespace Stroblhofwarte.AperturePhotometry
     {
         #region Properties
 
+        public string Telescope { get; set; }
         public string Instrument { get; set; }
         public double Gain { get; set; }
         public double Offset { get; set; }
@@ -207,7 +237,11 @@ namespace Stroblhofwarte.AperturePhotometry
         public double Gain_e_ADU { get; set; }
         public double ReadOutNoise { get; set; }
         public double DarkCurrent { get; set; }
-     
+
+        public double Aperture { get; set; }
+        public double InnerAnnulus { get; set; }
+        public double OuterAnnulus { get; set; }
+
         #endregion
 
     }

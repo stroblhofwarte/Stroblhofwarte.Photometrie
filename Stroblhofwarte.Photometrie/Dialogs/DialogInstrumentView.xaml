@@ -7,11 +7,12 @@
         xmlns:local="clr-namespace:Stroblhofwarte.Photometrie.Dialogs"
         xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
         mc:Ignorable="d"
-        Title="Instruments" Height="648" Width="943">
+        Title="Instruments" Height="826" Width="1288">
     <Grid>
         <ListView Margin="0,0,0,86" ItemsSource="{Binding InstrumentsList}">
             <ListView.View>
                 <GridView>
+                    <GridViewColumn Header="Telescope" DisplayMemberBinding="{Binding Telescope}" Width="130" />
                     <GridViewColumn Header="Instrument" DisplayMemberBinding="{Binding Instrument}" Width="130" />
                     <GridViewColumn Width="100">
                         <GridViewColumn.Header>
@@ -91,6 +92,9 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
+                    <GridViewColumn Header="Aperture" DisplayMemberBinding="{Binding Aperture}" Width="80" />
+                    <GridViewColumn Header="Inner" DisplayMemberBinding="{Binding InnerAnnulus}" Width="80" />
+                    <GridViewColumn Header="Outer" DisplayMemberBinding="{Binding OuterAnnulus}" Width="80" />
                 </GridView>
             </ListView.View>
         </ListView>

@@ -102,7 +102,7 @@ namespace Stroblhofwarte.AperturePhotometry
         {
             double SoftApertureSigma = 0.0;
             if (meas == null) return 999.0;
-            InstrumentObject instr = Instruments.Instance.Get(StroblhofwarteImage.Instance.GetInstrument(),
+            InstrumentObject instr = Instruments.Instance.Get(StroblhofwarteImage.Instance.GetTelescope(), StroblhofwarteImage.Instance.GetInstrument(),
                 (int)StroblhofwarteImage.Instance.GetSensorGain(),
                 (int)StroblhofwarteImage.Instance.GetSensorOffset(),
                 StroblhofwarteImage.Instance.GetSensorSetTemp());

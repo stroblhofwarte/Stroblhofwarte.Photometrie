@@ -34,7 +34,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         private MeasurementResult _measVar;
         private MeasurementResult _measComp;
         private MeasurementResult _measCheck;
-
+        private bool _apertureChanged = false;
 
         private enumPhotoState _photoState;
         public enumPhotoState PhotoState
@@ -321,6 +321,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             set
             {
                 _apertureSize = value;
+                _apertureChanged = true;
                 if (AnnulusInnerRadius <= value) AnnulusInnerRadius = value + 1;
                 UpdateApertureMeasurement();
                 PhotoState = enumPhotoState.VAR;
@@ -337,6 +338,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             {
                 _annulusInnerRadius = value;
                 if (AnnulusOuterRadius <= value) AnnulusOuterRadius = value + 1;
+                _apertureChanged = true;
                 OnPropertyChanged("AnnulusInnerRadius");
             }
         }
@@ -348,6 +350,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             set
             {
                 _annulusOuterRadius = value;
+                _apertureChanged = true;
                 OnPropertyChanged("AnnulusOuterRadius");
             }
         }
@@ -376,6 +379,47 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         private void ResetPhoto()
         {
             PhotoState = enumPhotoState.VAR;
+        }
+        #endregion
+
+        #region commandSaveAperture
+        private RelayCommand commandSaveAperture;
+        public ICommand CommandSaveAperture
+        {
+            get
+            {
+                if (commandSaveAperture == null)
+                {
+                    commandSaveAperture = new RelayCommand(param => this.SaveAperture(), param => this.CanSaveAperture());
+                }
+                return commandSaveAperture;
+            }
+        }
+
+        private bool CanSaveAperture()
+        {
+            return _apertureChanged;
+        }
+
+        private void SaveAperture()
+        {
+            // Store new size into the instrument setup:
+            try
+            {
+                InstrumentObject instr = Instruments.Instance.Get(StroblhofwarteImage.Instance.GetTelescope(), StroblhofwarteImage.Instance.GetInstrument(),
+                (int)StroblhofwarteImage.Instance.GetSensorGain(),
+                (int)StroblhofwarteImage.Instance.GetSensorOffset(),
+                StroblhofwarteImage.Instance.GetSensorSetTemp());
+                instr.Aperture = _apertureSize;
+                instr.InnerAnnulus = _annulusInnerRadius;
+                instr.OuterAnnulus = _annulusOuterRadius;
+                Instruments.Instance.Save();
+                _apertureChanged = false;
+            }
+            catch (Exception ex)
+            {
+                // This happen when no image is loaded.
+            }
         }
         #endregion
 
@@ -614,6 +658,19 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         private void Instance_NewImageLoaded(object? sender, EventArgs e)
         {
             PhotoState = enumPhotoState.VAR;
+            try
+            {
+                InstrumentObject instr = Instruments.Instance.Get(StroblhofwarteImage.Instance.GetTelescope(), StroblhofwarteImage.Instance.GetInstrument(),
+                        (int)StroblhofwarteImage.Instance.GetSensorGain(),
+                        (int)StroblhofwarteImage.Instance.GetSensorOffset(),
+                        StroblhofwarteImage.Instance.GetSensorSetTemp());
+                ApertureSize = (int)instr.Aperture;
+                AnnulusInnerRadius = (int)instr.InnerAnnulus;
+                AnnulusOuterRadius = (int)instr.OuterAnnulus;
+            } catch (Exception ex)
+            {
+                // could happen when no data inside the image. 
+            }
         }
 
         private void Instance_NewCursorClickPosition(object? sender, EventArgs e)

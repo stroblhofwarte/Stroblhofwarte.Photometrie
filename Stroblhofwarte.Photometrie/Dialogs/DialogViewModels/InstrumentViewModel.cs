@@ -63,15 +63,19 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                 {
                     InstrumentObject obj = new InstrumentObject()
                     {
+                        Telescope = f.Telescope,
                         Instrument = f.Instrument,
                         Gain = Convert.ToInt32(f.Gain, CultureInfo.InvariantCulture),
                         Offset = Convert.ToInt32(f.Offset, CultureInfo.InvariantCulture),
-                        SetTemp = Convert.ToDouble(f.SetTemp, CultureInfo.InvariantCulture)
+                        SetTemp = Convert.ToDouble(f.SetTemp, CultureInfo.InvariantCulture),
                     };
                     string hash = Stroblhofwarte.AperturePhotometry.Instruments.Instance.Hash(obj);
                     Stroblhofwarte.AperturePhotometry.Instruments.Instance.Update(hash, Convert.ToDouble(f.Gain_e_ADU, CultureInfo.InvariantCulture),
                         Convert.ToDouble(f.ReadoutNoise, CultureInfo.InvariantCulture),
                         Convert.ToDouble(f.DarkCurrent, CultureInfo.InvariantCulture));
+                    Stroblhofwarte.AperturePhotometry.Instruments.Instance.Update(hash, Convert.ToInt32(f.Aperture, CultureInfo.InvariantCulture),
+                        Convert.ToInt32(f.InnerAnnulus, CultureInfo.InvariantCulture),
+                        Convert.ToInt32(f.OuterAnnulus, CultureInfo.InvariantCulture));
                 }
                 catch (Exception ex)
                 {
@@ -95,12 +99,14 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
             try
             {
                 // Check first if a new instrument is in the image
+                string newTelescope = StroblhofwarteImage.Instance.GetTelescope();
                 string newInstrument = StroblhofwarteImage.Instance.GetInstrument();
                 double newGain = StroblhofwarteImage.Instance.GetSensorGain();
                 double newOffset = StroblhofwarteImage.Instance.GetSensorOffset();
                 double newSetTemp = StroblhofwarteImage.Instance.GetSensorSetTemp();
                 InstrumentObject newobj = new InstrumentObject()
                 {
+                    Telescope = newTelescope,
                     Instrument = newInstrument,
                     Gain = newGain,
                     Offset = newOffset,
@@ -122,13 +128,17 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
             {
                 Instruments obj = new Instruments()
                 {
+                    Telescope = f.Telescope,
                     Instrument = f.Instrument,
                     Gain = f.Gain.ToString(CultureInfo.InvariantCulture),
                     Offset = f.Offset.ToString(CultureInfo.InvariantCulture),
                     SetTemp = f.SetTemp.ToString(CultureInfo.InvariantCulture),
                     Gain_e_ADU = f.Gain_e_ADU.ToString(CultureInfo.InvariantCulture),
                     ReadoutNoise = f.ReadOutNoise.ToString(CultureInfo.InvariantCulture),
-                    DarkCurrent = f.DarkCurrent.ToString(CultureInfo.InvariantCulture)
+                    DarkCurrent = f.DarkCurrent.ToString(CultureInfo.InvariantCulture),
+                    Aperture = f.Aperture.ToString(CultureInfo.InvariantCulture),
+                    InnerAnnulus = f.InnerAnnulus.ToString(CultureInfo.InvariantCulture),
+                    OuterAnnulus = f.OuterAnnulus.ToString(CultureInfo.InvariantCulture)
                 };
                 InstrumentsList.Add(obj);
             }
@@ -139,6 +149,18 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
     public class Instruments : INotifyPropertyChanged
     {
         #region Properties
+
+        private string _telescope;
+
+        public string Telescope
+        {
+            get { return _telescope; }
+            set
+            {
+                _telescope = value;
+                OnPropertyChanged("Telescope");
+            }
+        }
 
         private string _instrument;
 
@@ -221,6 +243,42 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
             {
                 _darkCurrent = value;
                 OnPropertyChanged("DarkCurrent");
+            }
+        }
+
+        private string _aperture;
+
+        public string Aperture
+        {
+            get { return _aperture; }
+            set
+            {
+                _aperture = value;
+                OnPropertyChanged("Aperture");
+            }
+        }
+
+        private string _innerAnnulus;
+
+        public string InnerAnnulus
+        {
+            get { return _innerAnnulus; }
+            set
+            {
+                _innerAnnulus = value;
+                OnPropertyChanged("InnerAnnulus");
+            }
+        }
+
+        private string _outerAnnulus;
+
+        public string OuterAnnulus
+        {
+            get { return _outerAnnulus; }
+            set
+            {
+                _outerAnnulus = value;
+                OnPropertyChanged("OuterAnnulus");
             }
         }
         #endregion

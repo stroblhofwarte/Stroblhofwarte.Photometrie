@@ -106,6 +106,13 @@
                     <Label Content="Show Star Profile:" Foreground="#FFADADAD" Margin="0,27,180,0" Height="26" VerticalAlignment="Top" HorizontalAlignment="Right" Width="102"/>
                     <mah:ToggleSwitch IsOn="{Binding ShowProfile, Mode=TwoWay}"   Margin="0,24,10,0" Width="119" FontSize="12" VerticalAlignment="Top" Height="32" HorizontalAlignment="Right"/>
 
+                    <Button Width="35"
+                        Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding CommandSaveAperture}" HorizontalAlignment="Left" ToolTip="Switch Coordinates Grid on or off" Margin="297,80,0,0" Height="36" VerticalAlignment="Top">
+                        <StackPanel Orientation="Vertical">
+                            <icon:PackIconMaterial Width="20" Height="20" Kind="ContentSaveOutline" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
                 </Grid>
             </mah:MetroTabItem>
         </mah:MetroTabControl>
