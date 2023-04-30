@@ -87,7 +87,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             }
         }
 
-        private double _zoom = 1.0;
+        private double _zoom = 0.25;
         public double Zoom
         {
             set

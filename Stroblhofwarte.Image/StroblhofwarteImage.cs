@@ -147,18 +147,10 @@ namespace Stroblhofwarte.Image
                 Bitmap bmp =(Bitmap) _imageData.GetImage().Clone();
                 Graphics g = Graphics.FromImage(bmp);
                 System.Drawing.Pen pen = new System.Drawing.Pen(System.Drawing.Brushes.Yellow, 1.0f);
-                if (_font == null)
-                    _font = new Font("Segoe UI", (float)(10.0 * AnnotateScale));
+                _font = new Font("Segoe UI", (float)(16.0 /*/ AnnotateScale*/));
                 foreach (Annotation a in _annotations)
                 {
                     System.Windows.Point p = WCS.GetCoordinates(a.Coor);
-                    /*g.DrawLine(new System.Drawing.Pen(System.Drawing.Brushes.Yellow, 10.0f),
-                        (int)p.X + (int)(10* AnnotateScale),
-                        (int)p.Y + (int)(10* AnnotateScale),
-                        (int)p.X+(int)(20 * AnnotateScale),
-                        (int)p.Y+(int)(20 * AnnotateScale));*/
-                    /*g.DrawLine(pen, (int)p.X, (int)p.Y, (int)p.X + (int)(5 * AnnotateScale),
-                        (int)p.Y + (int)(5 * AnnotateScale));*/
                     TextRenderer.DrawText(g, "\\\n" + a.Name, _font, new System.Drawing.Point((int)p.X-4,
                         (int)p.Y-4), System.Drawing.Color.Yellow);
                 }   
