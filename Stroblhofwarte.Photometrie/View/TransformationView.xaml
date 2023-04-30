@@ -25,7 +25,7 @@
             <RowDefinition Height="5" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <oxy:PlotView Grid.Row="0" Model="{Binding Model}" />
+
         <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" />
         <ListView Grid.Row="2" Margin="0,0,0,51" ItemsSource="{Binding Data}">
             <ListView.View>
@@ -33,12 +33,29 @@
                     <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Id}" Width="80" />
                     <GridViewColumn Header="Filter" DisplayMemberBinding="{Binding Filter}" Width="80" />
                     <GridViewColumn Header="Meas" DisplayMemberBinding="{Binding Meas}" Width="80" />
-                    <GridViewColumn Header="V [mag]" DisplayMemberBinding="{Binding V}" Width="80" />
-                    <GridViewColumn Header="Index" DisplayMemberBinding="{Binding Index}" Width="80" />
+                    <GridViewColumn Header="V [mag]" DisplayMemberBinding="{Binding V}" Width="100" />
+                    <GridViewColumn Header="UB" DisplayMemberBinding="{Binding UB}" Width="100" />
+                    <GridViewColumn Header="BV" DisplayMemberBinding="{Binding BV}" Width="100" />
+                    <GridViewColumn Header="VR" DisplayMemberBinding="{Binding VR}" Width="100" />
+                    <GridViewColumn Header="RI" DisplayMemberBinding="{Binding RI}" Width="100" />
                 </GridView>
             </ListView.View>
         </ListView>
         <ComboBox ItemsSource="{Binding TransfromModels}" HorizontalAlignment="Left" Margin="112,0,0,10" Grid.Row="2" Width="120" Height="26" VerticalAlignment="Bottom"/>
         <Label Content="Calculate for:" HorizontalAlignment="Left" Margin="28,0,0,11" Grid.Row="2" Height="25" VerticalAlignment="Bottom"/>
+        <TabControl Margin="0,0,0,4" Grid.RowSpan="2">
+            <TabItem Header="Tx__yz">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="127*"/>
+                        <ColumnDefinition Width="667*"/>
+                    </Grid.ColumnDefinitions>
+                    <oxy:PlotView Model="{Binding Model_Tx_yz}" Grid.ColumnSpan="2" Background="#242426" />
+                </Grid>
+            </TabItem>
+            <TabItem Header="TabItem">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+        </TabControl>
     </Grid>
 </UserControl>

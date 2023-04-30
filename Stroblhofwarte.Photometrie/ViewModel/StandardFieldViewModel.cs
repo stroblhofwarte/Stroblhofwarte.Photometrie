@@ -60,8 +60,8 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                                                             { new Fields() { Name = "M67", Id=67 } } };
             _stars = new ObservableCollection<StandardStar>();
             ItemChange = _fields[0];
-            
-            StroblhofwarteImage.Instance.NewCursorClickPosition += Instance_NewCursorClickPosition;
+
+            MagMeasurement.Instance.NewMeasurement += Instance_NewMag;
             StroblhofwarteImage.Instance.NewImageLoaded += Instance_NewImageLoaded;
         }
 
@@ -70,10 +70,13 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             OnPropertyChanged("SelectStarfieldEnabled");
         }
 
-        private void Instance_NewCursorClickPosition(object? sender, EventArgs e)
+        private void Instance_NewMag(object? sender, EventArgs e)
         {
-            double x = StroblhofwarteImage.Instance.CursorClickPosition.X;
-            double y = StroblhofwarteImage.Instance.CursorClickPosition.Y;
+            MeasurementEventArgs args = e as MeasurementEventArgs;
+            if (args == null) return;
+            if (!args.IsMachine) return;
+            double x = args.X;
+            double y = args.Y;
             Coordinates coor = StroblhofwarteImage.Instance.WCS.GetCoordinates(x, y);
             int idx = 0;
             double minDistance = double.MaxValue;
@@ -89,6 +92,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 r++;
             }
             SelectedStar = Stars[idx];
+            TransformDataSet.Instance.Update(SelectedStar.Id, args.Mag, SelectedStar.V, SelectedStar.BV, SelectedStar.UB, SelectedStar.VR, SelectedStar.RI);
         }
 
         private Fields _selectedItem;

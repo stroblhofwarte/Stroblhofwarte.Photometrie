@@ -17,6 +17,8 @@ namespace Stroblhofwarte.Photometrie.ViewModel
     {
         #region Properties
 
+        private ScatterSeries _tx_yz_series;
+
         private ObservableCollection<TrandformationEntry> _data;
         public ObservableCollection<TrandformationEntry> Data
         {
@@ -24,7 +26,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         }
 
         private PlotModel _plotModel;
-        public PlotModel Model
+        public PlotModel Model_Tx_yz
         {
             get { return _plotModel; }
             set
@@ -56,26 +58,28 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             };
             _data = new ObservableCollection<TrandformationEntry>();
 
-            MagMeasurement.Instance.NewMeasurement += Instance_NewMeasurement;
+            TransformDataSet.Instance.NewMeasurement += Instance_NewMeasurement;
 
-            Model = new PlotModel { Title = "Simple example", Subtitle = "using OxyPlot" };
+            Model_Tx_yz = new PlotModel { Title = "Tx_yz", Subtitle = "(Magnitude Transformation)"};
 
-            var series1 = new ScatterSeries { Title = "Series 1", MarkerType = MarkerType.Circle };
-            series1.Points.Add(new ScatterPoint(1, 1));
-            series1.Points.Add(new ScatterPoint(2, 2));
-            series1.Points.Add(new ScatterPoint(3, 3));
-            series1.Points.Add(new ScatterPoint(4, 4));
-            series1.Points.Add(new ScatterPoint(5, 5));
-
-            Model.Series.Add(series1);
+            _tx_yz_series = new ScatterSeries { Title = "Series 1", MarkerType = MarkerType.Circle };
+            Model_Tx_yz.Series.Add(_tx_yz_series);
+            
         }
 
         private void Instance_NewMeasurement(object? sender, EventArgs e)
         {
-            MeasurementEventArgs args = e as MeasurementEventArgs;
-            if (args == null) return;
-            if (!args.IsMachine) return;
-            _data.Add(new TrandformationEntry() { Meas = args.Mag });
+            
+            _data.Add(new TrandformationEntry() { Id= TransformDataSet.Instance.Id,
+                Meas = TransformDataSet.Instance.Mag,
+                V = TransformDataSet.Instance.V,
+                BV = TransformDataSet.Instance.BV,
+                UB = TransformDataSet.Instance.UB,
+                VR = TransformDataSet.Instance.VR,
+                RI = TransformDataSet.Instance.RI
+            });
+            _tx_yz_series.Points.Add(new ScatterPoint(TransformDataSet.Instance.BV, TransformDataSet.Instance.Mag + 20 - TransformDataSet.Instance.V));
+            Model_Tx_yz.InvalidatePlot(true);
         }
         #endregion
     }
@@ -116,11 +120,32 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             set { _V = value; OnPropertyChanged("V"); }
         }
 
-        private double _index;
-        public double Index
+        private double _BV;
+        public double BV
         {
-            get { return _index; }
-            set { _index = value; OnPropertyChanged("Index"); }
+            get { return _BV; }
+            set { _BV = value; OnPropertyChanged("BV"); }
+        }
+
+        private double _UB;
+        public double UB
+        {
+            get { return _UB; }
+            set { _UB = value; OnPropertyChanged("UB"); }
+        }
+
+        private double _VR;
+        public double VR
+        {
+            get { return _VR; }
+            set { _VR = value; OnPropertyChanged("VR"); }
+        }
+
+        private double _RI;
+        public double RI
+        {
+            get { return _RI; }
+            set { _RI = value; OnPropertyChanged("RI"); }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

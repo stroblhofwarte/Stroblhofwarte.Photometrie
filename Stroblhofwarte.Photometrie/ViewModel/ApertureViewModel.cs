@@ -693,7 +693,11 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             {
                 AutodetectAperture();
                 UpdateApertureMeasurement();
-                if (MagMeasurement.Instance.CalibrationMode) return;
+                if (MagMeasurement.Instance.CalibrationMode)
+                {
+                    OnPropertyChanged("ImageSource");
+                    return;
+                }
                 if (PhotoState == enumPhotoState.VAR)
                 {
                     PhotoState = enumPhotoState.COMP;
@@ -741,7 +745,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 if (MagMeasurement.Instance.CalibrationMode)
                 {
                     Mag = measure.Magnitude(meas, 1.0); // Machine Mag here!
-                    MagMeasurement.Instance.Update(Mag, true);
+                    MagMeasurement.Instance.Update(Mag, _starCentroid.X, _starCentroid.Y, true);
                     return;
                 }
                 if (PhotoState == enumPhotoState.VAR) _measVar = meas;
@@ -749,7 +753,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 if (PhotoState == enumPhotoState.CHECK) _measCheck = meas;
                 double M = measure.Magnitude(meas, Z);
                 Mag = M;
-                MagMeasurement.Instance.Update(Mag, false);
+                MagMeasurement.Instance.Update(Mag, _starCentroid.X, _starCentroid.Y, false);
             }
             catch (Exception ex)
             {

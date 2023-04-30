@@ -46,6 +46,9 @@ namespace Stroblhofwarte.AperturePhotometry
         }
         public bool CalibrationMode { get; set; }
 
+        public int X { get; set; }
+        public int Y { get; set; }
+
         #endregion
 
         #region Ctor
@@ -56,13 +59,15 @@ namespace Stroblhofwarte.AperturePhotometry
 
         #endregion
 
-        public void Update(double mag, bool isMachine)
+        public void Update(double mag, int x, int y, bool isMachine)
         {
             _mag = mag;
             _isMachine = isMachine;
+            X = x;
+            Y = y;
             if (NewMeasurement != null)
             {
-                MeasurementEventArgs args = new MeasurementEventArgs() { Mag = _mag, IsMachine = _isMachine };
+                MeasurementEventArgs args = new MeasurementEventArgs() { Mag = _mag, IsMachine = _isMachine, X = x, Y = y };
                 NewMeasurement(this, args);
             }
         }
@@ -72,6 +77,8 @@ namespace Stroblhofwarte.AperturePhotometry
     {
         public double Mag { get; set; }
         public bool IsMachine { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
     }
 }
 
