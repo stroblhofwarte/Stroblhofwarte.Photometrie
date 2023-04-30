@@ -87,6 +87,21 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             }
         }
 
+        private double _zoom = 1.0;
+        public double Zoom
+        {
+            set
+            {
+                _zoom = value;
+                OnPropertyChanged("Zoom");
+                OnPropertyChanged("ImageSource");
+            }
+            get
+            {
+                return _zoom;
+            }
+        }
+
         #endregion
 
         #region Commands
@@ -126,6 +141,54 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             OnPropertyChanged("ImageSource");
         }
 
+
+        private RelayCommand commandZoomPlus;
+        public ICommand CommandZoomPlus
+        {
+            get
+            {
+                if (commandZoomPlus == null)
+                {
+                    commandZoomPlus = new RelayCommand(param => this.ZoomPlus(), param => this.CanZoomPlus());
+                }
+                return commandZoomPlus;
+            }
+        }
+
+        private bool CanZoomPlus()
+        {
+            return true;
+        }
+
+        private void ZoomPlus()
+        {
+            if (Zoom >= 2.5) return;
+            Zoom = Zoom + 0.25;
+        }
+
+        private RelayCommand commandZoomMinus;
+        public ICommand CommandZoomMinus
+        {
+            get
+            {
+                if (commandZoomMinus == null)
+                {
+                    commandZoomMinus = new RelayCommand(param => this.ZoomMinus(), param => this.CanZoomMinus());
+                }
+                return commandZoomMinus;
+            }
+        }
+
+        private bool CanZoomMinus()
+        {
+            return true;
+        }
+
+        private async void ZoomMinus()
+        {
+            if (Zoom <= 0.25) return;
+            Zoom = Zoom - 0.25;
+        }
         #endregion
         #region Ctor
 

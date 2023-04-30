@@ -17,6 +17,9 @@ using System.Windows.Media.Imaging;
 using static System.Net.WebRequestMethods;
 using Stroblhofwarte.Photometrie.DataPackages;
 using Stroblhofwarte.Photometrie.FileFormats;
+using Stroblhofwarte.AperturePhotometry.StandardFields;
+using Stroblhofwarte.Photometrie.View;
+using System.Windows.Media;
 
 namespace Stroblhofwarte.Photometrie.ViewModel
 {
@@ -112,7 +115,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                         }
                         double f = (max - min) / ((magN / 2) - 50);
                         double oldY = 0.0;
-                        Pen p = new System.Drawing.Pen(System.Drawing.Brushes.Yellow, 1.0f);
+                        System.Drawing.Pen p = new System.Drawing.Pen(System.Drawing.Brushes.Yellow, 1.0f);
                         for (int x = magN / 2 - 20; x < magN / 2 + 20; x++)
                         {
                             double y = (double)raw[(magN / 2) * magN + x];
@@ -644,6 +647,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             StarDataRelay.Instance.CompStarChanged += Instance_CompStarChanged;
             ContentId = "ApertureViewModel";
             _centroidSearchRadius = Properties.Settings.Default.MagnificationN / 8;
+
         }
 
         private void Instance_CompStarChanged(object? sender, EventArgs e)
@@ -672,6 +676,15 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             } catch (Exception ex)
             {
                 // could happen when no data inside the image. 
+            }
+
+            // TEST
+            Stroblhofwarte.AperturePhotometry.StandardFields.M67 field = new AperturePhotometry.StandardFields.M67();
+            List<StandardStar> stars = field.Stars;
+            foreach (StandardStar s in stars)
+            {
+                Coordinates c = new Coordinates(s.Ra, s.DEC, Epoch.J2000, Coordinates.RAType.Degrees);
+                StroblhofwarteImage.Instance.AddAnnotation(s.Id, c);
             }
         }
 

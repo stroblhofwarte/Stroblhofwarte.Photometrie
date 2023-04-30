@@ -22,11 +22,16 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        
-        <main:MouseTrackerDecorator x:Name="mouseTracker">
-            <Image Source="{Binding ImageSource}" Margin="0,0,0,76" />
-        </main:MouseTrackerDecorator>
- 
+
+        <ScrollViewer Name="MyScrollViewer" CanContentScroll="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <main:MouseTrackerDecorator x:Name="mouseTracker">
+                <Image Source="{Binding ImageSource}" Margin="0,0,0,76">
+                    <Image.LayoutTransform>
+                        <ScaleTransform ScaleX="{Binding Zoom}" ScaleY="{Binding Zoom}" />
+                    </Image.LayoutTransform>
+                </Image>
+            </main:MouseTrackerDecorator>
+        </ScrollViewer>
         <Label Content="{Binding CoordinateText}" Margin="220,0,220,36" Height="28" VerticalAlignment="Bottom"/>
         <Button Width="55"
         Style="{DynamicResource MahApps.Styles.Button.Circle}" Height="55" VerticalAlignment="Bottom" HorizontalAlignment="Left" ToolTip="Switch Coordinates Grid on or off" Margin="9,0,0,9">
@@ -40,5 +45,17 @@
                 <icon:PackIconMaterial Width="30" Height="30" Kind="Creation" HorizontalAlignment="Center"/>
             </StackPanel>
         </ToggleButton>
+        <Button
+        Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding CommandZoomPlus}" Height="55" VerticalAlignment="Bottom" ToolTip="Annotate reference stars from AAVSO data when loaded" Margin="0,0,91,10" HorizontalAlignment="Right" Width="55">
+            <StackPanel Orientation="Vertical">
+                <icon:PackIconMaterial Width="30" Height="30" Kind="Plus" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Button>
+        <Button
+        Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding CommandZoomMinus}" Height="55" VerticalAlignment="Bottom" ToolTip="Annotate reference stars from AAVSO data when loaded" Margin="0,0,31,10" HorizontalAlignment="Right" Width="55">
+            <StackPanel Orientation="Vertical">
+                <icon:PackIconMaterial Width="30" Height="30" Kind="Minus" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Button>
     </Grid>
 </UserControl>
