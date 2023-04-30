@@ -66,7 +66,6 @@ namespace Stroblhofwarte.Photometrie
                     double yRel = y;
                     StroblhofwarteImage.Instance.CursorPosition = new System.Drawing.Point((int)x, (int)y);
                     Coordinates c = wcs.GetCoordinates(xRel, yRel);
-                    Point test = wcs.GetCoordinates(c);
                     model.CoordinateText = c.ToString();
                 }
 

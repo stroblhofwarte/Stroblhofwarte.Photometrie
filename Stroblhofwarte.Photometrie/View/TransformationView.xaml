@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="Stroblhofwarte.Photometrie.View.TransformationView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:oxy="clr-namespace:OxyPlot.Wpf;assembly=OxyPlot.Wpf" 
+      xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      xmlns:local="clr-namespace:Stroblhofwarte.Photometrie.View"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- MahApps.Metro resource dictionaries. Make sure that all file names are Case Sensitive! -->
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <!-- Theme setting -->
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Dark.Blue.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <oxy:PlotView Grid.Row="0" Model="{Binding Model}" />
+        <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" />
+        <ListView Grid.Row="2" Margin="0,0,0,51" ItemsSource="{Binding Data}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Id}" Width="80" />
+                    <GridViewColumn Header="Filter" DisplayMemberBinding="{Binding Filter}" Width="80" />
+                    <GridViewColumn Header="Meas" DisplayMemberBinding="{Binding Meas}" Width="80" />
+                    <GridViewColumn Header="V [mag]" DisplayMemberBinding="{Binding V}" Width="80" />
+                    <GridViewColumn Header="Index" DisplayMemberBinding="{Binding Index}" Width="80" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <ComboBox ItemsSource="{Binding TransfromModels}" HorizontalAlignment="Left" Margin="112,0,0,10" Grid.Row="2" Width="120" Height="26" VerticalAlignment="Bottom"/>
+        <Label Content="Calculate for:" HorizontalAlignment="Left" Margin="28,0,0,11" Grid.Row="2" Height="25" VerticalAlignment="Bottom"/>
+    </Grid>
+</UserControl>

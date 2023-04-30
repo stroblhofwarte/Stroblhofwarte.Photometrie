@@ -21,6 +21,8 @@ namespace Stroblhofwarte.AperturePhotometry.StandardFields
         public double UBerr { get; set; }
         public double VRerr { get; set; }
         public double RIerr { get; set; }
+        public double X { get; set; }
+        public double Y { get; set; }
 
 
     }

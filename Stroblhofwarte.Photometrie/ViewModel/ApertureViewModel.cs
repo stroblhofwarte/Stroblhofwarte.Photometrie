@@ -32,6 +32,13 @@ namespace Stroblhofwarte.Photometrie.ViewModel
     public class ApertureViewModel : DockWindowViewModel
     {
         private string PERMADB = "mymeasurements.db";
+        #region Events
+
+        public event EventHandler NewMeasurement;
+
+
+
+        #endregion
 
         #region Properties
         private MeasurementResult _measVar;
@@ -678,14 +685,6 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 // could happen when no data inside the image. 
             }
 
-            // TEST
-            Stroblhofwarte.AperturePhotometry.StandardFields.M67 field = new AperturePhotometry.StandardFields.M67();
-            List<StandardStar> stars = field.Stars;
-            foreach (StandardStar s in stars)
-            {
-                Coordinates c = new Coordinates(s.Ra, s.DEC, Epoch.J2000, Coordinates.RAType.Degrees);
-                StroblhofwarteImage.Instance.AddAnnotation(s.Id, c);
-            }
         }
 
         private void Instance_NewCursorClickPosition(object? sender, EventArgs e)
@@ -694,6 +693,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             {
                 AutodetectAperture();
                 UpdateApertureMeasurement();
+                if (MagMeasurement.Instance.CalibrationMode) return;
                 if (PhotoState == enumPhotoState.VAR)
                 {
                     PhotoState = enumPhotoState.COMP;
@@ -738,11 +738,18 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 double inner = 0.0;
                 double outer = 0.0;
                 MeasurementResult meas = measure.Measure(_starCentroid.X, _starCentroid.Y, _centroidSearchRadius, (double)ApertureSize, AnnulusInnerRadius, AnnulusOuterRadius);
+                if (MagMeasurement.Instance.CalibrationMode)
+                {
+                    Mag = measure.Magnitude(meas, 1.0); // Machine Mag here!
+                    MagMeasurement.Instance.Update(Mag, true);
+                    return;
+                }
                 if (PhotoState == enumPhotoState.VAR) _measVar = meas;
                 if (PhotoState == enumPhotoState.COMP) _measComp = meas;
                 if (PhotoState == enumPhotoState.CHECK) _measCheck = meas;
                 double M = measure.Magnitude(meas, Z);
                 Mag = M;
+                MagMeasurement.Instance.Update(Mag, false);
             }
             catch (Exception ex)
             {
@@ -752,4 +759,5 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
         #endregion
     }
+
 }

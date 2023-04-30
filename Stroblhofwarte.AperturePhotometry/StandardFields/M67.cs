@@ -10,7 +10,7 @@ namespace Stroblhofwarte.AperturePhotometry.StandardFields
     public class M67
     {
         public List<StandardStar> Stars { get; set; }
-    
+        
         public M67() 
         {
             Stars = new List<StandardStar>()
