@@ -30,6 +30,13 @@
         <ListView Grid.Row="2" Margin="0,0,0,51" ItemsSource="{Binding Data}">
             <ListView.View>
                 <GridView>
+                    <GridViewColumn Header="Del." Width="40">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button  Content="X" Command="{Binding Path=DataContext.CommandDel, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" CommandParameter="{Binding}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                     <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Id}" Width="80" />
                     <GridViewColumn Header="Filter" DisplayMemberBinding="{Binding Filter}" Width="80" />
                     <GridViewColumn Header="Meas" DisplayMemberBinding="{Binding Meas}" Width="80" />
@@ -50,7 +57,7 @@
                         <ColumnDefinition Width="127*"/>
                         <ColumnDefinition Width="667*"/>
                     </Grid.ColumnDefinitions>
-                    <oxy:PlotView Model="{Binding Model_Tx_yz}" Grid.ColumnSpan="2" Background="#242426" />
+                    <oxy:PlotView Model="{Binding Model_Tx_yz}" Grid.ColumnSpan="2" Background="#242426" Foreground="Silver" />
                 </Grid>
             </TabItem>
             <TabItem Header="TabItem">
