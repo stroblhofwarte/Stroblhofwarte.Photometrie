@@ -32,6 +32,9 @@ namespace Stroblhofwarte.Photometrie.DataPackages
 
         #endregion
 
+        public bool CValid { get; set; }
+        public bool KValid { get; set; }
+
         private double _compMag;
         public double CompMag
         {
@@ -116,5 +119,24 @@ namespace Stroblhofwarte.Photometrie.DataPackages
             get { return _chartId; }
         }
 
+        private string _filter;
+        public string Filter
+        {
+            set
+            {
+                _filter = value;
+            }
+            get { return _filter; }
+        }
+
+        #region CTor
+
+        public StarDataRelay()
+        {
+            CValid = false;
+            KValid = false;
+        }
+
+        #endregion
     }
 }

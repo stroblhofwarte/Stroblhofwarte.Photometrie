@@ -175,6 +175,9 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         {
             
             StroblhofwarteImage.Instance.ClearAnnotation();
+            StarDataRelay.Instance.CValid = false;
+            StarDataRelay.Instance.KValid = false;
+
             await Task.Factory.StartNew(() =>
             {
 
@@ -225,6 +228,9 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         {
            
             StroblhofwarteImage.Instance.ClearAnnotation();
+            StarDataRelay.Instance.CValid = false;
+            StarDataRelay.Instance.KValid = false;
+
             await Task.Factory.StartNew(() =>
             {
 
@@ -274,6 +280,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         {
             if(o is Stroblhofwarte.Photometrie.ViewModel.ReferenceStar)
             {
+                StarDataRelay.Instance.Filter = _filter;
                 StarDataRelay.Instance.CompMag = (o as Stroblhofwarte.Photometrie.ViewModel.ReferenceStar).MAG;
                 if ((o as Stroblhofwarte.Photometrie.ViewModel.ReferenceStar).AUID != String.Empty)
                     StarDataRelay.Instance.CompName = (o as Stroblhofwarte.Photometrie.ViewModel.ReferenceStar).AUID;
@@ -281,6 +288,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                     StarDataRelay.Instance.CompName = (o as Stroblhofwarte.Photometrie.ViewModel.ReferenceStar).Name;
 
                 StarDataRelay.Instance.ChartId = _varStar.ChartId;
+                StarDataRelay.Instance.CValid = true;
             }
         }
 
@@ -311,6 +319,8 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                     StarDataRelay.Instance.CheckName = (o as Stroblhofwarte.Photometrie.ViewModel.ReferenceStar).AUID;
                 else
                     StarDataRelay.Instance.CheckName = (o as Stroblhofwarte.Photometrie.ViewModel.ReferenceStar).Name;
+
+                StarDataRelay.Instance.KValid = true;
             }
         }
         #endregion
@@ -346,6 +356,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             {
                 _refStars.Clear();
             }));
+
             if (_varStar == null) return;
             Name = _varStar.Var.Name;
             Auid = _varStar.Var.Auid;

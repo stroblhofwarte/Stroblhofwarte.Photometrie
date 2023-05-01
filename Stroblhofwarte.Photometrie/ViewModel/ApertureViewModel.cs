@@ -20,6 +20,8 @@ using Stroblhofwarte.Photometrie.FileFormats;
 using Stroblhofwarte.AperturePhotometry.StandardFields;
 using Stroblhofwarte.Photometrie.View;
 using System.Windows.Media;
+using System.ComponentModel;
+using System.Collections.ObjectModel;
 
 namespace Stroblhofwarte.Photometrie.ViewModel
 {
@@ -45,6 +47,14 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         private MeasurementResult _measComp;
         private MeasurementResult _measCheck;
         private bool _apertureChanged = false;
+        private ApertureMeasurementEntry _currentMeas;
+
+        private ObservableCollection<ApertureMeasurementEntry> _measures = new ObservableCollection<ApertureMeasurementEntry>();
+        public ObservableCollection<ApertureMeasurementEntry> Measures
+        {
+            get { return _measures; }
+        }
+
 
         private enumPhotoState _photoState;
         public enumPhotoState PhotoState
@@ -53,7 +63,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             set
             {
                 _photoState = value;
-                if(_photoState == enumPhotoState.VAR)
+                if (_photoState == enumPhotoState.VAR)
                 {
                     var converter = new System.Windows.Media.BrushConverter();
                     VarStatColor = (System.Windows.Media.Brush)converter.ConvertFromString("#FFF7E627");
@@ -94,8 +104,8 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                     Bitmap bitmap = StroblhofwarteImage.Instance.GetSubimage(_starCentroid, magN, magN);
                     Graphics g = Graphics.FromImage(bitmap);
                     g.DrawEllipse(new System.Drawing.Pen(System.Drawing.Brushes.Green, 1.0f),
-                        (int)(magN/2 - ApertureSize),
-                        (int)(magN/2 - ApertureSize),
+                        (int)(magN / 2 - ApertureSize),
+                        (int)(magN / 2 - ApertureSize),
                         (int)(2 * ApertureSize),
                         (int)(2 * ApertureSize));
                     g.DrawEllipse(new System.Drawing.Pen(System.Drawing.Brushes.Yellow, 1.0f),
@@ -145,6 +155,29 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             }
         }
 
+        private string _error;
+        public string Error
+        {
+            get { return _error; }
+            set
+            {
+                _error = value;
+                OnPropertyChanged("Error");
+            }
+        }
+
+        private string _stepInfo;
+        public string StepInfo
+        {
+            get { return _stepInfo; }
+            set
+            {
+                _stepInfo = value;
+                OnPropertyChanged("StepInfo");
+            }
+        }
+
+        
         private bool _showProfile;
         public bool ShowProfile
 
@@ -290,6 +323,8 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 CompMag = measure.Magnitude(_measComp, Z);
                 VarError = measure.Uncertenty(_measVar);
                 CompError = measure.Uncertenty(_measComp);
+                if(_currentMeas != null) _currentMeas.MagErr = VarError;
+                if (_currentMeas != null) _currentMeas.CompErr = CompError;
                 OnPropertyChanged("ReferenceMag");
             }
         }
@@ -334,7 +369,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 _apertureChanged = true;
                 if (AnnulusInnerRadius <= value) AnnulusInnerRadius = value + 1;
                 UpdateApertureMeasurement();
-                PhotoState = enumPhotoState.VAR;
+                PhotoState = enumPhotoState.COMP;
                 OnPropertyChanged("ApertureSize");
                 OnPropertyChanged("ImageSource");
             }
@@ -388,7 +423,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
         private void ResetPhoto()
         {
-            PhotoState = enumPhotoState.VAR;
+            PhotoState = enumPhotoState.COMP;
         }
         #endregion
 
@@ -621,7 +656,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             AAVSOList newElement;
             AAVSOExtendedFileFormat.Instance.Add(StarDataRelay.Instance.Name,
                 StroblhofwarteImage.Instance.GetJD().ToString(CultureInfo.InvariantCulture),
-                VarMag.ToString("0.##", CultureInfo.InvariantCulture), 
+                VarMag.ToString("0.##", CultureInfo.InvariantCulture),
                 VarError.ToString("0.####", CultureInfo.InvariantCulture),
                 Stroblhofwarte.AperturePhotometry.Filter.Instance.TranslateToAAVSOFilter(StroblhofwarteImage.Instance.GetFilter()),
                 "NO",
@@ -634,7 +669,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 "na",
                 StarDataRelay.Instance.ChartId,
                 "na", out newElement);
-            PhotoState = enumPhotoState.VAR;
+            PhotoState = enumPhotoState.COMP;
 
             // Store reported measurments also in the permanent db:
             AAVSOExtendedFileFormat permanentDb = new AAVSOExtendedFileFormat(PERMADB);
@@ -648,7 +683,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         {
             StroblhofwarteImage.Instance.NewCursorClickPosition += Instance_NewCursorClickPosition;
             StroblhofwarteImage.Instance.NewImageLoaded += Instance_NewImageLoaded;
-            PhotoState = enumPhotoState.VAR;
+            PhotoState = enumPhotoState.COMP;
             Z = 21.1;
             StarDataRelay.Instance.CheckStarChanged += Instance_CheckStarChanged;
             StarDataRelay.Instance.CompStarChanged += Instance_CompStarChanged;
@@ -669,7 +704,8 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
         private void Instance_NewImageLoaded(object? sender, EventArgs e)
         {
-            PhotoState = enumPhotoState.VAR;
+            PhotoState = enumPhotoState.COMP;
+            StepInfo = "Select C";
             try
             {
                 InstrumentObject instr = Instruments.Instance.Get(StroblhofwarteImage.Instance.GetTelescope(), StroblhofwarteImage.Instance.GetInstrument(),
@@ -680,7 +716,8 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 ApertureSize = (int)instr.Aperture;
                 AnnulusInnerRadius = (int)instr.InnerAnnulus;
                 AnnulusOuterRadius = (int)instr.OuterAnnulus;
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 // could happen when no data inside the image. 
             }
@@ -698,12 +735,14 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                     OnPropertyChanged("ImageSource");
                     return;
                 }
-                if (PhotoState == enumPhotoState.VAR)
+                if (PhotoState == enumPhotoState.COMP)
                 {
-                    PhotoState = enumPhotoState.COMP;
+                    StepInfo = "Select VAR";
+                    PhotoState = enumPhotoState.VAR;
                 }
-                else if (PhotoState == enumPhotoState.COMP)
+                else if (PhotoState == enumPhotoState.VAR)
                 {
+                    StepInfo = "Select K";
                     PhotoState = enumPhotoState.CHECK;
                 }
                 else
@@ -713,7 +752,8 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 OnPropertyChanged("ImageSource");
                 // If the reference data are prefilled, recalculate Z
                 ReferenceMag = _referenceMag;
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 // Centroid is outside the search region. 
             }
@@ -748,11 +788,45 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                     MagMeasurement.Instance.Update(Mag, _starCentroid.X, _starCentroid.Y, true);
                     return;
                 }
-                if (PhotoState == enumPhotoState.VAR) _measVar = meas;
-                if (PhotoState == enumPhotoState.COMP) _measComp = meas;
-                if (PhotoState == enumPhotoState.CHECK) _measCheck = meas;
+
+                // Check if Filter match:
+                if(Stroblhofwarte.AperturePhotometry.Filter.Instance.TranslateToAAVSOFilter(StroblhofwarteImage.Instance.GetFilter()) != StarDataRelay.Instance.Filter)
+                {
+                    // Filter does not match!
+                    Error = "AAVSO Data filter != Image filter!";
+                    return;
+                }
+                Error = "";
                 double M = measure.Magnitude(meas, Z);
                 Mag = M;
+                if (PhotoState == enumPhotoState.COMP)
+                {
+                    if (StarDataRelay.Instance.KValid == false || StarDataRelay.Instance.CValid == false)
+                    {
+                        Error = "No C and K star selected!";
+                        return;
+                    }
+                    Error = "";
+                    _currentMeas = new ApertureMeasurementEntry();
+                    Measures.Add(_currentMeas);
+                    _currentMeas.Filter = StarDataRelay.Instance.Filter;
+                    _currentMeas.Name = StroblhofwarteImage.Instance.GetObject();
+                    _currentMeas.CompMag = StarDataRelay.Instance.CompMag;
+                    _currentMeas.KMag = StarDataRelay.Instance.CheckMag;
+                    _currentMeas.CompMeasMag = Mag;
+                    _measComp = meas;
+                }
+                if (PhotoState == enumPhotoState.VAR)
+                {
+                    _currentMeas.Mag = Mag;
+                    _measVar = meas;
+                }
+                if (PhotoState == enumPhotoState.CHECK)
+                {
+                    _currentMeas.KMeasMag = Mag;
+                    _measCheck = meas;
+                }
+                OnPropertyChanged("Measures");
                 MagMeasurement.Instance.Update(Mag, _starCentroid.X, _starCentroid.Y, false);
             }
             catch (Exception ex)
@@ -764,4 +838,131 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         #endregion
     }
 
+    public class ApertureMeasurementEntry : INotifyPropertyChanged
+    {
+
+        private string _name;
+        public string Name
+        {
+            get { return _name; }
+            set
+            {
+                _name = value;
+                OnPropertyChanged("Name");
+            }
+        }
+
+        private string _filter;
+        public string Filter
+        {
+            get { return _filter; }
+            set
+            {
+                _filter = value;
+                OnPropertyChanged("Filter");
+            }
+        }
+
+        private double _mag;
+        public double Mag
+        {
+            get { return _mag; }
+            set
+            {
+                _mag = value;
+                OnPropertyChanged("Mag");
+            }
+        }
+
+        private double _magErr;
+        public double MagErr
+        {
+            get { return _magErr; }
+            set
+            {
+                _magErr = value;
+                OnPropertyChanged("MagErr");
+            }
+        }
+
+        private double _compMag;
+        public double CompMag
+        {
+            get { return _compMag; }
+            set
+            {
+                _compMag = value;
+                OnPropertyChanged("CompMag");
+            }
+        }
+
+        private double _compMeasMag;
+        public double CompMeasMag
+        {
+            get { return _compMeasMag; }
+            set
+            {
+                _compMeasMag = value;
+                OnPropertyChanged("CompMeasMag");
+            }
+        }
+
+        private double _compErr;
+        public double CompErr
+        {
+            get { return _compErr; }
+            set
+            {
+                _compErr = value;
+                OnPropertyChanged("CompMeasMag");
+            }
+        }
+
+        private double _kMag;
+        public double KMag
+        {
+            get { return _kMag; }
+            set
+            {
+                _kMag = value;
+                OnPropertyChanged("KMag");
+            }
+        }
+
+        private double _kMeasMag;
+        public double KMeasMag
+        {
+            get { return _kMeasMag; }
+            set
+            {
+                _kMeasMag = value;
+                OnPropertyChanged("KMeasMag");
+            }
+        }
+
+
+        private Guid _ident;
+        public Guid Ident
+        {
+            get { return _ident; }
+        }
+
+
+
+        #region Ctor
+
+        public ApertureMeasurementEntry()
+        {
+            _ident = Guid.NewGuid();
+        }
+
+        #endregion
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
 }
