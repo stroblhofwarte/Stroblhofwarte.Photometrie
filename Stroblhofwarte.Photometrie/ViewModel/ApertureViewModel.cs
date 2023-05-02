@@ -22,14 +22,17 @@ using Stroblhofwarte.Photometrie.View;
 using System.Windows.Media;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace Stroblhofwarte.Photometrie.ViewModel
 {
     public enum enumPhotoState
     {
+        INIT,
         VAR,
         COMP,
-        CHECK
+        CHECK,
+        DONE
     }
     public class ApertureViewModel : DockWindowViewModel
     {
@@ -89,7 +92,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
         private int _centroidSearchRadius = 30;
 
-        private Point _starCentroid = new Point(0, 0);
+        private System.Drawing.Point _starCentroid = new System.Drawing.Point(0, 0);
 
         public BitmapImage ImageSource
         {
@@ -353,7 +356,6 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             }
         }
 
-        private string _magString;
         public string MagString
         {
             get { return _mag.ToString(CultureInfo.InvariantCulture) + " mag"; }
@@ -369,7 +371,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 _apertureChanged = true;
                 if (AnnulusInnerRadius <= value) AnnulusInnerRadius = value + 1;
                 UpdateApertureMeasurement();
-                PhotoState = enumPhotoState.COMP;
+                PhotoState = enumPhotoState.INIT;
                 OnPropertyChanged("ApertureSize");
                 OnPropertyChanged("ImageSource");
             }
@@ -401,29 +403,35 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         }
 
         #endregion
-        #region commandResetPhoto
-        private RelayCommand commandResetPhoto;
-        public ICommand CommandResetPhoto
+        #region commandClear
+        private RelayCommand commandClear;
+        public ICommand CommandClear
         {
             get
             {
-                if (commandResetPhoto == null)
+                if (commandClear == null)
                 {
-                    commandResetPhoto = new RelayCommand(param => this.ResetPhoto(), param => this.CanResetPhoto());
+                    commandClear = new RelayCommand(param => this.Clear(), param => this.CanClear());
                 }
-                return commandResetPhoto;
+                return commandClear;
             }
         }
 
-        private bool CanResetPhoto()
+        private bool CanClear()
         {
-            if (PhotoState == enumPhotoState.CHECK) return true;
+            if (Measures.Count > 0) return true;
             return false;
         }
 
-        private void ResetPhoto()
+        private async void Clear()
         {
-            PhotoState = enumPhotoState.COMP;
+            var metroWindow = (Application.Current.MainWindow as MetroWindow);
+            var result = await metroWindow.ShowMessageAsync("Measurements Clear",
+                "All aperture measurements in the list will be deleted:",
+                MessageDialogStyle.AffirmativeAndNegative);
+
+            if (result == MessageDialogResult.Negative) return;
+            Measures.Clear();
         }
         #endregion
 
@@ -647,7 +655,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
         private bool CanReport()
         {
-            if (PhotoState == enumPhotoState.CHECK) return true;
+            if (PhotoState == enumPhotoState.DONE) return true;
             return false;
         }
 
@@ -669,7 +677,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 "na",
                 StarDataRelay.Instance.ChartId,
                 "na", out newElement);
-            PhotoState = enumPhotoState.COMP;
+            PhotoState = enumPhotoState.INIT;
 
             // Store reported measurments also in the permanent db:
             AAVSOExtendedFileFormat permanentDb = new AAVSOExtendedFileFormat(PERMADB);
@@ -677,13 +685,88 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
         }
         #endregion
+
+        #region commandDel
+        private RelayCommand commandDel;
+        public ICommand CommandDel
+        {
+            get
+            {
+                if (commandDel == null)
+                {
+                    commandDel = new RelayCommand(param => this.Del(param), param => this.CanDel());
+                }
+                return commandDel;
+            }
+        }
+
+        private bool CanDel()
+        {
+            return true;
+        }
+
+        private void Del(object o)
+        {
+            ApertureMeasurementEntry entry = o as ApertureMeasurementEntry;
+            if (entry == null) return;
+            if (o is ApertureMeasurementEntry)
+            {
+                int i = 0;
+                int idx = -1;
+                foreach(ApertureMeasurementEntry m in Measures)
+                {
+                    if(m.Ident == entry.Ident)
+                    {
+                        idx = i;
+                        break;
+                    }
+                    i++;
+                }
+                if (idx != -1)
+                    Measures.RemoveAt(idx);
+            }
+        }
+        #endregion
+
+        #region commandStart
+        private RelayCommand commandStart;
+        public ICommand CommandStart
+        {
+            get
+            {
+                if (commandStart == null)
+                {
+                    commandStart = new RelayCommand(param => this.Start(), param => this.CanStart());
+                }
+                return commandStart;
+            }
+        }
+
+        private bool CanStart()
+        {
+            if (StroblhofwarteImage.Instance.IsValid == false) return false;
+            if (PhotoState == enumPhotoState.INIT) return true;
+            return false;
+        }
+
+        private void Start()
+        {
+            PhotoState = enumPhotoState.COMP;
+            StepInfo = "Select C [" + StarDataRelay.Instance.CompName + "]";
+            StarDataRelay.Instance.UserInfoVisibility = true;
+            StarDataRelay.Instance.UserInfo = StepInfo;
+            
+
+        }
+        #endregion
+        
         #region ctor
 
         public ApertureViewModel()
         {
             StroblhofwarteImage.Instance.NewCursorClickPosition += Instance_NewCursorClickPosition;
             StroblhofwarteImage.Instance.NewImageLoaded += Instance_NewImageLoaded;
-            PhotoState = enumPhotoState.COMP;
+            PhotoState = enumPhotoState.INIT;
             Z = 21.1;
             StarDataRelay.Instance.CheckStarChanged += Instance_CheckStarChanged;
             StarDataRelay.Instance.CompStarChanged += Instance_CompStarChanged;
@@ -704,8 +787,10 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
         private void Instance_NewImageLoaded(object? sender, EventArgs e)
         {
-            PhotoState = enumPhotoState.COMP;
-            StepInfo = "Select C";
+            PhotoState = enumPhotoState.INIT;
+            StarDataRelay.Instance.UserInfoVisibility = false;
+            StarDataRelay.Instance.UserInfo = "";
+            StepInfo = "<Start> to start measurement";
             try
             {
                 InstrumentObject instr = Instruments.Instance.Get(StroblhofwarteImage.Instance.GetTelescope(), StroblhofwarteImage.Instance.GetInstrument(),
@@ -737,17 +822,24 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 }
                 if (PhotoState == enumPhotoState.COMP)
                 {
-                    StepInfo = "Select VAR";
+                    StepInfo = "Select VAR [" + StroblhofwarteImage.Instance.GetObject() + "]";
+                    StarDataRelay.Instance.UserInfo = StepInfo;
+                    StarDataRelay.Instance.UserInfoVisibility = true;
                     PhotoState = enumPhotoState.VAR;
                 }
                 else if (PhotoState == enumPhotoState.VAR)
                 {
-                    StepInfo = "Select K";
+                    StepInfo = "Select K [" + StarDataRelay.Instance.CheckName + "]";
+                    StarDataRelay.Instance.UserInfo = StepInfo;
+                    StarDataRelay.Instance.UserInfoVisibility = true;
                     PhotoState = enumPhotoState.CHECK;
                 }
-                else
+                else if (PhotoState == enumPhotoState.CHECK)
                 {
-
+                    StepInfo = "<Start> to start measurement";
+                    StarDataRelay.Instance.UserInfoVisibility = false;
+                    StarDataRelay.Instance.UserInfo = "";
+                    PhotoState = enumPhotoState.INIT;
                 }
                 OnPropertyChanged("ImageSource");
                 // If the reference data are prefilled, recalculate Z

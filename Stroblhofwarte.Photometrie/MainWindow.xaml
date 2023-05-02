@@ -14,7 +14,9 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="768" Width="1024" WindowState="Maximized"
         >
+    
     <Grid>
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -53,9 +55,6 @@
             <dock:DockingManager.Resources>
 
                 <!-- add views for specific ViewModels -->
-                <DataTemplate DataType="{x:Type vm:SampleDockWindowViewModel}">
-                    <v:SampleDockWindowView />
-                </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:ImageViewModel}">
                     <v:ImageView />
                 </DataTemplate>

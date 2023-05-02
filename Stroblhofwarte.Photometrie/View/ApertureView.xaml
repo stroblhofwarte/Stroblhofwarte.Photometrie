@@ -30,8 +30,18 @@
             <mah:MetroTabItem Header="Photometry">
                 <Grid>
 
-                    <Button Content="Report" Command="{Binding CommandReport}" HorizontalAlignment="Right" Margin="0,0,94,14" Height="27" VerticalAlignment="Bottom"/>
-                    <Button Content="Reset" Command="{Binding CommandResetPhoto}" Margin="0,0,31,14" HorizontalAlignment="Right" Width="41" Height="27" VerticalAlignment="Bottom"/>
+                    <Button Width="30" ToolTip="Report all measurements"
+                        Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding CommandReport}" Height="30" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,176,0,0">
+                        <StackPanel Orientation="Vertical">
+                            <icon:PackIconMaterial Width="18" Height="18" Kind="TextBoxPlusOutline" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Width="30" ToolTip="Delete all measurements"
+                        Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding CommandClear}" Height="30" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="0,0,0,30">
+                        <StackPanel Orientation="Vertical">
+                            <icon:PackIconMaterial Width="18" Height="18" Kind="Delete" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
                     <ListView ItemsSource="{Binding Measures}" Margin="0,0,0,60">
                         <ListView.View>
                             <GridView>
@@ -54,9 +64,14 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
-                    <Label Content="{Binding Error}" HorizontalAlignment="Left" Margin="10,160,0,0" VerticalAlignment="Top" Width="309" Foreground="#FFC53838"/>
-                    <Label Content="{Binding StepInfo}" HorizontalAlignment="Left" Margin="10,186,0,0" VerticalAlignment="Top" Width="309"/>
-
+                    <Label Content="{Binding Error}" HorizontalAlignment="Left" Margin="444,178,0,0" VerticalAlignment="Top" Width="309" Foreground="#FFABA9A9"/>
+                    <Label Content="{Binding StepInfo}" HorizontalAlignment="Left" Margin="91,178,0,0" VerticalAlignment="Top" Width="309"/>
+                    <Button Width="30" ToolTip="Starts a new measurement"
+                        Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding CommandStart}" Height="30" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="334,0,0,13">
+                        <StackPanel Orientation="Vertical">
+                            <icon:PackIconMaterial Width="18" Height="18" Kind="Play" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
                 </Grid>
             </mah:MetroTabItem>
             <mah:MetroTabItem Header="Aperture">

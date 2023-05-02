@@ -27,7 +27,7 @@
         </Grid.RowDefinitions>
 
         <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" />
-        <ListView Grid.Row="2" Margin="0,0,0,51" ItemsSource="{Binding Data}">
+        <ListView Grid.Row="2" ItemsSource="{Binding Data}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Del." Width="40">
@@ -48,8 +48,6 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <ComboBox ItemsSource="{Binding TransfromModels}" HorizontalAlignment="Left" Margin="112,0,0,10" Grid.Row="2" Width="120" Height="26" VerticalAlignment="Bottom"/>
-        <Label Content="Calculate for:" HorizontalAlignment="Left" Margin="28,0,0,11" Grid.Row="2" Height="25" VerticalAlignment="Bottom"/>
         <TabControl Margin="0,0,0,4" Grid.RowSpan="2">
             <TabItem Header="Tx__yz">
                 <Grid>
@@ -60,7 +58,12 @@
                     <Label Content="Color Index:" HorizontalAlignment="Left" Margin="186,0,0,10" Height="26" VerticalAlignment="Bottom" Width="74"/>
                     <Label Content="{Binding MagErrorParameterName}" HorizontalAlignment="Left" Margin="24,0,0,46" Height="26" VerticalAlignment="Bottom" Width="74"/>
                     <Label Content="{Binding MagErrorSlope}" HorizontalAlignment="Left" Margin="108,0,0,46" Height="26" VerticalAlignment="Bottom" Width="170"/>
-                    <Button Content="Save Tx__yz" HorizontalAlignment="Left" Margin="295,0,0,46" Height="26" VerticalAlignment="Bottom"/>
+                    <Button Width="30" ToolTip="Store Tx_yz parameter to the instrument setup"
+                        Style="{DynamicResource MahApps.Styles.Button.Circle}"  Height="30" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="279,0,0,44">
+                        <StackPanel Orientation="Vertical">
+                            <icon:PackIconMaterial Width="18" Height="18" Kind="ContentSaveMove" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
                 </Grid>
             </TabItem>
             <TabItem Header="TabItem">

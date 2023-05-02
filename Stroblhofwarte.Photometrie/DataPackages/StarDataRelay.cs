@@ -28,12 +28,29 @@ namespace Stroblhofwarte.Photometrie.DataPackages
         public event EventHandler CheckStarChanged;
         public event EventHandler CompStarChanged;
         public event EventHandler StarChanged;
+        public event EventHandler UserInfoChanged;
 
 
         #endregion
 
         public bool CValid { get; set; }
         public bool KValid { get; set; }
+
+        private string _userInfo;
+        public string UserInfo
+        {
+            get { return _userInfo; }
+            set
+            {
+                _userInfo = value;
+                if (UserInfoChanged != null)
+                {
+                    UserInfoChanged(this, null);
+                }
+            }
+        }
+
+        public bool UserInfoVisibility { get; set; }
 
         private double _compMag;
         public double CompMag
@@ -63,6 +80,20 @@ namespace Stroblhofwarte.Photometrie.DataPackages
             get { return _compName; }
         }
 
+        private string _compAUID;
+        public string CompAUID
+        {
+            set
+            {
+                _compAUID = value;
+                if (CompStarChanged != null)
+                {
+                    CompStarChanged(this, null);
+                }
+            }
+            get { return _compAUID; }
+        }
+
         private double _checkMag;
         public double CheckMag
         {
@@ -89,6 +120,20 @@ namespace Stroblhofwarte.Photometrie.DataPackages
                 }
             }
             get { return _checkName; }
+        }
+
+        private string _checkAUID;
+        public string CheckAUID
+        {
+            set
+            {
+                _checkAUID = value;
+                if (CheckStarChanged != null)
+                {
+                    CheckStarChanged(this, null);
+                }
+            }
+            get { return _checkAUID; }
         }
 
         private string _name;

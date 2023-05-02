@@ -5,6 +5,7 @@ using Stroblhofwarte.Photometrie.ViewModel;
 using System;
 using Stroblhofwarte.FITS.DataObjects;
 using Stroblhofwarte.Image;
+using Stroblhofwarte.Photometrie.View;
 
 namespace Stroblhofwarte.Photometrie
 {
@@ -70,9 +71,22 @@ namespace Stroblhofwarte.Photometrie
                 }
 
             }
-
+            if(model != null)
+            {
+                FrameworkElement f = sender as FrameworkElement;
+                while((f.Parent as ImageView) == null)
+                {
+                    f = f.Parent as FrameworkElement;
+                    if (f == null)
+                        break;
+                }
+                var point = Mouse.GetPosition(f);
+                model.FloatingPanelX = (int)point.X + 20;
+                model.FloatingPanelY = (int)point.Y + 20;
+            }
             // Here you can add some validation logic
             MousePosition = p;
+            
         }
 
         void _controlledObject_MouseUp(object sender, MouseEventArgs e)

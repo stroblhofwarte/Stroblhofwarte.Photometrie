@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Windows.Input;
+using Stroblhofwarte.Photometrie.DataPackages;
 
 namespace Stroblhofwarte.Photometrie.ViewModel
 {
@@ -99,6 +100,50 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             get
             {
                 return _zoom;
+            }
+        }
+
+        private int _floatingPanelX;
+        public int FloatingPanelX
+        {
+            get { return _floatingPanelX; }
+            set
+            {
+                _floatingPanelX = value;
+                OnPropertyChanged("FloatingPanelX");
+            }
+        }
+
+        private int _floatingPanelY;
+        public int FloatingPanelY
+        {
+            get { return _floatingPanelY; }
+            set
+            {
+                _floatingPanelY = value;
+                OnPropertyChanged("FloatingPanelY");
+            }
+        }
+
+        private bool _floatingVisible;
+        public bool FloatingVisible
+        {
+            get { return _floatingVisible; }
+            set
+            {
+                _floatingVisible = value;
+                OnPropertyChanged("FloatingVisible");
+            }
+        }
+
+        private string _userInfo;
+        public string UserInfo
+        {
+            get { return _userInfo; }
+            set
+            {
+                _userInfo = value;
+                OnPropertyChanged("UserInfo");
             }
         }
 
@@ -195,7 +240,15 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         public ImageViewModel()
         {
             StroblhofwarteImage.Instance.NewImageLoaded += Instance_NewImageLoaded;
+            StarDataRelay.Instance.UserInfoChanged += Instance_UserInfoChanged;
             ContentId = "ImageViewModel";
+        }
+
+        private void Instance_UserInfoChanged(object? sender, EventArgs e)
+        {
+            FloatingVisible = StarDataRelay.Instance.UserInfoVisibility;
+            UserInfo = StarDataRelay.Instance.UserInfo;
+            
         }
 
         private void Instance_NewImageLoaded(object? sender, EventArgs e)

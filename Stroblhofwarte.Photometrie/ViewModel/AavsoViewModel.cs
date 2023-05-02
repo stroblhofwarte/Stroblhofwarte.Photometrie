@@ -282,10 +282,8 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             {
                 StarDataRelay.Instance.Filter = _filter;
                 StarDataRelay.Instance.CompMag = (o as Stroblhofwarte.Photometrie.ViewModel.ReferenceStar).MAG;
-                if ((o as Stroblhofwarte.Photometrie.ViewModel.ReferenceStar).AUID != String.Empty)
-                    StarDataRelay.Instance.CompName = (o as Stroblhofwarte.Photometrie.ViewModel.ReferenceStar).AUID;
-                else
-                    StarDataRelay.Instance.CompName = (o as Stroblhofwarte.Photometrie.ViewModel.ReferenceStar).Name;
+                StarDataRelay.Instance.CompAUID = (o as Stroblhofwarte.Photometrie.ViewModel.ReferenceStar).AUID;
+                StarDataRelay.Instance.CompName = (o as Stroblhofwarte.Photometrie.ViewModel.ReferenceStar).Name;
 
                 StarDataRelay.Instance.ChartId = _varStar.ChartId;
                 StarDataRelay.Instance.CValid = true;
@@ -315,10 +313,8 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             if (o is Stroblhofwarte.Photometrie.ViewModel.ReferenceStar)
             {
                 StarDataRelay.Instance.CheckMag = (o as Stroblhofwarte.Photometrie.ViewModel.ReferenceStar).MAG;
-                if ((o as Stroblhofwarte.Photometrie.ViewModel.ReferenceStar).AUID != String.Empty)
-                    StarDataRelay.Instance.CheckName = (o as Stroblhofwarte.Photometrie.ViewModel.ReferenceStar).AUID;
-                else
-                    StarDataRelay.Instance.CheckName = (o as Stroblhofwarte.Photometrie.ViewModel.ReferenceStar).Name;
+                StarDataRelay.Instance.CheckAUID = (o as Stroblhofwarte.Photometrie.ViewModel.ReferenceStar).AUID;
+                StarDataRelay.Instance.CheckName = (o as Stroblhofwarte.Photometrie.ViewModel.ReferenceStar).Name;
 
                 StarDataRelay.Instance.KValid = true;
             }

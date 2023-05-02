@@ -22,7 +22,6 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-
         <ScrollViewer Name="MyScrollViewer" CanContentScroll="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
             <main:MouseTrackerDecorator x:Name="mouseTracker">
                 <Image Source="{Binding ImageSource}" Margin="0,0,0,76">
@@ -33,14 +32,9 @@
             </main:MouseTrackerDecorator>
         </ScrollViewer>
         <Label Content="{Binding CoordinateText}" Margin="220,0,220,36" Height="28" VerticalAlignment="Bottom"/>
-        <Button Width="55"
-        Style="{DynamicResource MahApps.Styles.Button.Circle}" Height="55" VerticalAlignment="Bottom" HorizontalAlignment="Left" ToolTip="Switch Coordinates Grid on or off" Margin="9,0,0,9">
-            <StackPanel Orientation="Vertical">
-                <icon:PackIconMaterial Width="30" Height="30" Kind="Grid" HorizontalAlignment="Center"/>
-            </StackPanel>
-        </Button>
+       
         <ToggleButton Width="55"
-        Style="{DynamicResource MahApps.Styles.ToggleButton.Circle}" Command="{Binding AnnotateCommand}" Height="55" VerticalAlignment="Bottom" HorizontalAlignment="Left" ToolTip="Annotate reference stars from AAVSO data when loaded" Margin="82,0,0,9">
+        Style="{DynamicResource MahApps.Styles.ToggleButton.Circle}" Command="{Binding AnnotateCommand}" Height="55" VerticalAlignment="Bottom" HorizontalAlignment="Left" ToolTip="Annotate reference stars from AAVSO data when loaded" Margin="10,0,0,10">
             <StackPanel Orientation="Vertical">
                 <icon:PackIconMaterial Width="30" Height="30" Kind="Creation" HorizontalAlignment="Center"/>
             </StackPanel>
@@ -57,5 +51,18 @@
                 <icon:PackIconMaterial Width="30" Height="30" Kind="Minus" HorizontalAlignment="Center"/>
             </StackPanel>
         </Button>
+        <Popup Name="PopupWindow"
+               Placement="Relative"
+               IsOpen="{Binding FloatingVisible}"
+               StaysOpen="True" VerticalOffset="{Binding FloatingPanelY}"
+               HorizontalOffset="{Binding FloatingPanelX}">
+
+            <Border Width="150" 
+                    Height="30"
+                    Background="CornflowerBlue">
+
+                <Label Content="{Binding UserInfo}" />
+            </Border>
+        </Popup>
     </Grid>
 </UserControl>
