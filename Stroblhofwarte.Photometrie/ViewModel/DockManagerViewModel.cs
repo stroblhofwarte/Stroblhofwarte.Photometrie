@@ -123,7 +123,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
     /// <param name="docManager"></param>
     private void LoadDockingManagerLayout(DockingManager docManager)
     {
-        string layoutFileName = "layout.dat";
+        string layoutFileName = Stroblhofwarte.Config.GlobalConfig.Instance.FilterDatabasePath + "\\layout.dat";
 
         if (System.IO.File.Exists(layoutFileName) == false)
             return;
@@ -157,9 +157,9 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         if (xmlLayout == null)
             return;
 
-        string fileName = "layout.dat";
+        string fileName = Stroblhofwarte.Config.GlobalConfig.Instance.FilterDatabasePath + "\\layout.dat";
 
-        File.WriteAllText(fileName, xmlLayout);
+            File.WriteAllText(fileName, xmlLayout);
         // Shutdown mode is set to Explicite call Shutdown in the App.xaml. 
         // This is required, otherwise the Unload event is never called.
         // To end the application, a call to Shutdown is required!

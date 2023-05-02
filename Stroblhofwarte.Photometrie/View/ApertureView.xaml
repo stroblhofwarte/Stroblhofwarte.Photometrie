@@ -31,7 +31,7 @@
                 <Grid>
 
                     <Button Width="30" ToolTip="Report all measurements"
-                        Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding CommandReport}" Height="30" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,176,0,0">
+                        Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding CommandReport}" HorizontalAlignment="Left" Margin="377,0,0,13" Height="30" VerticalAlignment="Bottom">
                         <StackPanel Orientation="Vertical">
                             <icon:PackIconMaterial Width="18" Height="18" Kind="TextBoxPlusOutline" HorizontalAlignment="Center"/>
                         </StackPanel>

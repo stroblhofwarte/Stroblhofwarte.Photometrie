@@ -58,9 +58,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Update="Ring Nebula%282%29_2021-05-31_22-41-52_GAIN_0_G_-20.00_600.00s_0001.fits">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>
