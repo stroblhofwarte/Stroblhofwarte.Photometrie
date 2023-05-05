@@ -39,12 +39,12 @@
                     </GridViewColumn>
                     <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Id}" Width="80" />
                     <GridViewColumn Header="Filter" DisplayMemberBinding="{Binding Filter}" Width="80" />
-                    <GridViewColumn Header="Meas" DisplayMemberBinding="{Binding Meas}" Width="80" />
-                    <GridViewColumn Header="V [mag]" DisplayMemberBinding="{Binding V}" Width="100" />
-                    <GridViewColumn Header="UB" DisplayMemberBinding="{Binding UB}" Width="100" />
-                    <GridViewColumn Header="BV" DisplayMemberBinding="{Binding BV}" Width="100" />
-                    <GridViewColumn Header="VR" DisplayMemberBinding="{Binding VR}" Width="100" />
-                    <GridViewColumn Header="RI" DisplayMemberBinding="{Binding RI}" Width="100" />
+                    <GridViewColumn Header="Meas" DisplayMemberBinding="{Binding Meas, StringFormat=N4}" Width="80" />
+                    <GridViewColumn Header="V [mag]" DisplayMemberBinding="{Binding V, StringFormat=N4}" Width="100" />
+                    <GridViewColumn Header="UB" DisplayMemberBinding="{Binding UB, StringFormat=N4}" Width="100" />
+                    <GridViewColumn Header="BV" DisplayMemberBinding="{Binding BV, StringFormat=N4}" Width="100" />
+                    <GridViewColumn Header="VR" DisplayMemberBinding="{Binding VR, StringFormat=N4}" Width="100" />
+                    <GridViewColumn Header="RI" DisplayMemberBinding="{Binding RI, StringFormat=N4}" Width="100" />
                 </GridView>
             </ListView.View>
         </ListView>

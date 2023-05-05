@@ -8,6 +8,7 @@ namespace Stroblhofwarte.AperturePhotometry.StandardFields
 {
     public class StandardStar
     {
+        public string AUID { get; set; }
         public string Id { get; set; }
         public double Ra { get; set; }
         public double DEC { get; set; }

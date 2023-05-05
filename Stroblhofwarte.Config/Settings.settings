@@ -26,5 +26,8 @@
     <Setting Name="OBSTYPE" Type="System.String" Scope="User">
       <Value Profile="(Default)">CCD</Value>
     </Setting>
+    <Setting Name="StandardFields" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

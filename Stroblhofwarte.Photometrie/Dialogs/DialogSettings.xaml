@@ -69,6 +69,11 @@
                     <TextBox HorizontalAlignment="Left" Margin="222,104,0,0" TextWrapping="NoWrap" Text="{Binding OBSTYPE, Mode=TwoWay}" VerticalAlignment="Top" Width="189" ToolTip="Set to CCD, DSLR or PEP. See https://www.aavso.org/aavso-extended-file-format"/>
                     <Label Content="OBSTYPE:" HorizontalAlignment="Left" Margin="147,104,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
 
+                    <Label Content="Standard Fields Directory" HorizontalAlignment="Left" Margin="51,283,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
+                    <Label Content="__________________________________________________________________________________________________________" HorizontalAlignment="Left" Margin="208,279,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5" Width="246"/>
+                    <TextBox HorizontalAlignment="Left" Margin="180,329,0,0" TextWrapping="NoWrap" Text="{Binding StandardFieldsPath, Mode=TwoWay}" VerticalAlignment="Top" Width="460" ToolTip="Set this only, when you want to have the db outside the standard directory. Otherwise set this to blank." />
+                    <Label Content="Directory:" HorizontalAlignment="Left" Margin="84,328,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
+                    <Button Content="..." Command="{Binding BrowseStandardFieldsPathCommand}" HorizontalAlignment="Left" Margin="645,328,0,0" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
         </TabControl>

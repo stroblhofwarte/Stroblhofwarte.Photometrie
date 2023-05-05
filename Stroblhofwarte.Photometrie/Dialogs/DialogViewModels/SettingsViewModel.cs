@@ -98,6 +98,23 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
             }
         }
 
+        public string StandardFieldsPath
+        {
+            get { return GlobalConfig.Instance.StandardFieldsPath; }
+            set
+            {
+                try
+                {
+                    GlobalConfig.Instance.StandardFieldsPath = value;
+                }
+                catch (Exception ex)
+                {
+                    GlobalConfig.Instance.StandardFieldsPath = "";
+                }
+                OnPropertyChanged("StandardFieldsPath");
+            }
+        }
+
         public string OBSCODE
         {
             get { return GlobalConfig.Instance.OBSCODE; }
@@ -171,6 +188,42 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                 FilterDatabasePath = folderPath;
             }
         }
+
+        private RelayCommand _browseStandardFieldsPathCommand;
+        public ICommand BrowseStandardFieldsPathCommand
+        {
+            get
+            {
+                if (_browseStandardFieldsPathCommand == null)
+                {
+                    _browseStandardFieldsPathCommand = new RelayCommand(param => this.BrowseStandardFieldsPath(), param => this.CanBrowseStandardFieldsPath());
+                }
+                return _browseStandardFieldsPathCommand;
+            }
+        }
+
+        private bool CanBrowseStandardFieldsPath()
+        {
+            return true;
+        }
+
+        private void BrowseStandardFieldsPath()
+        {
+            // Create OpenFileDialog 
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+
+
+            dlg.ValidateNames = false;
+            dlg.CheckFileExists = false;
+            dlg.CheckPathExists = true;
+            // Always default to Folder Selection.
+            dlg.FileName = "Folder Selection.";
+            if (dlg.ShowDialog() == true)
+            {
+                string folderPath = Path.GetDirectoryName(dlg.FileName);
+                StandardFieldsPath = folderPath;
+            }
+        }
         #endregion
 
         #region Ctor
@@ -182,6 +235,7 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
             AAVSOLimitMag = GlobalConfig.Instance.AAVSOLimitMag.ToString(CultureInfo.InvariantCulture);
             MagnificationN = GlobalConfig.Instance.MagnificationN.ToString();
             FilterDatabasePath = GlobalConfig.Instance.FilterDatabasePath;
+            StandardFieldsPath = GlobalConfig.Instance.StandardFieldsPath;
         }
 
         #endregion

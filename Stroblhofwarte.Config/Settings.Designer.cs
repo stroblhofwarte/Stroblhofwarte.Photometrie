@@ -118,5 +118,17 @@ namespace Stroblhofwarte.Config {
                 this["OBSTYPE"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string StandardFields {
+            get {
+                return ((string)(this["StandardFields"]));
+            }
+            set {
+                this["StandardFields"] = value;
+            }
+        }
     }
 }

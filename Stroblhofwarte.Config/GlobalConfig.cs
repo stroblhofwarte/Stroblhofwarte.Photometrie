@@ -83,6 +83,16 @@ namespace Stroblhofwarte.Config
             }
         }
 
+        public string StandardFieldsPath
+        {
+            get { return Stroblhofwarte.Config.Settings.Default.StandardFields; }
+            set
+            {
+                Stroblhofwarte.Config.Settings.Default.StandardFields = value;
+                Stroblhofwarte.Config.Settings.Default.Save();
+            }
+        }
+
         public string OBSCODE
         {
             get { return Stroblhofwarte.Config.Settings.Default.OBSCODE; }

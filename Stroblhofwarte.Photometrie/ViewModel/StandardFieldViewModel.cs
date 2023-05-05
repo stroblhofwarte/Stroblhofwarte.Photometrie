@@ -56,8 +56,17 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
         public StandardFieldViewModel()
         {
-            _fields = new ObservableCollection<Fields>() {  { new Fields() { Name = "No standard field", Id = 0 } },
-                                                            { new Fields() { Name = "M67", Id=67 } } };
+            _fields = new ObservableCollection<Fields>() {  { new Fields() { Name = "No standard field", Id = "0" } },
+                                                            { new Fields() { Name = "M67", Id="67" } } };
+
+            StandardFieldFiles fileBasesFields = new StandardFieldFiles();
+            List<string> files = fileBasesFields.Fields();
+            foreach(string file in files)
+            {
+                StandardFieldHeader h = fileBasesFields.HeaderFrom(file);
+                _fields.Add(new ViewModel.Fields() { Name = h.Name, Id = h.Id });
+            }
+
             _stars = new ObservableCollection<StandardStar>();
             ItemChange = _fields[0];
 
@@ -105,7 +114,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             set
             {
                 _selectedItem = value;
-                if (_selectedItem.Id == 0)
+                if (_selectedItem.Id == "0")
                 {
                     _stars.Clear();
                     StroblhofwarteImage.Instance.ClearAnnotation();
@@ -113,7 +122,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                     OnPropertyChanged("ItemChange");
                     OnPropertyChanged("Stars");
                 }
-                if (_selectedItem.Id == 67)
+                else if (_selectedItem.Id == "67")
                 {
                     _stars.Clear();
                     MagMeasurement.Instance.CalibrationMode = true;
@@ -129,6 +138,25 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                     }
                     OnPropertyChanged("ItemChange");
                     OnPropertyChanged("Stars");
+                }
+                else
+                {
+                    _stars.Clear();
+                    MagMeasurement.Instance.CalibrationMode = true;
+                    StandardFieldFiles fileBasesFields = new StandardFieldFiles();
+                    List<StandardStar> stars = fileBasesFields.StandardField(_selectedItem.Id);
+                    foreach (StandardStar s in stars)
+                    {
+                        Coordinates c = new Coordinates(s.Ra, s.DEC, Epoch.J2000, Coordinates.RAType.Degrees);
+                        StroblhofwarteImage.Instance.AddAnnotation(s.Id, c);
+                        System.Windows.Point p = StroblhofwarteImage.Instance.WCS.GetCoordinates(c);
+                        s.X = p.X;
+                        s.Y = p.Y;
+                        _stars.Add(s);
+                    }
+                    OnPropertyChanged("ItemChange");
+                    OnPropertyChanged("Stars");
+
                 }
             }
         }
@@ -148,7 +176,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
     public class Fields
     {
         public string Name { get; set; }
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public override string ToString()
         {
