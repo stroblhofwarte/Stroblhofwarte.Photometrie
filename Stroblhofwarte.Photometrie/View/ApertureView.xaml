@@ -42,6 +42,12 @@
                             <icon:PackIconMaterial Width="18" Height="18" Kind="Delete" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Button>
+                    <Button Width="30" ToolTip="Transform multiple measurements with two filters: U-B, B-V, V-Rc or RJ-IJ"
+                        Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding CommandTransform}" HorizontalAlignment="Left" Margin="456,0,0,13" Height="30" VerticalAlignment="Bottom">
+                        <StackPanel Orientation="Vertical">
+                            <icon:PackIconMaterial Width="18" Height="18" Kind="MathIntegralBox" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
                     <ListView ItemsSource="{Binding Measures}" Margin="0,0,0,60">
                         <ListView.View>
                             <GridView>
@@ -64,7 +70,7 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
-                    <Label Content="{Binding Error}" HorizontalAlignment="Left" Margin="444,178,0,0" VerticalAlignment="Top" Width="309" Foreground="#FFABA9A9"/>
+                    <Label Content="{Binding Error}" HorizontalAlignment="Left" Margin="519,178,0,0" VerticalAlignment="Top" Width="281" Foreground="#FFABA9A9" Height="12"/>
                     <Label Content="{Binding StepInfo}" HorizontalAlignment="Left" Margin="91,178,0,0" VerticalAlignment="Top" Width="309"/>
                     <Button Width="30" ToolTip="Starts a new measurement"
                         Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding CommandStart}" Height="30" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="334,0,0,13">

@@ -27,7 +27,27 @@
         </Grid.RowDefinitions>
 
         <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" />
-        <ListView Grid.Row="2" ItemsSource="{Binding Data}">
+        <ComboBox ItemsSource="{Binding ColorMagErrorFilters}" SelectedItem="{Binding ColorMagErrorFilter}" HorizontalAlignment="Left" Margin="122,70,0,0" Width="58" RenderTransformOrigin="3.283,23.596" Grid.Row="2" Height="26" VerticalAlignment="Top"/>
+        <Label Content="Color Mag Error:" HorizontalAlignment="Left" Margin="19,70,0,0" Width="98" Grid.Row="2" Height="26" VerticalAlignment="Top"/>
+        <ComboBox ItemsSource="{Binding TransfromModels}" SelectedItem="{Binding TransfromModelSelection}"  HorizontalAlignment="Left" Margin="291,70,0,0" Width="70" Grid.Row="2" Height="26" VerticalAlignment="Top"/>
+        <Label Content="Color Index:" HorizontalAlignment="Left" Margin="212,70,0,0" Width="74" Grid.Row="2" Height="26" VerticalAlignment="Top"/>
+        <Label Content="{Binding MagErrorParameterName}" HorizontalAlignment="Left" Margin="19,14,0,0" Width="74" Grid.Row="2" Height="25" VerticalAlignment="Top"/>
+        <Label Content="{Binding MagErrorSlope}" HorizontalAlignment="Left" Margin="98,14,0,0" Width="170" Grid.Row="2" Height="25" VerticalAlignment="Top"/>
+        <Label Content="{Binding ColorErrorParameterName}" HorizontalAlignment="Left" Margin="19,40,0,0" Width="74" Grid.Row="2" Height="24" VerticalAlignment="Top"/>
+        <Label Content="{Binding ColorErrorSlope}" HorizontalAlignment="Left" Margin="98,40,0,0" Width="170" Grid.Row="2" Height="24" VerticalAlignment="Top"/>
+        <Button Width="25" ToolTip="Store Tx_yz parameter to the instrument setup" Command="{Binding CommandAddTx_yz}"
+                        Style="{DynamicResource MahApps.Styles.Button.Circle}" HorizontalAlignment="Left" Margin="273,14,0,0" Grid.Row="2" Height="24" VerticalAlignment="Top">
+            <StackPanel Orientation="Vertical">
+                <icon:PackIconMaterial Width="15" Height="15" Kind="ContentSaveMove" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Button>
+        <Button Width="25" ToolTip="Store Tx_yz parameter to the instrument setup" Command="{Binding CommandAddTxy}"
+                        Style="{DynamicResource MahApps.Styles.Button.Circle}" HorizontalAlignment="Left" Margin="273,40,0,0" Grid.Row="2" Height="24" VerticalAlignment="Top">
+            <StackPanel Orientation="Vertical">
+                <icon:PackIconMaterial Width="15" Height="15" Kind="ContentSaveMove" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Button>
+        <ListView Grid.Row="2" ItemsSource="{Binding Data}" Margin="0,112,0,0">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Del." Width="40">
@@ -51,23 +71,21 @@
         <TabControl Margin="0,0,0,4" Grid.RowSpan="2">
             <TabItem Header="Tx__yz">
                 <Grid>
-                    <oxy:PlotView Model="{Binding Model_Tx_yz}" Background="#242426" Foreground="Silver" Margin="0,0,0,76" />
-                    <ComboBox ItemsSource="{Binding ColorMagErrorFilters}" SelectedItem="{Binding ColorMagErrorFilter}" HorizontalAlignment="Left" Margin="115,0,0,10" Width="59" Height="26" VerticalAlignment="Bottom" RenderTransformOrigin="3.283,23.596"/>
-                    <Label Content="Color Mag Error:" HorizontalAlignment="Left" Margin="13,0,0,10" Width="97" Height="26" VerticalAlignment="Bottom"/>
-                    <ComboBox ItemsSource="{Binding TransfromModels}" SelectedItem="{Binding TransfromModelSelection}"  HorizontalAlignment="Left" Margin="260,0,0,10" Width="70" Height="26" VerticalAlignment="Bottom"/>
-                    <Label Content="Color Index:" HorizontalAlignment="Left" Margin="186,0,0,10" Height="26" VerticalAlignment="Bottom" Width="74"/>
-                    <Label Content="{Binding MagErrorParameterName}" HorizontalAlignment="Left" Margin="24,0,0,46" Height="26" VerticalAlignment="Bottom" Width="74"/>
-                    <Label Content="{Binding MagErrorSlope}" HorizontalAlignment="Left" Margin="108,0,0,46" Height="26" VerticalAlignment="Bottom" Width="170"/>
-                    <Button Width="30" ToolTip="Store Tx_yz parameter to the instrument setup"
-                        Style="{DynamicResource MahApps.Styles.Button.Circle}"  Height="30" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="279,0,0,44">
-                        <StackPanel Orientation="Vertical">
-                            <icon:PackIconMaterial Width="18" Height="18" Kind="ContentSaveMove" HorizontalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="16*"/>
+                        <ColumnDefinition Width="381*"/>
+                    </Grid.ColumnDefinitions>
+                    <oxy:PlotView Name ="Tx_yz" Model="{Binding Model_Tx_yz}" Background="#242426" Foreground="Silver" Grid.ColumnSpan="2" />
                 </Grid>
             </TabItem>
-            <TabItem Header="TabItem">
-                <Grid Background="#FFE5E5E5"/>
+            <TabItem Header="Txy    ">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="16*"/>
+                        <ColumnDefinition Width="381*"/>
+                    </Grid.ColumnDefinitions>
+                    <oxy:PlotView Name ="Txy" Model="{Binding Model_Txy}" Background="#242426" Foreground="Silver" Grid.ColumnSpan="2" />
+                </Grid>
             </TabItem>
         </TabControl>
     </Grid>

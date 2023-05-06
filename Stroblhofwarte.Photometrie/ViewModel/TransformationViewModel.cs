@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Input;
+using System.Xml;
 
 namespace Stroblhofwarte.Photometrie.ViewModel
 {
@@ -29,6 +30,13 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
         private ScatterSeries _tx_yz_series;
         private LineSeries _tx_yz_fit;
+
+        private ScatterSeries _txy_series;
+        private LineSeries _txy_fit;
+
+        private bool _tx_yzChanged = false;
+        private bool _txyChanged = false;
+
 
         private ObservableCollection<ColorMagErrorEntry> _colorMagErrorFilters = new ObservableCollection<ColorMagErrorEntry>();
         public ObservableCollection<ColorMagErrorEntry> ColorMagErrorFilters
@@ -49,7 +57,18 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             set
             {
                 _plotModel = value;
-                OnPropertyChanged("Model");
+                OnPropertyChanged("Model_Tx_yz");
+            }
+        }
+
+        private PlotModel _plotModelTxy;
+        public PlotModel Model_Txy
+        {
+            get { return _plotModelTxy; }
+            set
+            {
+                _plotModelTxy = value;
+                OnPropertyChanged("Model_Txy");
             }
         }
 
@@ -71,6 +90,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             {
                 _transfromModel = value;
                 UpdateTx_yz();
+                UpdateTxy();
                 OnPropertyChanged("TransfromModelSelection");
             }
         }
@@ -83,6 +103,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             {
                 _colorMagErrorFilter = value;
                 UpdateTx_yz();
+                UpdateTxy();
                 OnPropertyChanged("ColorMagErrorFilter");
             }
         }
@@ -129,25 +150,115 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 _data.RemoveAt(idx);
             }
             UpdateTx_yz();
+            UpdateTxy();
         }
+
+        private RelayCommand commandAddTx_yz;
+        public ICommand CommandAddTx_yz
+        {
+            get
+            {
+                if (commandAddTx_yz == null)
+                {
+                    commandAddTx_yz = new RelayCommand(param => this.AddTx_yz(param), param => this.CanAddTx_yz());
+                }
+                return commandAddTx_yz;
+            }
+        }
+
+        private bool CanAddTx_yz()
+        {
+            return _tx_yzChanged;
+        }
+
+        private void AddTx_yz(object o)
+        {
+            string newTelescope = StroblhofwarteImage.Instance.GetTelescope();
+            string newInstrument = StroblhofwarteImage.Instance.GetInstrument();
+            double newGain = StroblhofwarteImage.Instance.GetSensorGain();
+            double newOffset = StroblhofwarteImage.Instance.GetSensorOffset();
+            string newBinning = StroblhofwarteImage.Instance.GetBinning();
+            double newSetTemp = StroblhofwarteImage.Instance.GetSensorSetTemp();
+            InstrumentObject newobj = new InstrumentObject()
+            {
+                Telescope = newTelescope,
+                Instrument = newInstrument,
+                Gain = newGain,
+                Offset = newOffset,
+                Binning = newBinning,
+                SetTemp = newSetTemp
+            };
+            string hash = Stroblhofwarte.AperturePhotometry.Instruments.Instance.Hash(newobj);
+
+            Stroblhofwarte.AperturePhotometry.Instruments.Instance.AddOrUpdateTransformationParameter(hash, MagErrorParameterName, MagErrorSlope);
+            _tx_yzChanged = false;
+        }
+
+        private RelayCommand commandAddTxy;
+        public ICommand CommandAddTxy
+        {
+            get
+            {
+                if (commandAddTxy == null)
+                {
+                    commandAddTxy = new RelayCommand(param => this.AddTxy(param), param => this.CanAddTxy());
+                }
+                return commandAddTxy;
+            }
+        }
+
+        private bool CanAddTxy()
+        {
+            return _txyChanged;
+        }
+
+        private void AddTxy(object o)
+        {
+            string newTelescope = StroblhofwarteImage.Instance.GetTelescope();
+            string newInstrument = StroblhofwarteImage.Instance.GetInstrument();
+            double newGain = StroblhofwarteImage.Instance.GetSensorGain();
+            double newOffset = StroblhofwarteImage.Instance.GetSensorOffset();
+            string newBinning = StroblhofwarteImage.Instance.GetBinning();
+            double newSetTemp = StroblhofwarteImage.Instance.GetSensorSetTemp();
+            InstrumentObject newobj = new InstrumentObject()
+            {
+                Telescope = newTelescope,
+                Instrument = newInstrument,
+                Gain = newGain,
+                Offset = newOffset,
+                Binning = newBinning,
+                SetTemp = newSetTemp
+            };
+            string hash = Stroblhofwarte.AperturePhotometry.Instruments.Instance.Hash(newobj);
+
+            Stroblhofwarte.AperturePhotometry.Instruments.Instance.AddOrUpdateTransformationParameter(hash, ColorErrorParameterName, ColorErrorSlope);
+            _txyChanged = false;
+        }
+
         public string MagErrorParameterName
         {
             get
             {
-                string errorColor = "";
-                if (ColorMagErrorFilter.Filter == "U") errorColor = "u";
-                if (ColorMagErrorFilter.Filter == "B") errorColor = "b";
-                if (ColorMagErrorFilter.Filter == "V") errorColor = "v";
-                if (ColorMagErrorFilter.Filter == "R") errorColor = "r";
-                if (ColorMagErrorFilter.Filter == "I") errorColor = "i";
+                try
+                {
+                    string errorColor = "";
+                    if (ColorMagErrorFilter.Filter == "U") errorColor = "u";
+                    if (ColorMagErrorFilter.Filter == "B") errorColor = "b";
+                    if (ColorMagErrorFilter.Filter == "V") errorColor = "v";
+                    if (ColorMagErrorFilter.Filter == "RJ") errorColor = "r";
+                    if (ColorMagErrorFilter.Filter == "I") errorColor = "i";
 
-                string index = "";
-                if (TransfromModelSelection.FromFilter == "U" && TransfromModelSelection.ToFilter == "B") index = "ub";
-                if (TransfromModelSelection.FromFilter == "B" && TransfromModelSelection.ToFilter == "V") index = "bv";
-                if (TransfromModelSelection.FromFilter == "V" && TransfromModelSelection.ToFilter == "R") index = "vr";
-                if (TransfromModelSelection.FromFilter == "R" && TransfromModelSelection.ToFilter == "I") index = "ri";
+                    string index = "";
+                    if (TransfromModelSelection.FromFilter == "U" && TransfromModelSelection.ToFilter == "B") index = "ub";
+                    if (TransfromModelSelection.FromFilter == "B" && TransfromModelSelection.ToFilter == "V") index = "bv";
+                    if (TransfromModelSelection.FromFilter == "V" && TransfromModelSelection.ToFilter == "RJ") index = "vr";
+                    if (TransfromModelSelection.FromFilter == "RJ" && TransfromModelSelection.ToFilter == "I") index = "ri";
 
-                return "T" + errorColor + "__" + index;
+                    return "T" + errorColor + "_" + index;
+                } catch (Exception ex)
+                {
+                    return "";
+                }
             }
         }
 
@@ -156,12 +267,46 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         {
             get { return _magErrorSlope;  }
             set {
+                _tx_yzChanged = true;
                 _magErrorSlope = value;
                 OnPropertyChanged("MagErrorParameterName");
                 OnPropertyChanged("MagErrorSlope");
             }
         }
 
+        public string ColorErrorParameterName
+        {
+            get
+            {
+                try
+                {
+                    string index = "";
+                    if (TransfromModelSelection.FromFilter == "U" && TransfromModelSelection.ToFilter == "B") index = "ub";
+                    if (TransfromModelSelection.FromFilter == "B" && TransfromModelSelection.ToFilter == "V") index = "bv";
+                    if (TransfromModelSelection.FromFilter == "V" && TransfromModelSelection.ToFilter == "RJ") index = "vr";
+                    if (TransfromModelSelection.FromFilter == "RJ" && TransfromModelSelection.ToFilter == "I") index = "ri";
+
+                    return "T" + index;
+                }
+                catch (Exception ex)
+                {
+                    return "";
+                }
+            }
+        }
+
+        private double _colorErrorSlope;
+        public double ColorErrorSlope
+        {
+            get { return _colorErrorSlope; }
+            set
+            {
+                _txyChanged = true;
+                _colorErrorSlope = value;
+                OnPropertyChanged("ColorErrorParameterName");
+                OnPropertyChanged("ColorErrorSlope");
+            }
+        }
         #endregion
 
         #region Ctor
@@ -170,19 +315,25 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             _transformModels = new ObservableCollection<TransformModel>()
             {   new TransformModel() { FromFilter = "B", ToFilter = "V"},
                 new TransformModel() { FromFilter = "U", ToFilter = "B"},
-                new TransformModel() { FromFilter = "V", ToFilter = "R"},
-                new TransformModel() { FromFilter = "R", ToFilter = "I"}
+                new TransformModel() { FromFilter = "V", ToFilter = "RJ"},
+                new TransformModel() { FromFilter = "RJ", ToFilter = "I"}
             };
             _data = new ObservableCollection<TrandformationEntry>();
 
             TransformDataSet.Instance.NewMeasurement += Instance_NewMeasurement;
 
             Model_Tx_yz = new PlotModel { Title = "Tx_yz", Subtitle = "(Magnitude Transformation)"};
+            Model_Txy = new PlotModel { Title = "Txy", Subtitle = "(Measured Color Index)" };
 
             _tx_yz_series = new ScatterSeries { Title = "Magnitudes", MarkerType = MarkerType.Circle };
             _tx_yz_fit = new LineSeries { Title = "Transform slop", MarkerType = MarkerType.Circle };
             Model_Tx_yz.Series.Add(_tx_yz_series);
             Model_Tx_yz.Series.Add(_tx_yz_fit);
+
+            _txy_series = new ScatterSeries { Title = "Color Index", MarkerType = MarkerType.Circle };
+            _txy_fit = new LineSeries { Title = "Transform slop", MarkerType = MarkerType.Circle };
+            Model_Txy.Series.Add(_txy_series);
+            Model_Txy.Series.Add(_txy_fit);
         }
 
         private void Instance_NewMeasurement(object? sender, EventArgs e)
@@ -211,6 +362,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 OnPropertyChanged("ColorMagErrorFilters");
             }
             UpdateTx_yz();
+            UpdateTxy();
         }
         #endregion
         private void UpdateTx_yz()
@@ -233,6 +385,8 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 double xmax = double.MinValue;
                 foreach (TrandformationEntry d in _data)
                 {
+                    if (d.Filter != ColorMagErrorFilter.Filter)
+                        continue;
                     double indice = ColorIndexFromData(_transfromModel, d);
 
                     x[idx] = indice;
@@ -243,7 +397,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 double rSuqared = 0.0;
                 double yIntersect = 0.0;
                 double slope = 0.0;
-                LinearRegression.FitLinear(x, y, 0, _data.Count, out rSuqared, out yIntersect, out slope);
+                LinearRegression.FitLinear(x, y, 0, idx, out rSuqared, out yIntersect, out slope);
                 MagErrorSlope = slope;
                 _tx_yz_fit.Points.Clear();
                 _tx_yz_fit.Points.Add(new DataPoint(0, yIntersect));
@@ -254,12 +408,75 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         }
         private double ColorIndexFromData(TransformModel filter, TrandformationEntry dataline)
         {
-            double indice = 0.0;
-            if (filter.FromFilter == "U" && filter.ToFilter == "B") indice = dataline.UB;
-            if (filter.FromFilter == "B" && filter.ToFilter == "V") indice = dataline.BV;
-            if (filter.FromFilter == "V" && filter.ToFilter == "R") indice = dataline.VR;
-            if (filter.FromFilter == "R" && filter.ToFilter == "I") indice = dataline.RI;
-            return indice;
+            try
+            {
+                double indice = 0.0;
+                if (filter.FromFilter == "U" && filter.ToFilter == "B") indice = dataline.UB;
+                if (filter.FromFilter == "B" && filter.ToFilter == "V") indice = dataline.BV;
+                if (filter.FromFilter == "V" && filter.ToFilter == "RJ") indice = dataline.VR;
+                if (filter.FromFilter == "RJ" && filter.ToFilter == "I") indice = dataline.RI;
+                return indice;
+            } catch (Exception ex)
+            {
+                return 0.0;
+            }
+        }
+
+        private void UpdateTxy()
+        {
+            _txy_series.Points.Clear();
+            Dictionary<string, MeasuredColorIndex> measIdx = new Dictionary<string, MeasuredColorIndex>();
+            foreach (TrandformationEntry t in _data)
+            {
+                if(!measIdx.ContainsKey(t.Id))
+                {
+                    MeasuredColorIndex idx = new MeasuredColorIndex() { Id = t.Id };
+                    idx.Add(t.Filter, t.Meas);
+                    idx.Tag = t;
+                    measIdx.Add(idx.Id, idx);
+                }
+                else
+                {
+                    measIdx[t.Id].Add(t.Filter, t.Meas);
+                }
+            }
+            double xmax = double.MinValue;
+            int i = 0;
+            double[] x = new double[_data.Count];
+            double[] y = new double[_data.Count];
+            foreach (MeasuredColorIndex idx in measIdx.Values)
+            {
+                double left = double.NaN;
+                double right = double.NaN;
+
+                if (idx.MeasValues.ContainsKey(_transfromModel.FromFilter))
+                    left = idx.MeasValues[_transfromModel.FromFilter];
+                if (idx.MeasValues.ContainsKey(_transfromModel.ToFilter))
+                    right = idx.MeasValues[_transfromModel.ToFilter];
+                if (double.IsNaN(left) || double.IsNaN(right))
+                    continue;
+                double index = left - right;
+                double indice = ColorIndexFromData(_transfromModel, idx.Tag);
+                ScatterPoint p = new ScatterPoint(indice, index);
+                x[i] = indice;
+                y[i++] = index;
+                if (indice > xmax)
+                    xmax = indice;
+                _txy_series.Points.Add(p);
+            }
+            if (measIdx.Count > 5)
+            {
+                double rSuqared = 0.0;
+                double yIntersect = 0.0;
+                double slope = 0.0;
+                LinearRegression.FitLinear(x, y, 0, i, out rSuqared, out yIntersect, out slope);
+                ColorErrorSlope = 1.0/slope;
+                _txy_fit.Points.Clear();
+                _txy_fit.Points.Add(new DataPoint(0, yIntersect));
+                _txy_fit.Points.Add(new DataPoint(xmax, yIntersect + (slope * xmax)));
+
+            }
+            Model_Txy.InvalidatePlot(true);
         }
     }
 
@@ -390,6 +607,31 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         public override string ToString()
         {
             return Filter;
+        }
+
+    }
+
+    public class MeasuredColorIndex 
+    {
+        public string Id { get; set; }
+        public TrandformationEntry Tag { get; set; }
+        public Dictionary<string, double> MeasValues { get; set; }
+
+        public MeasuredColorIndex()
+        {
+            MeasValues = new Dictionary<string, double>();
+        }
+
+        public void Add(string filter, double machineMag)
+        {
+            if(!MeasValues.ContainsKey(filter))
+            {
+                MeasValues.Add(filter, machineMag);
+            }
+            else
+            {
+                MeasValues[filter] = machineMag;
+            }
         }
     }
 }

@@ -23,6 +23,8 @@ using System.Windows.Media;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Windows;
+using Stroblhofwarte.Photometrie.Dialogs;
+using Stroblhofwarte.Photometrie.Dialogs.DialogViewModels;
 
 namespace Stroblhofwarte.Photometrie.ViewModel
 {
@@ -459,7 +461,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             // Store new size into the instrument setup:
             try
             {
-                InstrumentObject instr = Instruments.Instance.Get(StroblhofwarteImage.Instance.GetTelescope(), StroblhofwarteImage.Instance.GetInstrument(),
+                InstrumentObject instr = AperturePhotometry.Instruments.Instance.Get(StroblhofwarteImage.Instance.GetTelescope(), StroblhofwarteImage.Instance.GetInstrument(),
                 (int)StroblhofwarteImage.Instance.GetSensorGain(),
                 (int)StroblhofwarteImage.Instance.GetSensorOffset(),
                 StroblhofwarteImage.Instance.GetBinning(),
@@ -467,7 +469,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 instr.Aperture = _apertureSize;
                 instr.InnerAnnulus = _annulusInnerRadius;
                 instr.OuterAnnulus = _annulusOuterRadius;
-                Instruments.Instance.Save();
+                AperturePhotometry.Instruments.Instance.Save();
                 _apertureChanged = false;
             }
             catch (Exception ex)
@@ -759,7 +761,46 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
         }
         #endregion
-        
+
+        #region commandTransform
+        private RelayCommand commandTransform;
+        public ICommand CommandTransform
+        {
+            get
+            {
+                if (commandTransform == null)
+                {
+                    commandTransform = new RelayCommand(param => this.Transform(), param => this.CanTransform());
+                }
+                return commandTransform;
+            }
+        }
+
+        private bool CanTransform()
+        {
+            int filterCount = 0;
+            List<string> filter = new List<string>();
+            foreach(ApertureMeasurementEntry e in Measures)
+            {
+                if(!filter.Contains(e.Filter))
+                {
+                    filter.Add(e.Filter);
+                }
+            }
+            if (filter.Count == 2) return true;
+            return false;
+        }
+
+        private void Transform()
+        {
+            DialogTransformationView dlg = new DialogTransformationView();
+            DialogTransformationViewModel model = dlg.DataContext as DialogTransformationViewModel;
+            if (model != null)
+                model.Measures = Measures;
+            dlg.ShowDialog();
+        }
+        #endregion
+
         #region ctor
 
         public ApertureViewModel()
@@ -793,7 +834,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             StepInfo = "<Start> to start measurement";
             try
             {
-                InstrumentObject instr = Instruments.Instance.Get(StroblhofwarteImage.Instance.GetTelescope(), StroblhofwarteImage.Instance.GetInstrument(),
+                InstrumentObject instr = AperturePhotometry.Instruments.Instance.Get(StroblhofwarteImage.Instance.GetTelescope(), StroblhofwarteImage.Instance.GetInstrument(),
                         (int)StroblhofwarteImage.Instance.GetSensorGain(),
                         (int)StroblhofwarteImage.Instance.GetSensorOffset(),
                         StroblhofwarteImage.Instance.GetBinning(),

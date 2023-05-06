@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -66,7 +67,7 @@ namespace Stroblhofwarte.AperturePhotometry
                 {
                     if (line.StartsWith("#")) continue;
                     string[] fields = line.Split(";");
-                    if (fields.Length != 12) continue;
+                    if (fields.Length != 13) continue;
                     InstrumentObject obj = new InstrumentObject()
                     {
                         Telescope = fields[0],
@@ -81,6 +82,7 @@ namespace Stroblhofwarte.AperturePhotometry
                         Aperture = Convert.ToInt32(fields[9]),
                         InnerAnnulus = Convert.ToInt32(fields[10]),
                         OuterAnnulus = Convert.ToInt32(fields[11]),
+                        TransformationParameters = fields[12]
                     };
                     if(!_hashCache.ContainsKey(Hash(obj)))
                     {
@@ -119,7 +121,8 @@ namespace Stroblhofwarte.AperturePhotometry
                             instr.DarkCurrent.ToString(CultureInfo.InvariantCulture) + ";" +
                             instr.Aperture.ToString(CultureInfo.InvariantCulture) + ";" +
                             instr.InnerAnnulus.ToString(CultureInfo.InvariantCulture) + ";" +
-                            instr.OuterAnnulus.ToString(CultureInfo.InvariantCulture);
+                            instr.OuterAnnulus.ToString(CultureInfo.InvariantCulture) + ";" +
+                            instr.TransformationParameters;
 
                         writetext.WriteLine(line);
                     }
@@ -185,6 +188,71 @@ namespace Stroblhofwarte.AperturePhotometry
             return false;
         }
 
+        public bool AddOrUpdateTransformationParameter(string hash, string transformationKey, double value)
+        {
+            Dictionary<string, KeyValuePair<double, string>> db = TransformationDb(hash);
+            if(db.ContainsKey(transformationKey))
+            {
+                db[transformationKey] = new KeyValuePair<double, string>(value, DateTime.Now.ToShortDateString());
+            }
+            else
+            {
+                db.Add(transformationKey, new KeyValuePair<double, string>(value, DateTime.Now.ToShortDateString()));
+            }
+            InstrumentObject obj = Get(hash);
+            obj.TransformationParameters = DbToString(db);
+            return Save();
+        }
+
+        private string DbToString(Dictionary<string, KeyValuePair<double, string>> db)
+        {
+            string str = string.Empty;
+            foreach(string key in db.Keys)
+            {
+                str = str + key + "=" + db[key].Key.ToString(CultureInfo.InvariantCulture) + "#" + db[key].Value + "|";
+            }
+            return str;
+        }
+
+        public double GetTransformationParam(string hash, string transformationKey)
+        {
+            Dictionary<string, KeyValuePair<double, string>> db = TransformationDb(hash);
+            if (db.ContainsKey(transformationKey))
+            {
+                return db[transformationKey].Key;
+            }
+            return double.NaN;
+        }
+
+        private Dictionary<string, KeyValuePair<double, string>> TransformationDb(string hash)
+        {
+            Dictionary<string, KeyValuePair<double, string>> db = new Dictionary<string, KeyValuePair<double, string>>();
+            InstrumentObject obj = Get(hash);
+            string[] trFields = obj.TransformationParameters.Split('|');
+            if (trFields.Count() < 2) return db;
+            bool found = false;
+            foreach (string trField in trFields)
+            {
+                string[] namevalue = trField.Split('=');
+                if (namevalue.Count() < 2) return db;
+                if (!db.ContainsKey(namevalue[0]))
+                {
+                    string[] values = namevalue[1].Split('#');
+                    try
+                    {
+                        double val = Convert.ToDouble(values[0], CultureInfo.InvariantCulture);
+                        db.Add(namevalue[0], new KeyValuePair<double, string>(val, values[1]));
+                    }
+                    catch (Exception ex)
+                    {
+                        continue;
+                    }
+
+                }
+            }
+            return db;
+        }
+
         public bool Create(string teleskope, string instrument, int gain, int offset, string binning, double setTemp, int aperture, int innerAnnulus, int outerAnnulus)
         {
             InstrumentObject obj = new InstrumentObject()
@@ -247,6 +315,7 @@ namespace Stroblhofwarte.AperturePhotometry
         public double Aperture { get; set; }
         public double InnerAnnulus { get; set; }
         public double OuterAnnulus { get; set; }
+        public string TransformationParameters { get; set; }
 
         #endregion
 
