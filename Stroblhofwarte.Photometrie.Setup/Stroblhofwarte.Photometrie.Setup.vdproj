@@ -4,9 +4,9 @@
 "ProjectType" = "8:{978C614F-708E-4E1A-B201-565925725DBA}"
 "IsWebType" = "8:FALSE"
 "ProjectName" = "8:Stroblhofwarte.Photometrie.Setup"
-"LanguageId" = "3:1031"
+"LanguageId" = "3:0"
 "CodePage" = "3:1252"
-"UILanguageId" = "3:1031"
+"UILanguageId" = "3:0"
 "SccProjectName" = "8:"
 "SccLocalPath" = "8:"
 "SccAuxPath" = "8:"
@@ -27,7 +27,7 @@
         "DisplayName" = "8:Debug"
         "IsDebugOnly" = "11:TRUE"
         "IsReleaseOnly" = "11:FALSE"
-        "OutputFilename" = "8:Debug\\Stroblhofwarte.Photometrie.Setup.msi"
+        "OutputFilename" = "8:Debug\\Stroblhofwarte.Photometrie.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -37,13 +37,21 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
         "Release"
         {
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:Release\\Stroblhofwarte.Photometrie.Setup.msi"
+        "OutputFilename" = "8:Release\\Stroblhofwarte.Photometrie.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -53,6 +61,22 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
+            }
         }
     }
     "Deployable"
@@ -133,15 +157,15 @@
         }
         "MsiBootstrapper"
         {
-        "LangId" = "3:1031"
+        "LangId" = "3:0"
         "RequiresElevation" = "11:FALSE"
         }
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:Stroblhofwarte.Photometrie.Setup"
+        "ProductName" = "8:Stroblhofwarte.Photometrie"
         "ProductCode" = "8:{E699E1FF-E211-467C-90EC-4125EF6B8E2D}"
-        "PackageCode" = "8:{BD72DBA8-2E85-44BE-AC81-5A47565F12FA}"
+        "PackageCode" = "8:{C5037B92-86B1-4F34-8FB9-1B493E6B16F8}"
         "UpgradeCode" = "8:{40C28CB9-F243-4990-9E36-049EC6B8DAF8}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
@@ -149,12 +173,12 @@
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
         "ProductVersion" = "8:1.0.0"
-        "Manufacturer" = "8:Default Company Name"
+        "Manufacturer" = "8:Stroblhofwarte"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
-        "Title" = "8:Stroblhofwarte.Photometrie.Setup"
+        "Title" = "8:Stroblhofwarte.Photometrie"
         "Subject" = "8:"
-        "ARPCONTACT" = "8:Default Company Name"
+        "ARPCONTACT" = "8:Othmar Ehrhardt"
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:"
         "ARPURLINFOABOUT" = "8:"
@@ -676,7 +700,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_BBC184353F8E41EA8A0CA977037681E3"
             {
-            "SourcePath" = "8:..\\Stroblhofwarte.Photometrie\\obj\\Release\\net6.0-windows\\apphost.exe"
+            "SourcePath" = "8:..\\Stroblhofwarte.Photometrie\\obj\\Debug\\net6.0-windows\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_0DC2E8D8BC434F239D37F12002616B5F"

@@ -21,13 +21,19 @@ namespace Stroblhofwarte.AperturePhotometry.StandardFields
         public List<string> Fields()
         {
             List<string> fields = new List<string>();
-            string path = Stroblhofwarte.Config.GlobalConfig.Instance.StandardFieldsPath;
-            string[] files = Directory.GetFiles(path);
-            foreach (string file in files)
+            try
             {
-                fields.Add(Path.GetFileName(file));
+                string path = Stroblhofwarte.Config.GlobalConfig.Instance.StandardFieldsPath;
+                string[] files = Directory.GetFiles(path);
+                foreach (string file in files)
+                {
+                    fields.Add(Path.GetFileName(file));
+                }
+                return fields;
+            } catch(Exception ex)
+            {
+                return fields;
             }
-            return fields;
         }
 
         public List<StandardStar> StandardField(string id)
