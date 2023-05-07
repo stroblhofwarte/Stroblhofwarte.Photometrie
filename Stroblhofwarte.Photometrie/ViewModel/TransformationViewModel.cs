@@ -3,11 +3,13 @@ using OxyPlot;
 using OxyPlot.Series;
 using Stroblhofwarte.AperturePhotometry;
 using Stroblhofwarte.Image;
+using Stroblhofwarte.Photometrie.DataPackages;
 using Stroblhofwarte.Photometrie.FileFormats;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -234,6 +236,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             Stroblhofwarte.AperturePhotometry.Instruments.Instance.AddOrUpdateTransformationParameter(hash, ColorErrorParameterName, ColorErrorSlope);
             _txyChanged = false;
         }
+
 
         public string MagErrorParameterName
         {

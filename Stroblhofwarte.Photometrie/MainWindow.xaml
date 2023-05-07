@@ -12,7 +12,7 @@
         xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
         xmlns:AVBehav="clr-namespace:Stroblhofwarte.Photometrie.Behavior"
         mc:Ignorable="d"
-        Title="MainWindow" Height="768" Width="1024" WindowState="Maximized"
+        Title="Stroblhofwarte.Photometrie" Height="768" Width="1024" WindowState="Maximized"
         >
     
     <Grid>

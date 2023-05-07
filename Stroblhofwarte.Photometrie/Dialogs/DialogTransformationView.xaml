@@ -3,10 +3,70 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
         xmlns:local="clr-namespace:Stroblhofwarte.Photometrie.Dialogs"
         mc:Ignorable="d"
-        Title="DialogTransformationView" Height="450" Width="800">
+        Title="Transformed Data" Height="591" Width="1149">
     <Grid>
-        
+        <ListView ItemsSource="{Binding TransformedMeas}" Margin="0,0,0,149">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="80" />
+                    <GridViewColumn Header="Filter" DisplayMemberBinding="{Binding LeftFilter}" Width="80" />
+                    <GridViewColumn Header="Var Mag" DisplayMemberBinding="{Binding LeftMag, StringFormat=N4}" Width="80" />
+                    <GridViewColumn Header="CMagInstr." DisplayMemberBinding="{Binding LeftCompInstrumentMag, StringFormat=N4}" Width="80" />
+                    <GridViewColumn Header="KMagInstr." DisplayMemberBinding="{Binding LeftCheckInstrumentMag, StringFormat=N4}" Width="80" />
+                    <GridViewColumn Header="KMag" DisplayMemberBinding="{Binding LeftCheckMag, StringFormat=N4}" Width="80" />
+                    <GridViewColumn Header="Err [K]" DisplayMemberBinding="{Binding LeftErr, StringFormat=N6}" Width="80" />
+                    <GridViewColumn Header="{Binding LefttxyzName}" DisplayMemberBinding="{Binding LeftTx_yz, StringFormat=N4}" Width="80" />
+
+                    <GridViewColumn Header="Filter" DisplayMemberBinding="{Binding RightFilter}" Width="80" />
+                    <GridViewColumn Header="Var Mag" DisplayMemberBinding="{Binding RightMag, StringFormat=N4}" Width="80" />
+                    <GridViewColumn Header="CMagInstr." DisplayMemberBinding="{Binding RightCompInstrumentMag, StringFormat=N4}" Width="80" />
+                    <GridViewColumn Header="KMagInstr." DisplayMemberBinding="{Binding RightCheckInstrumentMag, StringFormat=N4}" Width="80" />
+                    <GridViewColumn Header="KMag" DisplayMemberBinding="{Binding RightCheckMag, StringFormat=N4}" Width="80" />
+                    <GridViewColumn Header="Err [K]" DisplayMemberBinding="{Binding RightErr, StringFormat=N6}" Width="80" />
+                    <GridViewColumn Header="{Binding RighttxyzName}" DisplayMemberBinding="{Binding RightTx_yz, StringFormat=N4}" Width="80" />
+
+                    <GridViewColumn Header="{Binding TxyName}" DisplayMemberBinding="{Binding Txy}" Width="80" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <ListView ItemsSource="{Binding CombinedTransformedMeas}" Height="144" VerticalAlignment="Bottom">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="80" />
+                    <GridViewColumn Header="Filter" DisplayMemberBinding="{Binding LeftFilter}" Width="80" />
+                    <GridViewColumn Header="Var Mag" DisplayMemberBinding="{Binding LeftMag, StringFormat=N4}" Width="80" />
+                    <GridViewColumn Header="CMagInstr." DisplayMemberBinding="{Binding LeftCompInstrumentMag, StringFormat=N4}" Width="80" />
+                    <GridViewColumn Header="KMagInstr." DisplayMemberBinding="{Binding LeftCheckInstrumentMag, StringFormat=N4}" Width="80" />
+                    <GridViewColumn Header="KMag" DisplayMemberBinding="{Binding LeftCheckMag, StringFormat=N4}" Width="80" />
+                    <GridViewColumn Header="Err [Var]" DisplayMemberBinding="{Binding LeftErr, StringFormat=N6}" Width="80" />
+                    <GridViewColumn Header="{Binding LefttxyzName}" DisplayMemberBinding="{Binding LeftTx_yz, StringFormat=N4}" Width="80" />
+
+                    <GridViewColumn Header="Filter" DisplayMemberBinding="{Binding RightFilter}" Width="80" />
+                    <GridViewColumn Header="Var Mag" DisplayMemberBinding="{Binding RightMag, StringFormat=N4}" Width="80" />
+                    <GridViewColumn Header="CMagInstr." DisplayMemberBinding="{Binding RightCompInstrumentMag, StringFormat=N4}" Width="80" />
+                    <GridViewColumn Header="KMagInstr." DisplayMemberBinding="{Binding RightCheckInstrumentMag, StringFormat=N4}" Width="80" />
+                    <GridViewColumn Header="KMag" DisplayMemberBinding="{Binding RightCheckMag, StringFormat=N4}" Width="80" />
+                    <GridViewColumn Header="Err [Var]" DisplayMemberBinding="{Binding RightErr, StringFormat=N6}" Width="80" />
+                    <GridViewColumn Header="{Binding RighttxyzName}" DisplayMemberBinding="{Binding RightTx_yz, StringFormat=N4}" Width="80" />
+
+                    <GridViewColumn Header="{Binding TxyName}" DisplayMemberBinding="{Binding Txy}" Width="80" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button ToolTip="Report all measurements"
+                        Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding CommandReportSerie}" Margin="0,44,10,0" HorizontalAlignment="Right" Width="30" Height="30" VerticalAlignment="Top">
+            <StackPanel Orientation="Vertical">
+                <icon:PackIconMaterial Width="18" Height="18" Kind="TextBoxPlusOutline" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Button>
+        <Button ToolTip="Report all measurements"
+                        Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding CommandReportCombined}" Margin="0,0,10,87" HorizontalAlignment="Right" Width="30" Height="30" VerticalAlignment="Bottom">
+            <StackPanel Orientation="Vertical">
+                <icon:PackIconMaterial Width="18" Height="18" Kind="TextBoxPlusOutline" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Button>
     </Grid>
 </Window>

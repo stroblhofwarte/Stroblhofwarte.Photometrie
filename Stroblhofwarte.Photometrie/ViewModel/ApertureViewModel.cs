@@ -657,33 +657,34 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
         private bool CanReport()
         {
-            if (PhotoState == enumPhotoState.DONE) return true;
-            return false;
+            return true;
         }
 
         private void Report()
         {
-            AAVSOList newElement;
-            AAVSOExtendedFileFormat.Instance.Add(StarDataRelay.Instance.Name,
-                StroblhofwarteImage.Instance.GetJD().ToString(CultureInfo.InvariantCulture),
-                VarMag.ToString("0.##", CultureInfo.InvariantCulture),
-                VarError.ToString("0.####", CultureInfo.InvariantCulture),
-                Stroblhofwarte.AperturePhotometry.Filter.Instance.TranslateToAAVSOFilter(StroblhofwarteImage.Instance.GetFilter()),
-                "NO",
-                "STD",
-                StarDataRelay.Instance.CompName,
-                StarDataRelay.Instance.CompMag.ToString(CultureInfo.InvariantCulture),
-                StarDataRelay.Instance.CheckName,
-                StarDataRelay.Instance.CheckMag.ToString(CultureInfo.InvariantCulture),
-                "na",
-                "na",
-                StarDataRelay.Instance.ChartId,
-                "na", out newElement);
-            PhotoState = enumPhotoState.INIT;
-
-            // Store reported measurments also in the permanent db:
-            AAVSOExtendedFileFormat permanentDb = new AAVSOExtendedFileFormat(PERMADB);
-            permanentDb.Add(newElement);
+            foreach (ApertureMeasurementEntry m in Measures)
+            {
+                AAVSOList newElement;
+                AAVSOExtendedFileFormat.Instance.Add(StarDataRelay.Instance.Name,
+                    StroblhofwarteImage.Instance.GetJD().ToString(CultureInfo.InvariantCulture),
+                    m.Mag.ToString("0.####", CultureInfo.InvariantCulture),
+                    m.MagErr.ToString("0.####", CultureInfo.InvariantCulture),
+                    Stroblhofwarte.AperturePhotometry.Filter.Instance.TranslateToAAVSOFilter(StroblhofwarteImage.Instance.GetFilter()),
+                    "NO",
+                    "STD",
+                    StarDataRelay.Instance.CompName,
+                    m.CompMag.ToString(CultureInfo.InvariantCulture),
+                    StarDataRelay.Instance.CheckName,
+                    m.KMag.ToString(CultureInfo.InvariantCulture),
+                    "na",
+                    "na",
+                    StarDataRelay.Instance.ChartId,
+                    "na", out newElement);
+                
+                // Store reported measurments also in the permanent db:
+                AAVSOExtendedFileFormat permanentDb = new AAVSOExtendedFileFormat(PERMADB);
+                permanentDb.Add(newElement);
+            }
 
         }
         #endregion
@@ -959,6 +960,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 if (PhotoState == enumPhotoState.CHECK)
                 {
                     _currentMeas.KMeasMag = Mag;
+                    _currentMeas.KMachineMag = measure.Magnitude(meas, 1.0);
                     _measCheck = meas;
                 }
                 OnPropertyChanged("Measures");
@@ -1097,6 +1099,16 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             }
         }
 
+        private double _kMachineMag;
+        public double KMachineMag
+        {
+            get { return _kMachineMag; }
+            set
+            {
+                _kMachineMag = value;
+                OnPropertyChanged("KMachineMag");
+            }
+        }
 
         private Guid _ident;
         public Guid Ident
