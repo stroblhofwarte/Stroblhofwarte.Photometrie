@@ -28,6 +28,7 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                     LeftFilter = left;
                     RightFilter = right;
                     IsError = TransformationParameter();
+                    Transform();
                 }
                 else
                 {
@@ -38,6 +39,16 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
             { 
                 return _measures; 
             } 
+        }
+
+        private ObservableCollection<TransformedEntry> _transformedMeas;
+        public ObservableCollection<TransformedEntry> TransformedMeas
+        {
+            get { return _transformedMeas; }
+            set {
+                _transformedMeas = value;
+                OnPropertyChanged("TransformedMeas");
+            }
         }
 
         private bool _isError;
@@ -150,7 +161,7 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
         #region Ctor
         public DialogTransformationViewModel()
         {
-
+            _transformedMeas = new ObservableCollection<TransformedEntry>();
         }
         #endregion
 
@@ -232,5 +243,100 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
             RightTx_yz = drightTx_yz;
             return true;
         }
+
+        private bool Transform()
+        {
+            List<ApertureMeasurementEntry> leftSideMeas = new List<ApertureMeasurementEntry>();
+            List<ApertureMeasurementEntry> rightSideMeas = new List<ApertureMeasurementEntry>();
+
+            foreach (ApertureMeasurementEntry e in Measures)
+            {
+                if (e.Filter == LeftFilter)
+                    leftSideMeas.Add(e);
+                if (e.Filter == RightFilter)
+                    rightSideMeas.Add(e);
+            }
+            foreach(ApertureMeasurementEntry e in leftSideMeas)
+            {
+                TransformedEntry t = new TransformedEntry()
+                {
+                    LeftFilter = LeftFilter,
+                    RightFilter = RightFilter,
+                    Txy = Txy,
+                    LeftTx_yz = LeftTx_yz,
+                    RightTx_yz = RightTx_yz
+                };
+                foreach (ApertureMeasurementEntry ee in rightSideMeas)
+                {
+                    t.LeftMag = LeftSideTransform(e, ee);
+                    t.RightMag = RightSideTransform(e, ee);
+                    t.LeftCompMag = LeftSideCompTransform(e, ee);
+                    t.RightCompMag = RightSideCompTransform(e, ee);
+                }
+                TransformedMeas.Add(t);
+            }
+            return true;
+        }
+
+        private double LeftSideTransform(ApertureMeasurementEntry leftMeas, ApertureMeasurementEntry rightMeas)
+        {
+            double bc = leftMeas.CompMachineMag;
+            double vc = rightMeas.CompMachineMag;
+            double bt = leftMeas.MachineMag;
+            double vt = rightMeas.MachineMag;
+            double Bc = leftMeas.CompMag;
+            // For left side (more blue filter):
+            return -LeftTx_yz * Txy * (bc - vc - bt + vt) + Bc - bc + bt;
+        }
+
+        private double LeftSideCompTransform(ApertureMeasurementEntry leftMeas, ApertureMeasurementEntry rightMeas)
+        {
+            double bc = leftMeas.CompMachineMag;
+            double vc = rightMeas.CompMachineMag;
+            double bt = leftMeas.CompMachineMag;
+            double vt = rightMeas.CompMachineMag;
+            double Bc = leftMeas.CompMag;
+            // For left side (more blue filter):
+            return -LeftTx_yz * Txy * (bc - vc - bt + vt) + Bc - bc + bt;
+        }
+
+        private double RightSideTransform(ApertureMeasurementEntry leftMeas, ApertureMeasurementEntry rightMeas)
+        {
+            double bc = leftMeas.CompMachineMag;
+            double vc = rightMeas.CompMachineMag;
+            double bt = leftMeas.MachineMag;
+            double vt = rightMeas.MachineMag;
+            double Vc = rightMeas.CompMag;
+            // For left side (more blue filter):
+            return -RightTx_yz * Txy * (bc - vc - bt + vt) + Vc - vc + vt;
+        }
+
+        private double RightSideCompTransform(ApertureMeasurementEntry leftMeas, ApertureMeasurementEntry rightMeas)
+        {
+            double bc = leftMeas.CompMachineMag;
+            double vc = rightMeas.CompMachineMag;
+            double bt = leftMeas.CompMachineMag;
+            double vt = rightMeas.CompMachineMag;
+            double Vc = rightMeas.CompMag;
+            // For left side (more blue filter):
+            return -RightTx_yz * Txy * (bc - vc - bt + vt) + Vc - vc + vt;
+        }
+    }
+
+    public class TransformedEntry
+    {
+        #region Properties
+
+        public double Txy { get; set; }
+        public double LeftTx_yz { get; set; }
+        public double RightTx_yz { get; set; }
+        public string LeftFilter { get; set; }
+        public string RightFilter { get; set; }
+        public double LeftMag { get; set; }
+        public double RightMag { get; set; }
+        public double LeftCompMag { get; set; }
+        public double RightCompMag { get; set; }
+
+        #endregion
     }
 }

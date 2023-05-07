@@ -947,11 +947,13 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                     _currentMeas.CompMag = StarDataRelay.Instance.CompMag;
                     _currentMeas.KMag = StarDataRelay.Instance.CheckMag;
                     _currentMeas.CompMeasMag = Mag;
+                    _currentMeas.CompMachineMag = measure.Magnitude(meas, 1.0);
                     _measComp = meas;
                 }
                 if (PhotoState == enumPhotoState.VAR)
                 {
                     _currentMeas.Mag = Mag;
+                    _currentMeas.MachineMag = measure.Magnitude(meas, 1.0);
                     _measVar = meas;
                 }
                 if (PhotoState == enumPhotoState.CHECK)
@@ -1018,6 +1020,17 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             }
         }
 
+        private double _machinemag;
+        public double MachineMag
+        {
+            get { return _machinemag; }
+            set
+            {
+                _machinemag = value;
+                OnPropertyChanged("MachineMag");
+            }
+        }
+
         private double _compMag;
         public double CompMag
         {
@@ -1037,6 +1050,17 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             {
                 _compMeasMag = value;
                 OnPropertyChanged("CompMeasMag");
+            }
+        }
+
+        private double _compMachineMag;
+        public double CompMachineMag
+        {
+            get { return _compMachineMag; }
+            set
+            {
+                _compMachineMag = value;
+                OnPropertyChanged("CompMachineMag");
             }
         }
 
