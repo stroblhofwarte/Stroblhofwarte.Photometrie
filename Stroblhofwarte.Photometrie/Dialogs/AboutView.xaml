@@ -1,0 +1,20 @@
+﻿<Controls:MetroWindow x:Class="Stroblhofwarte.Photometrie.Dialogs.AboutView"
+        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:local="clr-namespace:Stroblhofwarte.Photometrie.Dialogs"
+        mc:Ignorable="d"
+        Title="About" Height="660" Width="1079">
+    <Grid Margin="0,0,0,6">
+        <Label Content="Stroblhofwarte.Photometrie" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Foreground="#FFD2D0D0" FontSize="16" FontWeight="Bold"/>
+        <Label Content="Version 0.9" HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Top" Foreground="#FFD2D0D0"/>
+        <Label Content="Author: Othmar Ehrhardt, https://astro.stroblhof-oberrohrbach.de" HorizontalAlignment="Left" Margin="10,63,0,0" VerticalAlignment="Top" Foreground="#FFD2D0D0"/>
+        <Label Content="Copyright 2023" HorizontalAlignment="Left" Margin="10,89,0,0" VerticalAlignment="Top" Foreground="#FFD2D0D0"/>
+        <ScrollViewer Margin="44,120,40,34" HorizontalScrollBarVisibility="Auto">
+            <TextBlock TextWrapping="Wrap" Text="{Binding Disclaimer}" FontFamily="Courier New" />
+        </ScrollViewer>
+    </Grid>
+</Controls:MetroWindow>
