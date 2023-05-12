@@ -290,8 +290,9 @@ namespace Stroblhofwarte.FITS.DataObjects
                     try
                     {
                         string val = card.Value;
-                        val = val.Replace(".", "");
-                        xb = Convert.ToInt32(val, CultureInfo.InvariantCulture);
+                        val = val.Replace(",", ".");
+                        string[] cleanVal = val.Split('.');
+                        xb = Convert.ToInt32(cleanVal[0], CultureInfo.InvariantCulture);
                     }
                     catch (Exception)
                     {
@@ -303,8 +304,9 @@ namespace Stroblhofwarte.FITS.DataObjects
                     try
                     {
                         string val = card.Value;
-                        val = val.Replace(".", "");
-                        yb = Convert.ToInt32(val, CultureInfo.InvariantCulture);
+                        val = val.Replace(",", ".");
+                        string[] cleanVal = val.Split('.');
+                        yb = Convert.ToInt32(cleanVal[0], CultureInfo.InvariantCulture);
                     }
                     catch (Exception)
                     {
