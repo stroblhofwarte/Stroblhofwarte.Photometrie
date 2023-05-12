@@ -287,6 +287,9 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
                 StarDataRelay.Instance.ChartId = _varStar.ChartId;
                 StarDataRelay.Instance.CValid = true;
+                foreach (ReferenceStar s in RefStars)
+                    s.IsC = false;
+                (o as Stroblhofwarte.Photometrie.ViewModel.ReferenceStar).IsC = true;
             }
         }
 
@@ -317,6 +320,9 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 StarDataRelay.Instance.CheckName = (o as Stroblhofwarte.Photometrie.ViewModel.ReferenceStar).Name;
 
                 StarDataRelay.Instance.KValid = true;
+                foreach (ReferenceStar s in RefStars)
+                    s.IsK = false;
+                (o as Stroblhofwarte.Photometrie.ViewModel.ReferenceStar).IsK = true;
             }
         }
         #endregion
@@ -342,12 +348,41 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                     break;
                 }
             }
+
+            StarDataRelay.Instance.Filter = _filter;
+            UpdateData();
+            foreach (ReferenceStar s in RefStars)
+            {
+                if(s.IsC)
+                {
+                    StarDataRelay.Instance.CheckMag = s.MAG;
+                }
+                if(s.IsK)
+                {
+                    StarDataRelay.Instance.CompMag = s.MAG;
+                }
+            }
         }
 
         #endregion
 
         private void UpdateData()
         {
+            // Store C and K star:
+            string cAuid = string.Empty;
+            string kAuid = string.Empty;
+            foreach (ReferenceStar s in RefStars)
+            {
+                if (s.IsC)
+                {
+                    cAuid = s.AUID;
+                }
+                if (s.IsK)
+                {
+                    kAuid = s.AUID;
+                }
+            }
+
             System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
             {
                 _refStars.Clear();
@@ -357,7 +392,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             Name = _varStar.Var.Name;
             Auid = _varStar.Var.Auid;
             Coor = _varStar.Var.StarCoordinates;
-            StroblhofwarteImage.Instance.AddAnnotation(Name, Coor);
+            StroblhofwarteImage.Instance.AddAnnotation(Name + " [" + Auid + "]", Coor);
 
             foreach (Star s in _varStar.ReferenceStars)
             {
@@ -372,10 +407,14 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                         reference.MAG = m.Magnitude;
                     }
                 }
+                if (s.Auid == cAuid)
+                    reference.IsC = true;
+                if (s.Auid == kAuid)
+                    reference.IsK = true;
                 System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
                 {
                     _refStars.Add(reference);
-                    StroblhofwarteImage.Instance.AddAnnotation(reference.Name, reference.Coor);
+                    StroblhofwarteImage.Instance.AddAnnotation(reference.Name + " [" + s.Auid + "]", reference.Coor);
                 }));
 
             }
@@ -384,6 +423,51 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
     public class ReferenceStar : INotifyPropertyChanged
     {
+        private bool _isC;
+        public bool IsC
+        {
+            get { return _isC; }
+            set {
+                _isC = value;
+                OnPropertyChanged("IsC");
+                OnPropertyChanged("IsCString");
+            }
+        }
+
+        public string IsCString
+        {
+            get 
+            {
+                if (_isC)
+                    return "C";
+                return "";
+            }
+        }
+
+        private bool _isK;
+        public bool IsK
+        {
+            get { return _isK; }
+            set
+            {
+                _isK = value;
+                OnPropertyChanged("IsK");
+                OnPropertyChanged("IsKString");
+
+            }
+        }
+
+        public string IsKString
+        {
+            get
+            {
+                if (_isK)
+                    return "K";
+                return "";
+            }
+        }
+
+
         private string _name;
         public string Name
         {

@@ -57,7 +57,7 @@
                StaysOpen="True" VerticalOffset="{Binding FloatingPanelY}"
                HorizontalOffset="{Binding FloatingPanelX}">
 
-            <Border Width="150" 
+            <Border Width="200" 
                     Height="30"
                     Background="CornflowerBlue">
 

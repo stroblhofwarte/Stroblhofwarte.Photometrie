@@ -316,7 +316,7 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                    "|" + t.LeftTx_yz_Name + "=" + t.LeftTx_yz.ToString(CultureInfo.InvariantCulture) +
                    "|" + t.Txy_Name + "=" + t.Txy.ToString(CultureInfo.InvariantCulture);
                 AAVSOExtendedFileFormat.Instance.Add(StarDataRelay.Instance.Name,
-                    StroblhofwarteImage.Instance.GetJD().ToString(CultureInfo.InvariantCulture),
+                    t.LeftJD.ToString("0.#####", CultureInfo.InvariantCulture),
                     t.LeftMag.ToString("0.####", CultureInfo.InvariantCulture),
                     t.LeftErr.ToString("0.####", CultureInfo.InvariantCulture),
                     t.LeftFilter,
@@ -337,7 +337,7 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                     "|" + t.RightTx_yz_Name + "=" + t.RightTx_yz.ToString(CultureInfo.InvariantCulture) +
                     "|" + t.Txy_Name + "=" + t.Txy.ToString(CultureInfo.InvariantCulture);
                 AAVSOExtendedFileFormat.Instance.Add(StarDataRelay.Instance.Name,
-                    StroblhofwarteImage.Instance.GetJD().ToString(CultureInfo.InvariantCulture),
+                    t.RightJD.ToString("0.#####", CultureInfo.InvariantCulture),
                     t.RightMag.ToString("0.####", CultureInfo.InvariantCulture),
                     t.RightErr.ToString("0.####", CultureInfo.InvariantCulture),
                     t.RightFilter,
@@ -386,7 +386,7 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                     "|" + t.LeftTx_yz_Name + "=" + t.LeftTx_yz.ToString(CultureInfo.InvariantCulture) +
                     "|" + t.Txy_Name + "=" + t.Txy.ToString(CultureInfo.InvariantCulture);
                 AAVSOExtendedFileFormat.Instance.Add(StarDataRelay.Instance.Name,
-                    StroblhofwarteImage.Instance.GetJD().ToString(CultureInfo.InvariantCulture),
+                    t.LeftJD.ToString("0.#####", CultureInfo.InvariantCulture),
                     t.LeftMag.ToString("0.####", CultureInfo.InvariantCulture),
                     t.LeftErr.ToString("0.####", CultureInfo.InvariantCulture),
                     t.LeftFilter,
@@ -408,7 +408,7 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                     "|" + t.Txy_Name + "=" + t.Txy.ToString(CultureInfo.InvariantCulture);
 
                 AAVSOExtendedFileFormat.Instance.Add(StarDataRelay.Instance.Name,
-                    StroblhofwarteImage.Instance.GetJD().ToString(CultureInfo.InvariantCulture),
+                    t.RightJD.ToString("0.#####", CultureInfo.InvariantCulture),
                     t.RightMag.ToString("0.####", CultureInfo.InvariantCulture),
                     t.RightErr.ToString("0.####", CultureInfo.InvariantCulture),
                     t.RightFilter,
@@ -533,24 +533,26 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
             }
             foreach(ApertureMeasurementEntry e in leftSideMeas)
             {
-                TransformedEntry t = new TransformedEntry()
-                {
-                    Name = e.Name,
-                    LeftFilter = LeftFilter,
-                    RightFilter = RightFilter,
-                    Txy = Txy,
-                    LeftTx_yz = LeftTx_yz,
-                    RightTx_yz = RightTx_yz,
-                    LeftCompInstrumentMag = e.CompMachineMag,
-                    LeftCheckInstrumentMag = e.KMachineMag,
-                    Txy_Name = _txyName,
-                    LeftTx_yz_Name = _lefttxyzName,
-                    RightTx_yz_Name = _righttxyzName,
-                    LeftCompMag = e.CompMag,
-                    LeftInstrumentMag = e.MachineMag
-                };
                 foreach (ApertureMeasurementEntry ee in rightSideMeas)
                 {
+                    TransformedEntry t = new TransformedEntry()
+                    {
+                        Name = e.Name,
+                        LeftFilter = LeftFilter,
+                        RightFilter = RightFilter,
+                        Txy = Txy,
+                        LeftTx_yz = LeftTx_yz,
+                        RightTx_yz = RightTx_yz,
+                        LeftCompInstrumentMag = e.CompMachineMag,
+                        LeftCheckInstrumentMag = e.KMachineMag,
+                        Txy_Name = _txyName,
+                        LeftTx_yz_Name = _lefttxyzName,
+                        RightTx_yz_Name = _righttxyzName,
+                        LeftCompMag = e.CompMag,
+                        LeftInstrumentMag = e.MachineMag,
+                        LeftJD = e.JD
+                    };
+
                     t.LeftMag = LeftSideTransform(e, ee);
                     t.RightMag = RightSideTransform(e, ee);
                     t.LeftCheckMag = LeftSideCheckTransform(e, ee);
@@ -559,8 +561,10 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                     t.RightCheckInstrumentMag = ee.KMachineMag;
                     t.RightCompMag = ee.CompMag;
                     t.RightInstrumentMag = ee.MachineMag;
+                    t.RightJD = ee.JD;
+                    TransformedMeas.Add(t);
                 }
-                TransformedMeas.Add(t);
+                
             }
             return true;
         }
@@ -666,6 +670,17 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
             RightStd = Math.Sqrt(rightsum / (rightSideMeas.Count() - 1));
             RightKStd = Math.Sqrt(rightKsum / (rightSideMeas.Count() - 1));
 
+            if (leftSideMeas.Count < 3)
+            {
+                LeftStd = leftSideMeas[0].MagErr;
+                LeftKStd = leftSideMeas[0].MagErr;
+            }
+            if (rightSideMeas.Count < 3)
+            {
+                RightStd = rightSideMeas[0].MagErr;
+                RightKStd = rightSideMeas[0].MagErr;
+            }
+
             // Calculate combined roport (one line per filter)
             double leftvaravrg = 0.0;
             double leftvarinstravrg = 0.0;
@@ -737,6 +752,8 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
             combined.Txy = Txy;
             combined.LeftTx_yz = LeftTx_yz;
             combined.RightTx_yz = RightTx_yz;
+            combined.LeftJD = leftSideMeas[0].JD;
+            combined.RightJD = rightSideMeas[0].JD;
 
             CombinedTransformedMeas.Add(combined);
             return true;
@@ -767,6 +784,9 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
         public double RightCheckInstrumentMag { get; set; }
         public double LeftErr { get; set; }
         public double RightErr { get; set; }
+
+        public double LeftJD { get; set; }
+        public double RightJD { get; set; }
 
 
         private string _Txy_Name;

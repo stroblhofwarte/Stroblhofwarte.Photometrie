@@ -57,8 +57,8 @@ namespace Stroblhofwarte.Photometrie
             if (imageControl != null && imageControl.Source != null)
             {
                 // Convert from control space to image space
-                var x = Math.Floor(p.X);// * (imageControl.Source.Width / imageControl.ActualWidth));
-                var y = Math.Floor(p.Y);// * (imageControl.Source.Height / imageControl.ActualHeight));
+                var x = Math.Floor(p.X) * (imageControl.Source.Width / imageControl.ActualWidth);
+                var y = Math.Floor(p.Y) * (imageControl.Source.Height / imageControl.ActualHeight);
                 WorldCoordinateSystem wcs = StroblhofwarteImage.Instance.WCS;
                 if (wcs != null)
                 {
@@ -94,8 +94,8 @@ namespace Stroblhofwarte.Photometrie
             Point p = e.GetPosition(base.Child);
             // Transfer screen click coordinate to entire image click position
             var imageControl = this.Child as System.Windows.Controls.Image;
-            var x = Math.Floor(p.X);// * imageControl.Source.Width / imageControl.ActualWidth);
-            var y = Math.Floor(p.Y);// * imageControl.Source.Height / imageControl.ActualHeight);
+            var x = Math.Floor(p.X) * (imageControl.Source.Width / imageControl.ActualWidth);
+            var y = Math.Floor(p.Y) * (imageControl.Source.Height / imageControl.ActualHeight);
             StroblhofwarteImage.Instance.CursorClickPosition = new System.Drawing.Point((int)x, (int)y);
         }
     }

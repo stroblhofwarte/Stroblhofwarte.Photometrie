@@ -9,7 +9,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.TextFormatting;
-using static Stroblhofwarte.FITS.CfitsioNative;
 
 namespace Stroblhofwarte.FITS
 {

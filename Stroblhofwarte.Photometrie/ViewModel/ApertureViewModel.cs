@@ -666,10 +666,10 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             {
                 AAVSOList newElement;
                 AAVSOExtendedFileFormat.Instance.Add(StarDataRelay.Instance.Name,
-                    StroblhofwarteImage.Instance.GetJD().ToString(CultureInfo.InvariantCulture),
+                    m.JD.ToString("0.#####", CultureInfo.InvariantCulture),
                     m.Mag.ToString("0.####", CultureInfo.InvariantCulture),
                     m.MagErr.ToString("0.####", CultureInfo.InvariantCulture),
-                    Stroblhofwarte.AperturePhotometry.Filter.Instance.TranslateToAAVSOFilter(StroblhofwarteImage.Instance.GetFilter()),
+                    m.Filter,
                     "NO",
                     "STD",
                     StarDataRelay.Instance.CompName,
@@ -755,7 +755,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         private void Start()
         {
             PhotoState = enumPhotoState.COMP;
-            StepInfo = "Select C [" + StarDataRelay.Instance.CompName + "]";
+            StepInfo = "Select C [" + StarDataRelay.Instance.CompName + "-" + StarDataRelay.Instance.CompAUID + "]";
             StarDataRelay.Instance.UserInfoVisibility = true;
             StarDataRelay.Instance.UserInfo = StepInfo;
             
@@ -871,7 +871,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 }
                 else if (PhotoState == enumPhotoState.VAR)
                 {
-                    StepInfo = "Select K [" + StarDataRelay.Instance.CheckName + "]";
+                    StepInfo = "Select K [" + StarDataRelay.Instance.CheckName + "-" + StarDataRelay.Instance.CheckAUID +"]";
                     StarDataRelay.Instance.UserInfo = StepInfo;
                     StarDataRelay.Instance.UserInfoVisibility = true;
                     PhotoState = enumPhotoState.CHECK;
@@ -949,6 +949,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                     _currentMeas.KMag = StarDataRelay.Instance.CheckMag;
                     _currentMeas.CompMeasMag = Mag;
                     _currentMeas.CompMachineMag = measure.Magnitude(meas, 1.0);
+                    _currentMeas.JD = StroblhofwarteImage.Instance.GetJD();
                     _measComp = meas;
                 }
                 if (PhotoState == enumPhotoState.VAR)
@@ -1107,6 +1108,17 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             {
                 _kMachineMag = value;
                 OnPropertyChanged("KMachineMag");
+            }
+        }
+
+        private double _JD;
+        public double JD
+        {
+            get { return _JD; }
+            set
+            {
+                _JD = value;
+                OnPropertyChanged("JD");
             }
         }
 

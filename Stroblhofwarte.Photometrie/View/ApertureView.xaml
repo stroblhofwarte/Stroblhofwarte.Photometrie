@@ -30,12 +30,7 @@
             <mah:MetroTabItem Header="Photometry">
                 <Grid>
 
-                    <Button Width="30" ToolTip="Report all measurements"
-                        Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding CommandReport}" HorizontalAlignment="Left" Margin="377,0,0,13" Height="30" VerticalAlignment="Bottom">
-                        <StackPanel Orientation="Vertical">
-                            <icon:PackIconMaterial Width="18" Height="18" Kind="TextBoxPlusOutline" HorizontalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
+                   
                     <Button Width="30" ToolTip="Delete all measurements"
                         Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding CommandClear}" Height="30" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="0,0,0,30">
                         <StackPanel Orientation="Vertical">
@@ -67,11 +62,18 @@
                                 <GridViewColumn Header="V Err" DisplayMemberBinding="{Binding MagErr, StringFormat=N6}" Width="80" />
                                 <GridViewColumn Header="K" DisplayMemberBinding="{Binding KMag, StringFormat=N4}" Width="80" />
                                 <GridViewColumn Header="K Meas" DisplayMemberBinding="{Binding KMeasMag, StringFormat=N4}" Width="80" />
+                                <GridViewColumn Header="JD" DisplayMemberBinding="{Binding JD, StringFormat=N4}" Width="80" />
                             </GridView>
                         </ListView.View>
                     </ListView>
                     <Label Content="{Binding Error}" HorizontalAlignment="Left" Margin="519,178,0,0" VerticalAlignment="Top" Width="281" Foreground="#FFABA9A9" Height="12"/>
                     <Label Content="{Binding StepInfo}" HorizontalAlignment="Left" Margin="91,178,0,0" VerticalAlignment="Top" Width="309"/>
+                    <Button Width="30" ToolTip="Report all measurements"
+                        Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding CommandReport}" HorizontalAlignment="Left" Margin="377,0,0,13" Height="30" VerticalAlignment="Bottom">
+                        <StackPanel Orientation="Vertical">
+                            <icon:PackIconMaterial Width="18" Height="18" Kind="TextBoxPlusOutline" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
                     <Button Width="30" ToolTip="Starts a new measurement"
                         Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding CommandStart}" Height="30" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="334,0,0,13">
                         <StackPanel Orientation="Vertical">

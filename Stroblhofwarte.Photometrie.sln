@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stroblhofwarte.Config", "St
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Stroblhofwarte.Photometrie.Setup", "Stroblhofwarte.Photometrie.Setup\Stroblhofwarte.Photometrie.Setup.vdproj", "{64E216E9-3F5B-4B71-804D-E4947BEA7901}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharpFITS", "CSharpFITS\CSharpFITS.csproj", "{366C04C6-3B36-407D-A17F-80EFE2EA261C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +75,10 @@ Global
 		{CC64BC62-DDEB-4D49-956B-655E0A8929FF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{64E216E9-3F5B-4B71-804D-E4947BEA7901}.Debug|Any CPU.ActiveCfg = Debug
 		{64E216E9-3F5B-4B71-804D-E4947BEA7901}.Release|Any CPU.ActiveCfg = Release
+		{366C04C6-3B36-407D-A17F-80EFE2EA261C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{366C04C6-3B36-407D-A17F-80EFE2EA261C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{366C04C6-3B36-407D-A17F-80EFE2EA261C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{366C04C6-3B36-407D-A17F-80EFE2EA261C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -17,10 +17,13 @@
 
 #endregion "copyright"
 
+using NINA.Image.FileFormat.FITS.DataConverter;
+using nom.tam.fits;
 using Stroblhofwarte.FITS.DataObjects;
 using Stroblhofwarte.FITS.Interface;
 using Stroblhofwarte.FITS.Utility;
 using System;
+using System.Collections;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -44,201 +47,162 @@ namespace Stroblhofwarte.FITS
     {
 
         [SecurityCritical]
-        public static DataObjects.FitsImage Load(Uri filePath, bool isBayered) {
-            IntPtr fitsPtr = IntPtr.Zero;
-            IntPtr buffer = IntPtr.Zero;
-            try {
-                var bytes = File.ReadAllBytes(filePath.LocalPath);
+        public static DataObjects.FitsImage Load(Uri filePath, bool isBayered) 
+        {
+            string filename = filePath.LocalPath;
+            Fits f = new Fits(filename);
+            ImageHDU hdu = (ImageHDU)f.ReadHDU();
+            Array[] arr = (Array[])hdu.Data.DataArray;
 
-                buffer = Marshal.AllocHGlobal(bytes.Length);
-                Marshal.Copy(bytes, 0, buffer, bytes.Length);
+            var dimensions = hdu.Header.GetIntValue("NAXIS");
+            if (dimensions > 2)
+            {
+                //Debayered Images are not supported. Take the first dimension instead to get at least a monochrome image
+                arr = (Array[])arr[0];
+            }
 
-                UIntPtr size = new UIntPtr((uint)bytes.Length);
-                UIntPtr deltaSize = UIntPtr.Zero;
+            var width = hdu.Header.GetIntValue("NAXIS1");
+            var height = hdu.Header.GetIntValue("NAXIS2");
+            var bitPix = hdu.Header.GetIntValue("BITPIX");
 
-                CfitsioNative.fits_open_memory(out fitsPtr, string.Empty, CfitsioNative.IOMODE.READONLY, ref buffer, ref size, ref deltaSize, IntPtr.Zero, out var status);
-                CfitsioNative.CheckStatus("fits_open_memory", status);
+            var converter = GetConverter(bitPix);
+            ushort[] pixels = converter.Convert(arr, width, height);
 
-                var dimensions = CfitsioNative.fits_read_key_long(fitsPtr, "NAXIS");
-                if (dimensions > 2) {
-                    Logger.Warning("Reading debayered FITS images not supported. Reading the first 2 axes to get a monochrome image");
+            //Translate nom.tam.fits into N.I.N.A. FITSHeader
+            FITSHeader header = new FITSHeader(width, height);
+            var iterator = hdu.Header.GetCursor();
+            while (iterator.MoveNext())
+            {
+                HeaderCard card = (HeaderCard)((DictionaryEntry)iterator.Current).Value;
+
+                if (string.IsNullOrEmpty(card.Value) || card.Key.Equals("COMMENT") || card.Key.Equals("HISTORY"))
+                {
+                    continue;
                 }
 
-                var width = (int)CfitsioNative.fits_read_key_long(fitsPtr, "NAXIS1");
-                var height = (int)CfitsioNative.fits_read_key_long(fitsPtr, "NAXIS2");
-                var bitPix = (CfitsioNative.BITPIX)(int)CfitsioNative.fits_read_key_long(fitsPtr, "BITPIX");
-                int intBitPix = (int)CfitsioNative.fits_read_key_long(fitsPtr, "BITPIX");
-                var pixels = CfitsioNative.read_ushort_pixels(fitsPtr, bitPix, 2, width * height);
-
-                //Translate CFITSio into N.I.N.A. FITSHeader
-                FITSHeader header = new FITSHeader(width, height);
-                CfitsioNative.fits_get_hdrspace(fitsPtr, out var numKeywords, out var numMoreKeywords, out status);
-                CfitsioNative.CheckStatus("fits_get_hdrspace", status);
-                for (int headerIdx = 1; headerIdx <= numKeywords; ++headerIdx) {
-                    CfitsioNative.fits_read_keyn(fitsPtr, headerIdx, out var keyName, out var keyValue, out var keyComment);
-
-                    if (string.IsNullOrEmpty(keyValue) || keyName.Equals("COMMENT") || keyName.Equals("HISTORY")) {
-                        continue;
+                if (card.IsStringValue)
+                {
+                    header.Add(card.Key, card.Value, card.Comment);
+                }
+                else
+                {
+                    if (card.Value.Equals("T"))
+                    {
+                        header.Add(card.Key, true, card.Comment);
                     }
-
-                    if (keyValue.Equals("T")) {
-                        header.Add(keyName, true, keyComment);
-                    } else if (keyValue.Equals("F")) {
-                        header.Add(keyName, false, keyComment);
-                    } else if (keyValue.StartsWith("'")) {
-                        // Treat as a string
-                        keyValue = $"{keyValue.TrimStart('\'').TrimEnd('\'', ' ').Replace(@"''", @"'")}";
-                        header.Add(keyName, keyValue, keyComment);
-
-                    } else if (keyValue.Contains(".")) {
-                        if (double.TryParse(keyValue, NumberStyles.Float, CultureInfo.InvariantCulture, out var value)) {
-                            header.Add(keyName, value, keyComment);
-                        }
-                    } else {
-                        if (int.TryParse(keyValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out var value)) {
-                            header.Add(keyName, value, keyComment);
-                        } else {
-                            // Treat as a string
-                            keyValue = $"{keyValue.TrimStart('\'').TrimEnd('\'', ' ').Replace(@"''", @"'")}";
-                            header.Add(keyName, keyValue, keyComment);
+                    else if (card.Value.Equals("F"))
+                    {
+                        header.Add(card.Key, false, card.Comment);
+                    }
+                    else if (card.Value.Contains("."))
+                    {
+                        if (double.TryParse(card.Value, NumberStyles.Number, CultureInfo.InvariantCulture, out var value))
+                        {
+                            header.Add(card.Key, value, card.Comment);
                         }
                     }
-                }
-                DataObjects.FitsImage img = new DataObjects.FitsImage(width, height, intBitPix, header, pixels);
-                return img;
-
-            } catch (AccessViolationException ex) {
-                Logger.Error($"{nameof(FITS)} - Access Violation Exception occurred during cfitsio load!", ex);
-                // Finally blocks are not executed after corrupted state exception
-                if (fitsPtr != IntPtr.Zero) {
-                    try {
-                        CfitsioNative.fits_close_file(fitsPtr, out var status);
-                    } catch(Exception) { }                    
-                }
-                if (buffer != IntPtr.Zero) {
-                    Marshal.FreeHGlobal(buffer);
-                }
-                throw new Exception($"Unable to load FITS file from {filePath.LocalPath}");
-            } finally {
-                if (fitsPtr != IntPtr.Zero) {
-                    CfitsioNative.fits_close_file(fitsPtr, out var status);
-                }
-                if (buffer != IntPtr.Zero) {
-                    Marshal.FreeHGlobal(buffer);
+                    else
+                    {
+                        if (int.TryParse(card.Value, NumberStyles.Number, CultureInfo.InvariantCulture, out var value))
+                            header.Add(card.Key, value, card.Comment);
+                    }
                 }
             }
+
+            DataObjects.FitsImage img = new DataObjects.FitsImage(width, height, bitPix, header, pixels);
+            return img;
         }
 
         [SecurityCritical]
         public static DataObjects.FitsImage LoadHeaderOnly(Uri filePath)
         {
-            IntPtr fitsPtr = IntPtr.Zero;
-            IntPtr buffer = IntPtr.Zero;
-            try
+            string filename = filePath.LocalPath;
+            // CSharpFits: Use depricated calls to get a proxy. We use the filename interface only.
+            Fits f = new Fits(filename);
+            ImageHDU hdu = (ImageHDU)f.ReadHDU();
+            Array[] arr = (Array[])hdu.Data.DataArray;
+
+            var dimensions = hdu.Header.GetIntValue("NAXIS");
+            if (dimensions > 2)
             {
-                var bytes = File.ReadAllBytes(filePath.LocalPath);
+                //Debayered Images are not supported. Take the first dimension instead to get at least a monochrome image
+                arr = (Array[])arr[0];
+            }
 
-                buffer = Marshal.AllocHGlobal(bytes.Length);
-                Marshal.Copy(bytes, 0, buffer, bytes.Length);
+            var width = hdu.Header.GetIntValue("NAXIS1");
+            var height = hdu.Header.GetIntValue("NAXIS2");
+            var bitPix = hdu.Header.GetIntValue("BITPIX");
 
-                UIntPtr size = new UIntPtr((uint)bytes.Length);
-                UIntPtr deltaSize = UIntPtr.Zero;
+            //Translate nom.tam.fits into N.I.N.A. FITSHeader
+            FITSHeader header = new FITSHeader(width, height);
+            var iterator = hdu.Header.GetCursor();
+            while (iterator.MoveNext())
+            {
+                HeaderCard card = (HeaderCard)((DictionaryEntry)iterator.Current).Value;
 
-                CfitsioNative.fits_open_memory(out fitsPtr, string.Empty, CfitsioNative.IOMODE.READONLY, ref buffer, ref size, ref deltaSize, IntPtr.Zero, out var status);
-                CfitsioNative.CheckStatus("fits_open_memory", status);
-
-                var dimensions = CfitsioNative.fits_read_key_long(fitsPtr, "NAXIS");
-                if (dimensions > 2)
+                if (string.IsNullOrEmpty(card.Value) || card.Key.Equals("COMMENT") || card.Key.Equals("HISTORY"))
                 {
-                    Logger.Warning("Reading debayered FITS images not supported. Reading the first 2 axes to get a monochrome image");
+                    continue;
                 }
 
-                var width = (int)CfitsioNative.fits_read_key_long(fitsPtr, "NAXIS1");
-                var height = (int)CfitsioNative.fits_read_key_long(fitsPtr, "NAXIS2");
-                var bitPix = (CfitsioNative.BITPIX)(int)CfitsioNative.fits_read_key_long(fitsPtr, "BITPIX");
-                int intBitPix = (int)CfitsioNative.fits_read_key_long(fitsPtr, "BITPIX");
-               
-                //Translate CFITSio into N.I.N.A. FITSHeader
-                FITSHeader header = new FITSHeader(width, height);
-                CfitsioNative.fits_get_hdrspace(fitsPtr, out var numKeywords, out var numMoreKeywords, out status);
-                CfitsioNative.CheckStatus("fits_get_hdrspace", status);
-                for (int headerIdx = 1; headerIdx <= numKeywords; ++headerIdx)
+                if (card.IsStringValue)
                 {
-                    CfitsioNative.fits_read_keyn(fitsPtr, headerIdx, out var keyName, out var keyValue, out var keyComment);
-
-                    if (string.IsNullOrEmpty(keyValue) || keyName.Equals("COMMENT") || keyName.Equals("HISTORY"))
+                    header.Add(card.Key, card.Value, card.Comment);
+                }
+                else
+                {
+                    if (card.Value.Equals("T"))
                     {
-                        continue;
+                        header.Add(card.Key, true, card.Comment);
                     }
-
-                    if (keyValue.Equals("T"))
+                    else if (card.Value.Equals("F"))
                     {
-                        header.Add(keyName, true, keyComment);
+                        header.Add(card.Key, false, card.Comment);
                     }
-                    else if (keyValue.Equals("F"))
+                    else if (card.Value.Contains("."))
                     {
-                        header.Add(keyName, false, keyComment);
-                    }
-                    else if (keyValue.StartsWith("'"))
-                    {
-                        // Treat as a string
-                        keyValue = $"{keyValue.TrimStart('\'').TrimEnd('\'', ' ').Replace(@"''", @"'")}";
-                        header.Add(keyName, keyValue, keyComment);
-
-                    }
-                    else if (keyValue.Contains("."))
-                    {
-                        if (double.TryParse(keyValue, NumberStyles.Float, CultureInfo.InvariantCulture, out var value))
+                        if (double.TryParse(card.Value, NumberStyles.Number, CultureInfo.InvariantCulture, out var value))
                         {
-                            header.Add(keyName, value, keyComment);
+                            header.Add(card.Key, value, card.Comment);
                         }
                     }
                     else
                     {
-                        if (int.TryParse(keyValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out var value))
-                        {
-                            header.Add(keyName, value, keyComment);
-                        }
-                        else
-                        {
-                            // Treat as a string
-                            keyValue = $"{keyValue.TrimStart('\'').TrimEnd('\'', ' ').Replace(@"''", @"'")}";
-                            header.Add(keyName, keyValue, keyComment);
-                        }
+                        if (int.TryParse(card.Value, NumberStyles.Number, CultureInfo.InvariantCulture, out var value))
+                            header.Add(card.Key, value, card.Comment);
                     }
                 }
-                DataObjects.FitsImage img = new DataObjects.FitsImage(width, height, intBitPix, header, null);
-                return img;
+            }
 
-            }
-            catch (AccessViolationException ex)
+            DataObjects.FitsImage img = new DataObjects.FitsImage(width, height, bitPix, header, null);
+            return img;
+
+        }
+
+        private static IDataConverter GetConverter(int bitPix)
+        {
+            switch (bitPix)
             {
-                Logger.Error($"{nameof(FITS)} - Access Violation Exception occurred during cfitsio load!", ex);
-                // Finally blocks are not executed after corrupted state exception
-                if (fitsPtr != IntPtr.Zero)
-                {
-                    try
-                    {
-                        CfitsioNative.fits_close_file(fitsPtr, out var status);
-                    }
-                    catch (Exception) { }
-                }
-                if (buffer != IntPtr.Zero)
-                {
-                    Marshal.FreeHGlobal(buffer);
-                }
-                throw new Exception($"Unable to load FITS file from {filePath.LocalPath}");
-            }
-            finally
-            {
-                if (fitsPtr != IntPtr.Zero)
-                {
-                    CfitsioNative.fits_close_file(fitsPtr, out var status);
-                }
-                if (buffer != IntPtr.Zero)
-                {
-                    Marshal.FreeHGlobal(buffer);
-                }
+                case BITPIX_BYTE:
+                    return new ByteConverter();
+
+                case BITPIX_SHORT:
+                    return new ShortConverter();
+
+                case BITPIX_INT:
+                    return new IntConverter();
+
+                case BITPIX_LONG:
+                    return new LongConverter();
+
+                case BITPIX_FLOAT:
+                    return new FloatConverter();
+
+                case BITPIX_DOUBLE:
+                    return new DoubleConverter();
+
+                default:
+                    throw new InvalidDataException($"Invalid BITPIX in FITS header {bitPix}");
             }
         }
 

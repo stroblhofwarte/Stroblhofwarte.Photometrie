@@ -27,6 +27,8 @@
                     <GridViewColumn Header="AUID" DisplayMemberBinding="{Binding AUID}" Width="120"/>
                     <GridViewColumn Header="Position" DisplayMemberBinding="{Binding Coor}" Width="250"/>
                     <GridViewColumn Header="Magnitude" DisplayMemberBinding="{Binding MAG}" Width="80"/>
+                    <GridViewColumn Header="C" DisplayMemberBinding="{Binding IsCString}" Width="20"/>
+                    <GridViewColumn Header="K" DisplayMemberBinding="{Binding IsKString}" Width="20"/>
                     <GridViewColumn Header="Comp" Width="50">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
