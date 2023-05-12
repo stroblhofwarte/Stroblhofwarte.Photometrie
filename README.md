@@ -11,3 +11,6 @@ Stroblhofwarte.Photometrie is a tool for star photometrie on CCD/CMOS images:
 - All equipment data are read out of the .fits file and matched with the equipment database
 - Only .fits files are supported. Many parts of the code are from the N.I.N.A. project, only .fits-Files from N.I.N.A. are tested yet
 
+![Stroblhofwarte.Photometrie](https://github.com/stroblhofwarte/Stroblhofwarte.Photometrie/blob/master/Stroblhofwarte.Photometrie.png )
+
+For a detailed description of this software see: https://astro.stroblhofwarte-oberrohrbach.de (german only)
