@@ -1,4 +1,14 @@
-﻿using System;
+﻿#region "copyright"
+
+/*
+    Code from: VISHMAY, StackOverflow
+
+    This file is part of the Stroblhof.Photometrie application
+*/
+
+#endregion "copyright"
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
