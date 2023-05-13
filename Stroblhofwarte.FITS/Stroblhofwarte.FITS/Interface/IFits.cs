@@ -30,6 +30,8 @@ namespace Stroblhofwarte.FITS.Interface
         string GetFilter();
         string GetObject();
         string GetBinningId();
+        double GetAirmass();
+
         DateTime GetObservationTimeUTC();
         DateTime GetObservationTime();
     }

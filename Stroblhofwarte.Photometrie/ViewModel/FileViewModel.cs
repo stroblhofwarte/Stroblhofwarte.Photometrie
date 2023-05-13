@@ -115,7 +115,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
                     foreach (string file in files)
                     {
-                        if (file.EndsWith(".fits"))
+                        if (file.EndsWith(".fits") || file.EndsWith(".fit"))
                         {
                             string wcs = "";
                             StroblhofwarteHEADER checkFile = new StroblhofwarteHEADER(file);

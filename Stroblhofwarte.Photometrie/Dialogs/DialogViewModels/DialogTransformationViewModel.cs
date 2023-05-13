@@ -326,7 +326,7 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                     t.LeftCompInstrumentMag.ToString("0.####", CultureInfo.InvariantCulture),
                     StarDataRelay.Instance.CheckName,
                     t.LeftCheckInstrumentMag.ToString("0.####", CultureInfo.InvariantCulture),
-                    "na",
+                    t.LeftAirmass.ToString("0.####", CultureInfo.InvariantCulture),
                     "na",
                     StarDataRelay.Instance.ChartId,
                     leftNote, out newElement);
@@ -347,7 +347,7 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                     t.RightCompInstrumentMag.ToString("0.####", CultureInfo.InvariantCulture),
                     StarDataRelay.Instance.CheckName,
                     t.RightCheckInstrumentMag.ToString("0.####", CultureInfo.InvariantCulture),
-                    "na",
+                    t.RightAirmass.ToString("0.####", CultureInfo.InvariantCulture),
                     "na",
                     StarDataRelay.Instance.ChartId,
                     rightNote, out newElement);
@@ -396,7 +396,7 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                     t.LeftCompMag.ToString("0.####", CultureInfo.InvariantCulture),
                     StarDataRelay.Instance.CheckName,
                     t.LeftCheckMag.ToString("0.####", CultureInfo.InvariantCulture),
-                    "na",
+                    t.LeftAirmass.ToString("0.####", CultureInfo.InvariantCulture),
                     "na",
                     StarDataRelay.Instance.ChartId,
                     leftNote, out newElement);
@@ -418,7 +418,7 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                     t.RightCompMag.ToString("0.####", CultureInfo.InvariantCulture),
                     StarDataRelay.Instance.CheckName,
                     t.RightCheckMag.ToString("0.####", CultureInfo.InvariantCulture),
-                    "na",
+                    t.RightAirmass.ToString("0.####", CultureInfo.InvariantCulture),
                     "na",
                     StarDataRelay.Instance.ChartId,
                     rightNote, out newElement);
@@ -550,7 +550,8 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                         RightTx_yz_Name = _righttxyzName,
                         LeftCompMag = e.CompMag,
                         LeftInstrumentMag = e.MachineMag,
-                        LeftJD = e.JD
+                        LeftJD = e.JD,
+                        LeftAirmass = e.Airmass
                     };
 
                     t.LeftMag = LeftSideTransform(e, ee);
@@ -562,6 +563,7 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                     t.RightCompMag = ee.CompMag;
                     t.RightInstrumentMag = ee.MachineMag;
                     t.RightJD = ee.JD;
+                    t.RightAirmass = ee.Airmass;
                     TransformedMeas.Add(t);
                 }
                 
@@ -754,6 +756,8 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
             combined.RightTx_yz = RightTx_yz;
             combined.LeftJD = leftSideMeas[0].JD;
             combined.RightJD = rightSideMeas[0].JD;
+            combined.LeftAirmass = leftSideMeas[0].Airmass;
+            combined.RightAirmass = rightSideMeas[0].Airmass;
 
             CombinedTransformedMeas.Add(combined);
             return true;
@@ -787,6 +791,10 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
 
         public double LeftJD { get; set; }
         public double RightJD { get; set; }
+
+        public double LeftAirmass { get; set; }
+        public double RightAirmass { get; set; }
+
 
 
         private string _Txy_Name;

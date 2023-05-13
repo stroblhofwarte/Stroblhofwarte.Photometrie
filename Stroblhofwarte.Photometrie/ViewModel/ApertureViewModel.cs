@@ -676,7 +676,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                     m.CompMag.ToString(CultureInfo.InvariantCulture),
                     StarDataRelay.Instance.CheckName,
                     m.KMag.ToString(CultureInfo.InvariantCulture),
-                    "na",
+                    m.Airmass.ToString("0.####", CultureInfo.InvariantCulture),
                     "na",
                     StarDataRelay.Instance.ChartId,
                     "na", out newElement);
@@ -950,6 +950,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                     _currentMeas.CompMeasMag = Mag;
                     _currentMeas.CompMachineMag = measure.Magnitude(meas, 1.0);
                     _currentMeas.JD = StroblhofwarteImage.Instance.GetJD();
+                    _currentMeas.Airmass = StroblhofwarteImage.Instance.GetAirmass();
                     _measComp = meas;
                 }
                 if (PhotoState == enumPhotoState.VAR)
@@ -1119,6 +1120,17 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             {
                 _JD = value;
                 OnPropertyChanged("JD");
+            }
+        }
+
+        private double _airmass;
+        public double Airmass
+        {
+            get { return _airmass; }
+            set
+            {
+                _airmass = value;
+                OnPropertyChanged("Airmass");
             }
         }
 

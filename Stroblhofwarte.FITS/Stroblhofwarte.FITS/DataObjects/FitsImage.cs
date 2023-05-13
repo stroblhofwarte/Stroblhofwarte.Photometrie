@@ -357,6 +357,28 @@ namespace Stroblhofwarte.FITS.DataObjects
             }
             return int.MinValue;
         }
+
+        public double GetAirmass()
+        {
+            foreach (FITSHeaderCard card in _header.HeaderCards)
+            {
+                if (card.Key == "AIRMASS")
+                {
+                    try
+                    {
+                        string val = card.Value;
+                        if (val.EndsWith(".")) val += "0";
+                        return Convert.ToDouble(val, CultureInfo.InvariantCulture);
+                    }
+                    catch (Exception)
+                    {
+                        return double.NaN;
+                    }
+                }
+            }
+            return double.NaN;
+        }
+
         public string GetFilter()
         {
             foreach (FITSHeaderCard card in _header.HeaderCards)

@@ -246,6 +246,11 @@ namespace Stroblhofwarte.Image
         {
             return _imageData.GetSensorOffset();
         }
+
+        public double GetAirmass()
+        {
+            return _imageData.GetAirmass();
+        }
         public string GetFilter()
         {
             return _imageData.GetFilter();

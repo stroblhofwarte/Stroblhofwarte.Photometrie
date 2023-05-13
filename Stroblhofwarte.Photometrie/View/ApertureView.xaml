@@ -63,6 +63,7 @@
                                 <GridViewColumn Header="K" DisplayMemberBinding="{Binding KMag, StringFormat=N4}" Width="80" />
                                 <GridViewColumn Header="K Meas" DisplayMemberBinding="{Binding KMeasMag, StringFormat=N4}" Width="80" />
                                 <GridViewColumn Header="JD" DisplayMemberBinding="{Binding JD, StringFormat=N4}" Width="80" />
+                                <GridViewColumn Header="Airmass" DisplayMemberBinding="{Binding Airmass, StringFormat=N4}" Width="80" />
                             </GridView>
                         </ListView.View>
                     </ListView>

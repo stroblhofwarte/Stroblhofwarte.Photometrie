@@ -169,6 +169,12 @@ namespace Stroblhofwarte.FITS
             if (_image == null) return string.Empty;
             return _image.GetBinningId();
         }
+
+        public double GetAirmass()
+        {
+            if (_image == null) return double.NaN;
+            return _image.GetAirmass();
+        }
     }
 
     internal class HDUValue

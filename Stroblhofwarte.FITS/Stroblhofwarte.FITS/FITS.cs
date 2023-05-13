@@ -121,7 +121,7 @@ namespace Stroblhofwarte.FITS
             Fits f = new Fits(filename);
             ImageHDU hdu = (ImageHDU)f.ReadHDU();
             Array[] arr = (Array[])hdu.Data.DataArray;
-
+            
             var dimensions = hdu.Header.GetIntValue("NAXIS");
             if (dimensions > 2)
             {
