@@ -390,7 +390,8 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 if (t.Filter != ColorMagErrorFilter.Filter) 
                     continue;
                 double indice = ColorIndexFromData(_transfromModel, t);
-                ScatterPoint p = new ScatterPoint(indice, t.Meas + _MACHINE_MAG_C - t.V);
+                double corr = ColorCorrValue(_transfromModel, t);
+                ScatterPoint p = new ScatterPoint(indice, t.Meas + _MACHINE_MAG_C - (t.V + corr));
                 _tx_yz_series.Points.Add(p);
             }
 
@@ -405,9 +406,10 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                     if (d.Filter != ColorMagErrorFilter.Filter)
                         continue;
                     double indice = ColorIndexFromData(_transfromModel, d);
+                    double corr = ColorCorrValue(_transfromModel, d);
 
                     x[idx] = indice;
-                    y[idx++] = d.Meas + _MACHINE_MAG_C - d.V;
+                    y[idx++] = d.Meas + _MACHINE_MAG_C - (d.V + corr);
                     if (indice > xmax)
                         xmax = indice;
                 }
@@ -434,6 +436,25 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 if (filter.FromFilter == "RJ" && filter.ToFilter == "I") indice = dataline.RI;
                 return indice;
             } catch (Exception ex)
+            {
+                return 0.0;
+            }
+        }
+
+        private double ColorCorrValue(TransformModel filter, TrandformationEntry dataline)
+        {
+            try
+            {
+                double corr = 0.0;
+                if (filter.FromFilter == "U" && filter.ToFilter == "B" && dataline.Filter == "U") corr = dataline.UB + dataline.BV;
+                if (filter.FromFilter == "U" && filter.ToFilter == "B" && dataline.Filter == "B") corr = dataline.BV;
+                if (filter.FromFilter == "B" && filter.ToFilter == "V" && dataline.Filter == "B") corr = dataline.BV;
+                if (filter.FromFilter == "B" && filter.ToFilter == "V" && dataline.Filter == "V") corr = 0.0;
+                if (filter.FromFilter == "V" && filter.ToFilter == "RJ" && dataline.Filter == "V") corr = 0.0;
+                if (filter.FromFilter == "V" && filter.ToFilter == "RJ" && dataline.Filter == "RJ") corr = - dataline.VR;
+                return corr;
+            }
+            catch (Exception ex)
             {
                 return 0.0;
             }

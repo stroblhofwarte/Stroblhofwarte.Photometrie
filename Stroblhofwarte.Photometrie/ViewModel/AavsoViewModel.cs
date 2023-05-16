@@ -369,11 +369,11 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             {
                 if(s.IsC)
                 {
-                    StarDataRelay.Instance.CheckMag = s.MAG;
+                    StarDataRelay.Instance.CompMag = s.MAG;
                 }
                 if(s.IsK)
                 {
-                    StarDataRelay.Instance.CompMag = s.MAG;
+                    StarDataRelay.Instance.CheckMag = s.MAG;
                 }
             }
         }
@@ -422,9 +422,13 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                     }
                 }
                 if (s.Auid == cAuid)
-                    reference.IsC = true;
+                { 
+                    reference.IsC = true; 
+                }
                 if (s.Auid == kAuid)
+                { 
                     reference.IsK = true;
+                }
                 System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
                 {
                     _refStars.Add(reference);
