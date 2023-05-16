@@ -118,7 +118,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
                 using (MemoryStream memory = new MemoryStream())
                 {
-                    int magN = Properties.Settings.Default.MagnificationN;
+                    int magN = Config.GlobalConfig.Instance.MagnificationN;
                     ushort[] raw = StroblhofwarteImage.Instance.GetSubimagRaw(_starCentroid, magN, magN);
                     Bitmap bitmap = StroblhofwarteImage.Instance.GetSubimage(_starCentroid, magN, magN);
                     Graphics g = Graphics.FromImage(bitmap);
@@ -827,7 +827,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             StarDataRelay.Instance.CheckStarChanged += Instance_CheckStarChanged;
             StarDataRelay.Instance.CompStarChanged += Instance_CompStarChanged;
             ContentId = "ApertureViewModel";
-            _centroidSearchRadius = Properties.Settings.Default.MagnificationN / 8;
+            _centroidSearchRadius =Config.GlobalConfig.Instance.MagnificationN / 8;
 
         }
 

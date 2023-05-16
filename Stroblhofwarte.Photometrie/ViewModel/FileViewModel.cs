@@ -202,7 +202,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             if (result == MessageDialogResult.Negative) return;
             await Task.Factory.StartNew(async () =>
             {
-                AstrometryNet solver = new AstrometryNet(Properties.Settings.Default.AstrometrynetHost, Properties.Settings.Default.AstrometrynetKey);
+                AstrometryNet solver = new AstrometryNet(Config.GlobalConfig.Instance.AstrometrynetHost, Config.GlobalConfig.Instance.AstrometrynetKey);
                 foreach (FitsFileModel file in _files)
                 {
                     if (file.WCS == "yes") continue;

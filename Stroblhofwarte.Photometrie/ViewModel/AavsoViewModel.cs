@@ -202,8 +202,8 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
                 StroblhofwarteVSPAPI aavso = new StroblhofwarteVSPAPI();
                 Task<VariableStar> result = aavso.GetAAVSOData(RequestName, 
-                    Properties.Settings.Default.AAVSOFov.ToString(CultureInfo.InvariantCulture),
-                    Properties.Settings.Default.AAVSOLimitMag.ToString(CultureInfo.InvariantCulture));
+                    Config.GlobalConfig.Instance.AAVSOFov.ToString(CultureInfo.InvariantCulture),
+                    Config.GlobalConfig.Instance.AAVSOLimitMag.ToString(CultureInfo.InvariantCulture));
 
                 _varStar = result.Result;
                 UpdateData();
@@ -257,8 +257,8 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                
                 Coordinates coor = StroblhofwarteImage.Instance.WCS.GetCoordinates(StroblhofwarteImage.Instance.Width / 2, StroblhofwarteImage.Instance.Height / 2);
                 Task<VariableStar> result = aavso.GetAAVSOData(coor.RADegrees, coor.Dec,
-                    Properties.Settings.Default.AAVSOFov.ToString(CultureInfo.InvariantCulture),
-                    Properties.Settings.Default.AAVSOLimitMag.ToString(CultureInfo.InvariantCulture));
+                    Config.GlobalConfig.Instance.AAVSOFov.ToString(CultureInfo.InvariantCulture),
+                    Config.GlobalConfig.Instance.AAVSOLimitMag.ToString(CultureInfo.InvariantCulture));
                 _varStar = result.Result;
                 UpdateData();
 

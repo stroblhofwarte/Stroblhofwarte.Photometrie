@@ -37,7 +37,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
                 using (MemoryStream memory = new MemoryStream())
                 {
-                    int magN = Properties.Settings.Default.MagnificationN;
+                    int magN = Config.GlobalConfig.Instance.MagnificationN;
                     StroblhofwarteImage.Instance.GetSubimage(StroblhofwarteImage.Instance.CursorPosition, magN, magN).Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
                     memory.Position = 0;
                     BitmapImage bitmapimage = new BitmapImage();
