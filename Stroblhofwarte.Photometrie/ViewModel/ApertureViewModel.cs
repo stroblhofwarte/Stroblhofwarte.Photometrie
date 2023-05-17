@@ -765,7 +765,11 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             StepInfo = "Select C [" + StarDataRelay.Instance.CompName + "-" + StarDataRelay.Instance.CompAUID + "]";
             StarDataRelay.Instance.UserInfoVisibility = true;
             StarDataRelay.Instance.UserInfo = StepInfo;
-            ScratchPad.ScratchPad.Instance.CreateAndAdd(@"\\\\COMP: " + StarDataRelay.Instance.CompName + "_{" + StarDataRelay.Instance.CompAUID + "}");
+            ScratchPad.ScratchPad.Instance.CreateAndAdd(@"\text{" + Path.GetFileName(StroblhofwarteImage.Instance.Filename) + "}");
+            ScratchPad.ScratchPad.Instance.Add(@"Filter:= " + StarDataRelay.Instance.Filter);
+            ScratchPad.ScratchPad.Instance.Add(@"Observing:= \text{" + StroblhofwarteImage.Instance.GetObservationTimeUTC() + @"}^{UTC}");
+
+            ScratchPad.ScratchPad.Instance.Add(@"\\COMP: " + StarDataRelay.Instance.CompName + "_{" + StarDataRelay.Instance.CompAUID + "}");
 
         }
         #endregion

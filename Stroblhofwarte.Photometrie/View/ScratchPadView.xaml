@@ -22,10 +22,8 @@
     <Grid>
         <ScrollViewer HorizontalScrollBarVisibility="Auto"
                           VerticalScrollBarVisibility="Auto"
-                          Margin="3">
+                          Margin="3,3,3,70">
             <controls:FormulaControl Name="FormulaControl"
-                                         HorizontalAlignment="Stretch"
-                                         VerticalAlignment="Stretch"
                                          SnapsToDevicePixels="True"
                                          Formula="{Binding ScratchPage}"
                                          Padding="5"
@@ -33,5 +31,36 @@
                                          SelectionBrush="LightBlue"
                                          SystemTextFontName="Arial" FontSize="10" />
         </ScrollViewer>
+        <Button
+        Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding CommandPlus}" Height="55" VerticalAlignment="Bottom" ToolTip="Annotate reference stars from AAVSO data when loaded" Margin="183,0,0,10" HorizontalAlignment="Left" Width="55">
+            <StackPanel Orientation="Vertical">
+                <icon:PackIconMaterial Width="30" Height="30" Kind="Plus" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Button>
+        <Button
+        Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding CommandMinus}" Height="55" VerticalAlignment="Bottom" ToolTip="Annotate reference stars from AAVSO data when loaded" Margin="17,0,0,10" HorizontalAlignment="Left" Width="55">
+            <StackPanel Orientation="Vertical">
+                <icon:PackIconMaterial Width="30" Height="30" Kind="Minus" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Button>
+        <TextBox HorizontalAlignment="Left" Margin="81,0,0,24" TextWrapping="Wrap" Text="{Binding Page,Mode=TwoWay}" Width="93" Height="26" VerticalAlignment="Bottom"/>
+        <Button
+        Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding SaveCommand}" Height="55" VerticalAlignment="Bottom" ToolTip="Annotate reference stars from AAVSO data when loaded" Margin="262,0,0,10" HorizontalAlignment="Left" Width="55">
+            <StackPanel Orientation="Vertical">
+                <icon:PackIconMaterial Width="30" Height="30" Kind="ContentSave" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Button>
+        <Button
+        Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding LoadCommand}" Height="55" VerticalAlignment="Bottom" ToolTip="Annotate reference stars from AAVSO data when loaded" Margin="332,0,0,10" HorizontalAlignment="Left" Width="55">
+            <StackPanel Orientation="Vertical">
+                <icon:PackIconMaterial Width="30" Height="30" Kind="FolderOpen" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Button>
+        <Button
+        Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding ClearCommand}" ToolTip="Annotate reference stars from AAVSO data when loaded" Margin="0,0,33,10" HorizontalAlignment="Right" Width="54" Height="55" VerticalAlignment="Bottom">
+            <StackPanel Orientation="Vertical">
+                <icon:PackIconMaterial Width="30" Height="30" Kind="Delete" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Button>
     </Grid>
 </UserControl>

@@ -1,4 +1,7 @@
-﻿namespace ScratchPad
+﻿using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+
+namespace ScratchPad
 {
     public class ScratchPad
     {
@@ -20,6 +23,7 @@
         #endregion
 
         public event EventHandler eventPadChanged;
+        public event EventHandler eventNewPageCreated;
 
         #region Properties
 
@@ -58,6 +62,7 @@
             _lineCnt = 0;
             _pad.Add(_currentPage, new List<string>());
             _pad[_currentPage].Add(formula);
+            eventNewPageCreated?.Invoke(this, null);
             eventPadChanged?.Invoke(this, null);
         }
 
@@ -75,11 +80,11 @@
         public string GetPage(int p)
         {
             string page = string.Empty;
-            if (p >= _currentPage) return page;
+            if (p > _currentPage) return page;
             if (p < 0) return page;
             foreach (string s in _pad[p])
             {
-                page += s + "\\";
+                page += s + @"\\";
             }
             return page;
         }
@@ -89,6 +94,47 @@
             _currentPage = 0;
             _pad.Clear();
             _pad.Add(_currentPage, new List<string>());
+            eventPadChanged?.Invoke(this, null);
+        }
+
+        public int CurrentPagePtr()
+        {
+            return _currentPage;
+        }
+
+        public bool Save(string filename)
+        {
+            try
+            {
+                using (FileStream fs = new FileStream(filename, FileMode.Create))
+                {
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    formatter.Serialize(fs, _pad);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public bool Load(string filename)
+        {
+            try
+            {
+                using (FileStream fs = new FileStream(filename, FileMode.Open))
+                {
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    _pad = (Dictionary<int, List<string>>)formatter.Deserialize(fs);
+                    _currentPage = _pad.Count - 1;
+                }
+                return true;
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
         }
     }
 }

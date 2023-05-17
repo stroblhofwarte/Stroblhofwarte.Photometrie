@@ -27,6 +27,7 @@ namespace Stroblhofwarte.Image.Interface
     {
         public bool IsValid { get; }
         public WorldCoordinateSystem WCS { get; }
+        public string Filename { get; }
         #region Events
 
         event EventHandler NewImageLoaded;

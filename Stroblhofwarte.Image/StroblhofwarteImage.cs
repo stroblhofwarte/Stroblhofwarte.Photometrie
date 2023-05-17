@@ -118,6 +118,7 @@ namespace Stroblhofwarte.Image
             }
         }
 
+        public string Filename { get; private set; }
         #endregion
 
         #region Events
@@ -144,6 +145,7 @@ namespace Stroblhofwarte.Image
             {
                 NewImageLoaded(this, null);
             }
+            Filename = filename;
             return _imageData.IsValid;
         }
 

@@ -146,7 +146,7 @@ namespace Stroblhofwarte.AperturePhotometry
             ScratchPad.ScratchPad.Instance.Add(@"\sigma:= (0.289 \cdot Gain) = " + (0.289 * instr.Gain_e_ADU).ToString("0.######", CultureInfo.InvariantCulture) + " e^{-} ADU");
 
             double NStarMinusSkyElectrons = instr.Gain_e_ADU * (meas.StarPixels * ((meas.StarADU / meas.StarPixels) - (meas.SkyADU / meas.SkyPixels)));
-            ScratchPad.ScratchPad.Instance.Add(@"Star = Gain ( Star_{pixl} \frac{Star_{ADU}}{Star_{pixl}} - \frac{Sky_{ADU}}{Sky_{pixl}} = " + NStarMinusSkyElectrons.ToString("0.######", CultureInfo.InvariantCulture) + " e^{-}");
+            ScratchPad.ScratchPad.Instance.Add(@"Star = Gain ( Star_{pixl} \left( \frac{Star_{ADU}}{Star_{pixl}} - \frac{Sky_{ADU}}{Sky_{pixl}} \right)) = " + NStarMinusSkyElectrons.ToString("0.######", CultureInfo.InvariantCulture) + " e^{-}");
 
             double NoiseRMSElectrons = Math.Sqrt(NStarMinusSkyElectrons + meas.StarPixels * PixRatio * (Nsky + Ndark + Nron2 + Gsig2));
             ScratchPad.ScratchPad.Instance.Add(@"Nois_{RMS e^{-}} = \sqrt{Star + Star_{pixl} \cdot (1+\frac{Star_{pixl}}{Sky_{pixl}}) \cdot (N_{sky} + N_{dark} + N_{readout}^2 + \sigma)} = " + NoiseRMSElectrons.ToString("0.######", CultureInfo.InvariantCulture) + " e^{-}");
