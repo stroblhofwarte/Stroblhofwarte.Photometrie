@@ -38,7 +38,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
     {
         #region Constant
 
-        private double _MACHINE_MAG_C = 20.0;
+        private double _MACHINE_MAG_C = 0.0;
 
         #endregion
 
