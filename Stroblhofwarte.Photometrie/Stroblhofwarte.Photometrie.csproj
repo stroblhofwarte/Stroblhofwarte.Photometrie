@@ -37,9 +37,11 @@
     <PackageReference Include="MahApps.Metro.IconPacks.Modern" Version="4.11.0" />
     <PackageReference Include="OxyPlot.Wpf" Version="2.1.2" />
     <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
+    <PackageReference Include="WpfMath" Version="1.1.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ScratchPad\ScratchPad.csproj" />
     <ProjectReference Include="..\Stroblhofwarte.AperturePhotometry\Stroblhofwarte.AperturePhotometry.csproj" />
     <ProjectReference Include="..\Stroblhofwarte.Astrometry.Solver\Stroblhofwarte.Astrometry.Solver.csproj" />
     <ProjectReference Include="..\Stroblhofwarte.Config\Stroblhofwarte.Config.csproj" />

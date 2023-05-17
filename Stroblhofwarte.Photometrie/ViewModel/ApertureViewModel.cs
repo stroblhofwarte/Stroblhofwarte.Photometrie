@@ -335,15 +335,8 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             set
             {
                 _referenceMag = value;
-                Stroblhofwarte.AperturePhotometry.ApertureMeasure measure = new ApertureMeasure();
-                Z = measure.GetZ(_measComp, _referenceMag);
-                VarMag = measure.Magnitude(_measVar, Z);
-                CheckMag = measure.Magnitude(_measCheck, Z);
-                CompMag = measure.Magnitude(_measComp, Z);
-                VarError = measure.Uncertenty(_measVar);
-                CompError = measure.Uncertenty(_measComp);
-                if(_currentMeas != null) _currentMeas.MagErr = VarError;
-                if (_currentMeas != null) _currentMeas.CompErr = CompError;
+                
+               
                 OnPropertyChanged("ReferenceMag");
             }
         }
@@ -772,7 +765,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             StepInfo = "Select C [" + StarDataRelay.Instance.CompName + "-" + StarDataRelay.Instance.CompAUID + "]";
             StarDataRelay.Instance.UserInfoVisibility = true;
             StarDataRelay.Instance.UserInfo = StepInfo;
-            
+            ScratchPad.ScratchPad.Instance.CreateAndAdd(@"\\\\COMP: " + StarDataRelay.Instance.CompName + "_{" + StarDataRelay.Instance.CompAUID + "}");
 
         }
         #endregion
@@ -876,30 +869,45 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                     OnPropertyChanged("ImageSource");
                     return;
                 }
+                // If the reference data are prefilled, recalculate Z
                 if (PhotoState == enumPhotoState.COMP)
                 {
+                    Stroblhofwarte.AperturePhotometry.ApertureMeasure measure = new ApertureMeasure();
+                    Z = measure.GetZ(_measComp, _referenceMag);
+                    
+                    CompMag = measure.Magnitude(_measComp, Z);
+                    CompError = measure.Uncertenty(_measComp);
+
+                    if (_currentMeas != null) _currentMeas.MagErr = VarError;
+                    if (_currentMeas != null) _currentMeas.CompErr = CompError;
                     StepInfo = "Select VAR [" + StroblhofwarteImage.Instance.GetObject() + "]";
                     StarDataRelay.Instance.UserInfo = StepInfo;
                     StarDataRelay.Instance.UserInfoVisibility = true;
                     PhotoState = enumPhotoState.VAR;
+                    ScratchPad.ScratchPad.Instance.Add(@"\\\\VAR: " + StroblhofwarteImage.Instance.GetObject());
                 }
                 else if (PhotoState == enumPhotoState.VAR)
                 {
+                    Stroblhofwarte.AperturePhotometry.ApertureMeasure measure = new ApertureMeasure();
+                    VarMag = measure.Magnitude(_measVar, Z);
+                    VarError = measure.Uncertenty(_measVar);
                     StepInfo = "Select K [" + StarDataRelay.Instance.CheckName + "-" + StarDataRelay.Instance.CheckAUID +"]";
                     StarDataRelay.Instance.UserInfo = StepInfo;
                     StarDataRelay.Instance.UserInfoVisibility = true;
                     PhotoState = enumPhotoState.CHECK;
+                    ScratchPad.ScratchPad.Instance.Add(@"\\\\CHECK: " + StarDataRelay.Instance.CheckName + "_{" + StarDataRelay.Instance.CheckAUID + "}");
                 }
                 else if (PhotoState == enumPhotoState.CHECK)
                 {
+                    Stroblhofwarte.AperturePhotometry.ApertureMeasure measure = new ApertureMeasure();
+                    CheckMag = measure.Magnitude(_measCheck, Z);
                     StepInfo = "<Start> to start measurement";
                     StarDataRelay.Instance.UserInfoVisibility = false;
                     StarDataRelay.Instance.UserInfo = "";
                     PhotoState = enumPhotoState.INIT;
                 }
                 OnPropertyChanged("ImageSource");
-                // If the reference data are prefilled, recalculate Z
-                ReferenceMag = _referenceMag;
+                
             }
             catch (Exception ex)
             {
@@ -966,15 +974,29 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                     _currentMeas.JD = StroblhofwarteImage.Instance.GetJD();
                     _currentMeas.Airmass = StroblhofwarteImage.Instance.GetAirmass();
                     _measComp = meas;
+                    ScratchPad.ScratchPad.Instance.Add(@"C_{" + StarDataRelay.Instance.Filter + "}:=" + StarDataRelay.Instance.CompMag + "^{mag}");
+                    ScratchPad.ScratchPad.Instance.Add(StarDataRelay.Instance.Filter + @"_{comp}=Z - 2.5\cdot log_{10}(\frac{flux}{T_{exp}}) = " + StarDataRelay.Instance.CompMag.ToString("0.####", CultureInfo.InvariantCulture) + "^{mag}");
+                    ScratchPad.ScratchPad.Instance.Add(@"Z:=" + Z.ToString("0.####", CultureInfo.InvariantCulture));
+                    ScratchPad.ScratchPad.Instance.Add(@"flux:=" + meas.ADU.ToString("0.####", CultureInfo.InvariantCulture));
+                    ScratchPad.ScratchPad.Instance.Add(@"T_{exp}:=" + meas.ExposureTime.ToString("0.####", CultureInfo.InvariantCulture) + " sec.");
                 }
                 if (PhotoState == enumPhotoState.VAR)
                 {
                     _currentMeas.Mag = Mag;
                     _currentMeas.MachineMag = measure.Magnitude(meas, 1.0);
                     _measVar = meas;
+                    ScratchPad.ScratchPad.Instance.Add(StarDataRelay.Instance.Filter + @"_{var}=Z - 2.5\cdot log_{10}(\frac{flux}{T_{exp}}) = " + Mag.ToString("0.####", CultureInfo.InvariantCulture) + "^{mag}");
+                    ScratchPad.ScratchPad.Instance.Add(@"Z:=" + Z.ToString("0.####", CultureInfo.InvariantCulture));
+                    ScratchPad.ScratchPad.Instance.Add(@"flux:=" + meas.ADU.ToString("0.####", CultureInfo.InvariantCulture));
+                    ScratchPad.ScratchPad.Instance.Add(@"T_{exp}:=" + meas.ExposureTime.ToString("0.####", CultureInfo.InvariantCulture) + " sec.");
                 }
                 if (PhotoState == enumPhotoState.CHECK)
                 {
+                    ScratchPad.ScratchPad.Instance.Add(@"K_{" + StarDataRelay.Instance.Filter + "}:=" + StarDataRelay.Instance.CheckMag + "^{mag}");
+                    ScratchPad.ScratchPad.Instance.Add(StarDataRelay.Instance.Filter + @"_{check}=Z - 2.5\cdot log_{10}(\frac{flux}{T_{exp}}) = " + Mag.ToString("0.####", CultureInfo.InvariantCulture) + "^{mag}");
+                    ScratchPad.ScratchPad.Instance.Add(@"Z:=" + Z.ToString("0.####", CultureInfo.InvariantCulture));
+                    ScratchPad.ScratchPad.Instance.Add(@"flux:=" + meas.ADU.ToString("0.####", CultureInfo.InvariantCulture));
+                    ScratchPad.ScratchPad.Instance.Add(@"T_{exp}:=" + meas.ExposureTime.ToString("0.####", CultureInfo.InvariantCulture) + " sec.");
                     _currentMeas.KMeasMag = Mag;
                     _currentMeas.KMachineMag = measure.Magnitude(meas, 1.0);
                     _measCheck = meas;

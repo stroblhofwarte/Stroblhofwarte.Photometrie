@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.DirectoryServices;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -100,6 +101,15 @@ namespace Stroblhofwarte.AperturePhotometry
             MeasurementResult result = new MeasurementResult() { StarADU = apertureSum, SkyADU = annulusSum, StarPixels = starPixels, SkyPixels = skyPixels };
             result.ExposureTime = StroblhofwarteImage.Instance.GetExposureTime();
 
+            ScratchPad.ScratchPad.Instance.Add(@"R_{Aperture}:=" + apertureR.ToString("0.####", CultureInfo.InvariantCulture));
+            ScratchPad.ScratchPad.Instance.Add(@"R_{inner Annulus}:=" + innerAnulusR.ToString("0.####", CultureInfo.InvariantCulture));
+            ScratchPad.ScratchPad.Instance.Add(@"R_{outer Annulus}:=" + outerAnnulusR.ToString("0.####", CultureInfo.InvariantCulture));
+            ScratchPad.ScratchPad.Instance.Add("Star_{ADU}:=" + result.StarADU.ToString("0.####", CultureInfo.InvariantCulture));
+            ScratchPad.ScratchPad.Instance.Add("Sky_{ADU}:=" + result.SkyADU.ToString("0.####", CultureInfo.InvariantCulture));
+            ScratchPad.ScratchPad.Instance.Add("Star_{pixel}:=" + result.StarPixels.ToString("0.####", CultureInfo.InvariantCulture));
+            ScratchPad.ScratchPad.Instance.Add("Sky_{pixel}:=" + result.SkyPixels.ToString("0.####", CultureInfo.InvariantCulture));
+
+
             return result;
         }
 
@@ -108,12 +118,14 @@ namespace Stroblhofwarte.AperturePhotometry
             if (meas == null) return -999.0;
             if (meas.ExposureTime <= 0.0) return -999.0;
             double StarADU = meas.StarPixels * ((meas.StarADU / meas.StarPixels) - (meas.SkyADU / meas.SkyPixels));
+            meas.ADU = StarADU;
             double SoftApertureMagnitude = Z - 2.5 * Math.Log10(StarADU / meas.ExposureTime);
             return SoftApertureMagnitude;
         }
 
         public double Uncertenty(MeasurementResult meas)
         {
+            ScratchPad.ScratchPad.Instance.Add("Uncertainty (CCD  Equation):");
             double SoftApertureSigma = 0.0;
             if (meas == null) return 999.0;
             InstrumentObject instr = Instruments.Instance.Get(StroblhofwarteImage.Instance.GetTelescope(), StroblhofwarteImage.Instance.GetInstrument(),
@@ -127,15 +139,26 @@ namespace Stroblhofwarte.AperturePhotometry
             double Nron2 = instr.ReadOutNoise * instr.ReadOutNoise;
             double PixRatio = 1 + (meas.StarPixels / meas.SkyPixels);
             double Gsig2 = (0.289 * instr.Gain_e_ADU) * (0.289 * instr.Gain_e_ADU);
-            
+
+            ScratchPad.ScratchPad.Instance.Add(@"N_{sky}:=" + Nsky.ToString("0.######", CultureInfo.InvariantCulture) + " e^{-}");
+            ScratchPad.ScratchPad.Instance.Add(@"N_{dark}:=" + Ndark.ToString("0.######", CultureInfo.InvariantCulture) + " e^{-}/s/pix");
+            ScratchPad.ScratchPad.Instance.Add(@"N_{readout}:=" + instr.ReadOutNoise.ToString("0.######", CultureInfo.InvariantCulture) + " e^{-} rms");
+            ScratchPad.ScratchPad.Instance.Add(@"\sigma:= (0.289 \cdot Gain) = " + (0.289 * instr.Gain_e_ADU).ToString("0.######", CultureInfo.InvariantCulture) + " e^{-} ADU");
+
             double NStarMinusSkyElectrons = instr.Gain_e_ADU * (meas.StarPixels * ((meas.StarADU / meas.StarPixels) - (meas.SkyADU / meas.SkyPixels)));
+            ScratchPad.ScratchPad.Instance.Add(@"Star = Gain ( Star_{pixl} \frac{Star_{ADU}}{Star_{pixl}} - \frac{Sky_{ADU}}{Sky_{pixl}} = " + NStarMinusSkyElectrons.ToString("0.######", CultureInfo.InvariantCulture) + " e^{-}");
+
             double NoiseRMSElectrons = Math.Sqrt(NStarMinusSkyElectrons + meas.StarPixels * PixRatio * (Nsky + Ndark + Nron2 + Gsig2));
-            if(NoiseRMSElectrons > 0)
+            ScratchPad.ScratchPad.Instance.Add(@"Nois_{RMS e^{-}} = \sqrt{Star + Star_{pixl} \cdot (1+\frac{Star_{pixl}}{Sky_{pixl}}) \cdot (N_{sky} + N_{dark} + N_{readout}^2 + \sigma)} = " + NoiseRMSElectrons.ToString("0.######", CultureInfo.InvariantCulture) + " e^{-}");
+
+            if (NoiseRMSElectrons > 0)
             {
                 double Snr = NStarMinusSkyElectrons / NoiseRMSElectrons;
+                ScratchPad.ScratchPad.Instance.Add(@"SNR:=\frac{" + NStarMinusSkyElectrons.ToString("0.######", CultureInfo.InvariantCulture) + "}{" + NoiseRMSElectrons.ToString("0.######", CultureInfo.InvariantCulture) + "} = " + Snr.ToString("0.######", CultureInfo.InvariantCulture));
                 if(Snr > 1.11)
                 {
                     SoftApertureSigma = 2.5 * Math.Log10(1 / (1 - 1 / Snr)) / 2.302585;
+                    ScratchPad.ScratchPad.Instance.Add(@"\varsigma:=\frac{2.5 Log_{10}(\frac{1}{1 - \frac{1}{SNR}})}{2.302585} = " + SoftApertureSigma.ToString("0.######", CultureInfo.InvariantCulture));
                 }
             }
             return SoftApertureSigma;
@@ -179,5 +202,6 @@ namespace Stroblhofwarte.AperturePhotometry
         public double StarPixels { get; set; }
         public double SkyPixels { get; set; }
         public double ExposureTime { get; set; }
+        public double ADU { get; set; }
     }
 }

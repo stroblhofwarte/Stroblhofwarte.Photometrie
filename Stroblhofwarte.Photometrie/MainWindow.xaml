@@ -82,6 +82,9 @@
                 <DataTemplate DataType="{x:Type vm:TransformationViewModel}">
                     <v:TransformationView />
                 </DataTemplate>
+                <DataTemplate DataType="{x:Type vm:ScratchPadViewModel}">
+                    <v:ScratchPadView />
+                </DataTemplate>
 
 
             </dock:DockingManager.Resources>

@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ScratchPad\ScratchPad.csproj" />
     <ProjectReference Include="..\Stroblhofwarte.Config\Stroblhofwarte.Config.csproj" />
     <ProjectReference Include="..\Stroblhofwarte.Image\Stroblhofwarte.Image.csproj" />
   </ItemGroup>

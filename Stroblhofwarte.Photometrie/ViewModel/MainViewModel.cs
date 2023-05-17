@@ -45,6 +45,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
       documents.Add(new ReportViewModel() { Title = "Report" });
       documents.Add(new StandardFieldViewModel() { Title = "Standard Field" });
       documents.Add(new TransformationViewModel() { Title = "Transformation" });
+      documents.Add(new ScratchPadViewModel() { Title = "ScratchPad" });
 
       this.DockManagerViewModel = new DockManagerViewModel(documents);
       this.MenuViewModel = new MenuViewModel(documents);

@@ -109,6 +109,8 @@
 
 * WpfAnimatedGif                Thomas Levesque, Apache License 2.0
 
+* WpfMath                       ForNeVeR, MIT Licnse
+
 
 
 ***  Mozilla Public License
