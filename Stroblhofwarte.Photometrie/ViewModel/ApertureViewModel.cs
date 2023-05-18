@@ -277,7 +277,10 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         private double _varError;
         public double VarError
         {
-            get { return _varError; }
+            get 
+            {
+                return _varError; 
+            }
             set
             {
                 _varError = value;
@@ -348,7 +351,6 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             set
             {
                 _checkReferenceMag = value;
-                VarError = CheckMag - (double)(CheckReferenceMag);
                 OnPropertyChanged("CheckReferenceMag");
             }
         }
@@ -882,7 +884,6 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                     CompMag = measure.Magnitude(_measComp, Z);
                     CompError = measure.Uncertenty(_measComp);
 
-                    if (_currentMeas != null) _currentMeas.MagErr = VarError;
                     if (_currentMeas != null) _currentMeas.CompErr = CompError;
                     StepInfo = "Select VAR [" + StroblhofwarteImage.Instance.GetObject() + "]";
                     StarDataRelay.Instance.UserInfo = StepInfo;
@@ -895,6 +896,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                     Stroblhofwarte.AperturePhotometry.ApertureMeasure measure = new ApertureMeasure();
                     VarMag = measure.Magnitude(_measVar, Z);
                     VarError = measure.Uncertenty(_measVar);
+                    if (_currentMeas != null) _currentMeas.MagErr = VarError;
                     StepInfo = "Select K [" + StarDataRelay.Instance.CheckName + "-" + StarDataRelay.Instance.CheckAUID +"]";
                     StarDataRelay.Instance.UserInfo = StepInfo;
                     StarDataRelay.Instance.UserInfoVisibility = true;
@@ -1056,7 +1058,10 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         private double _magErr;
         public double MagErr
         {
-            get { return _magErr; }
+            get
+            { 
+                return _magErr;
+            }
             set
             {
                 _magErr = value;
