@@ -7,6 +7,7 @@
         xmlns:v="clr-namespace:Stroblhofwarte.Photometrie.View"
         xmlns:vm="clr-namespace:Stroblhofwarte.Photometrie.ViewModel"
         xmlns:local="clr-namespace:Stroblhofwarte.Photometrie.Dialogs"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
         Title="Stroblhofwarte.Photometrie Settings" Height="538" Width="800">
     <Grid>
@@ -40,6 +41,11 @@
                     <Label Content="Astrometry.Net Host:" HorizontalAlignment="Left" Margin="96,102,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
                     <TextBox HorizontalAlignment="Left" Margin="222,133,0,0" TextWrapping="NoWrap" Text="{Binding AstrometrynetKey, Mode=TwoWay}" VerticalAlignment="Top" Width="189"/>
                     <Label Content="Astrometry.Net APIKey:" HorizontalAlignment="Left" Margin="84,133,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
+
+                    <Label Content="ScratchPad Active:" HorizontalAlignment="Left" Margin="111,189,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
+                    <mah:ToggleSwitch IsOn="{Binding ScratchPadActive, Mode=TwoWay}"   Margin="0,186,414,0" Width="119" FontSize="12" VerticalAlignment="Top" Height="32" HorizontalAlignment="Right"/>
+
+
 
                     <Label Content="Magnification" HorizontalAlignment="Left" Margin="51,279,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
                     <Label Content="__________________________________________________________________________________________________________" HorizontalAlignment="Left" Margin="180,274,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>

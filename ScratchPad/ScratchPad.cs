@@ -31,6 +31,9 @@ namespace ScratchPad
         private int _currentPage = 0;
         private int _lineCnt = 0;
 
+        private bool _isActive = false;
+        private bool _batch = false;
+
         #endregion
 
         #region Ctor
@@ -43,21 +46,34 @@ namespace ScratchPad
 
         #endregion
 
+        public void Begin()
+        {
+            _batch = true;
+        }
+
+        public void Commit()
+        {
+            _batch = false;
+            eventPadChanged?.Invoke(this, null);
+        }
+
         public void Add(string formula)
         {
+            if (!Stroblhofwarte.Config.GlobalConfig.Instance.ScratchPadActive) return;
             _lineCnt++;
-            if (_lineCnt > 100)
+            /*if (_lineCnt > 100)
             {
                 CreateAndAdd(formula);
                 eventPadChanged?.Invoke(this, null);
                 return;
-            }
+            }*/
             _pad[_currentPage].Add(formula);
-            eventPadChanged?.Invoke(this, null);
+            if(!_batch) eventPadChanged?.Invoke(this, null);
         }
 
         public void CreateAndAdd(string formula)
         {
+            if (!Stroblhofwarte.Config.GlobalConfig.Instance.ScratchPadActive) return;
             _currentPage++;
             _lineCnt = 0;
             _pad.Add(_currentPage, new List<string>());
@@ -69,6 +85,7 @@ namespace ScratchPad
         public int Pages() { return _currentPage; }
         public string GetCurrentPage()
         {
+            if (!Stroblhofwarte.Config.GlobalConfig.Instance.ScratchPadActive) return string.Empty;
             string page = string.Empty;
             foreach (string s in _pad[_currentPage])
             {
@@ -79,6 +96,7 @@ namespace ScratchPad
 
         public string GetPage(int p)
         {
+            if (!Stroblhofwarte.Config.GlobalConfig.Instance.ScratchPadActive) return string.Empty;
             string page = string.Empty;
             if (p > _currentPage) return page;
             if (p < 0) return page;

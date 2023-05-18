@@ -130,5 +130,17 @@ namespace Stroblhofwarte.Config {
                 this["StandardFields"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ScratchPadActive {
+            get {
+                return ((bool)(this["ScratchPadActive"]));
+            }
+            set {
+                this["ScratchPadActive"] = value;
+            }
+        }
     }
 }

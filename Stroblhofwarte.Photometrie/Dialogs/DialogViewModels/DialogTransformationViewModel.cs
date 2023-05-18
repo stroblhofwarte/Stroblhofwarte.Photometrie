@@ -47,8 +47,10 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                     LeftFilter = left;
                     RightFilter = right;
                     IsError = TransformationParameter();
+                    ScratchPad.ScratchPad.Instance.Begin();
                     Transform();
                     StdDeviation();
+                    ScratchPad.ScratchPad.Instance.Commit();
                 }
                 else
                 {
@@ -329,6 +331,10 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                    "|KMAGINS=" + t.LeftCheckInstrumentMag.ToString(CultureInfo.InvariantCulture) +
                    "|" + t.LeftTx_yz_Name + "=" + t.LeftTx_yz.ToString(CultureInfo.InvariantCulture) +
                    "|" + t.Txy_Name + "=" + t.Txy.ToString(CultureInfo.InvariantCulture);
+                if (t.LeftIsStd)
+                    leftNote += "|MERR=STDDIV";
+                else
+                    leftNote += "|MERR=SNR CCD Eq.";
                 AAVSOExtendedFileFormat.Instance.Add(StarDataRelay.Instance.Name,
                     t.LeftJD.ToString("0.#####", CultureInfo.InvariantCulture),
                     t.LeftMag.ToString("0.####", CultureInfo.InvariantCulture),
@@ -350,6 +356,10 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                     "|KMAGINS=" + t.RightCheckInstrumentMag.ToString(CultureInfo.InvariantCulture) +
                     "|" + t.RightTx_yz_Name + "=" + t.RightTx_yz.ToString(CultureInfo.InvariantCulture) +
                     "|" + t.Txy_Name + "=" + t.Txy.ToString(CultureInfo.InvariantCulture);
+                if (t.RightIsStd)
+                    rightNote += "|MERR=STDDIV";
+                else
+                    rightNote += "|MERR=SNR CCD Eq.";
                 AAVSOExtendedFileFormat.Instance.Add(StarDataRelay.Instance.Name,
                     t.RightJD.ToString("0.#####", CultureInfo.InvariantCulture),
                     t.RightMag.ToString("0.####", CultureInfo.InvariantCulture),
@@ -399,6 +409,10 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                     "|KMAGINS=" + t.LeftCheckInstrumentMag.ToString(CultureInfo.InvariantCulture) +
                     "|" + t.LeftTx_yz_Name + "=" + t.LeftTx_yz.ToString(CultureInfo.InvariantCulture) +
                     "|" + t.Txy_Name + "=" + t.Txy.ToString(CultureInfo.InvariantCulture);
+                if (t.LeftIsStd)
+                    leftNote += "|MERR=STDDIV";
+                else
+                    leftNote += "|MERR=SNR CCD Eq.";
                 AAVSOExtendedFileFormat.Instance.Add(StarDataRelay.Instance.Name,
                     t.LeftJD.ToString("0.#####", CultureInfo.InvariantCulture),
                     t.LeftMag.ToString("0.####", CultureInfo.InvariantCulture),
@@ -420,6 +434,10 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                     "|KMAGINS=" + t.RightCheckInstrumentMag.ToString(CultureInfo.InvariantCulture) +
                     "|" + t.RightTx_yz_Name + "=" + t.RightTx_yz.ToString(CultureInfo.InvariantCulture) +
                     "|" + t.Txy_Name + "=" + t.Txy.ToString(CultureInfo.InvariantCulture);
+                if (t.RightIsStd)
+                    rightNote += "|MERR=STDDIV";
+                else
+                    rightNote += "|MERR=SNR CCD Eq.";
 
                 AAVSOExtendedFileFormat.Instance.Add(StarDataRelay.Instance.Name,
                     t.RightJD.ToString("0.#####", CultureInfo.InvariantCulture),
@@ -545,7 +563,15 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                 if (e.Filter == RightFilter)
                     rightSideMeas.Add(e);
             }
-            foreach(ApertureMeasurementEntry e in leftSideMeas)
+
+            ScratchPad.ScratchPad.Instance.CreateAndAdd("Transformation");
+            ScratchPad.ScratchPad.Instance.Add(@"N_{" + LeftFilter + "} = " + leftSideMeas.Count);
+            ScratchPad.ScratchPad.Instance.Add(@"N_{" + RightFilter + "} = " + rightSideMeas.Count);
+            ScratchPad.ScratchPad.Instance.Add(@"\text{" + LefttxyzName + "} = " + LeftTx_yz.ToString("0.####", CultureInfo.InvariantCulture));
+            ScratchPad.ScratchPad.Instance.Add(@"\text{" + RighttxyzName + "} = " + RightTx_yz.ToString("0.####", CultureInfo.InvariantCulture));
+            ScratchPad.ScratchPad.Instance.Add(@"\text{" + TxyName + "} = " + Txy.ToString("0.####", CultureInfo.InvariantCulture));
+
+            foreach (ApertureMeasurementEntry e in leftSideMeas)
             {
                 foreach (ApertureMeasurementEntry ee in rightSideMeas)
                 {
@@ -592,8 +618,17 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
             double bt = leftMeas.MachineMag;
             double vt = rightMeas.MachineMag;
             double Bc = leftMeas.CompMag;
+            ScratchPad.ScratchPad.Instance.Add(_leftFilterSmall + @"_c = " + bc.ToString("0.####", CultureInfo.InvariantCulture) + @"^{m} \{Comp Instrument Mag\}");
+            ScratchPad.ScratchPad.Instance.Add(_rightFilterSmall + @"_c = " + vc.ToString("0.####", CultureInfo.InvariantCulture) + @"^{m} \{Comp Instrument Mag\}");
+            ScratchPad.ScratchPad.Instance.Add(_leftFilterSmall + @"_t = " + bt.ToString("0.####", CultureInfo.InvariantCulture) + @"^{m} \{Target Instrument Mag\}");
+            ScratchPad.ScratchPad.Instance.Add(_rightFilterSmall + @"_t = " + vt.ToString("0.####", CultureInfo.InvariantCulture) + @"^{m} \{Target Instrument Mag\}");
+            ScratchPad.ScratchPad.Instance.Add(LeftFilter + @"_c = " + Bc.ToString("0.####", CultureInfo.InvariantCulture) + @" \{Comp Mag\}");
+
+            double val = -LeftTx_yz * Txy * (bc - vc - bt + vt) + Bc - bc + bt;
             // For left side (more blue filter):
-            return -LeftTx_yz * Txy * (bc - vc - bt + vt) + Bc - bc + bt;
+            ScratchPad.ScratchPad.Instance.Add(@"T_{" + LeftFilter + @"} = \text{" + LefttxyzName + @"} \cdot \text{" + TxyName + @"} \cdot (b_c - v_c - b_t + v_t) + B_c - b_c + b_t = " +
+                    val.ToString("0.####", CultureInfo.InvariantCulture) + @"^{m} \\ \\ \\");
+            return val;
         }
 
         private double LeftSideCheckTransform(ApertureMeasurementEntry leftMeas, ApertureMeasurementEntry rightMeas)
@@ -603,8 +638,20 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
             double bt = leftMeas.KMachineMag;
             double vt = rightMeas.KMachineMag;
             double Bc = leftMeas.CompMag;
+            ScratchPad.ScratchPad.Instance.Add(_leftFilterSmall + @"_c = " + bc.ToString("0.####", CultureInfo.InvariantCulture) + @"^{m} \{Comp Instrument Mag\}");
+            ScratchPad.ScratchPad.Instance.Add(_rightFilterSmall + @"_c = " + vc.ToString("0.####", CultureInfo.InvariantCulture) + @"^{m} \{Comp Instrument Mag\}");
+            ScratchPad.ScratchPad.Instance.Add(_leftFilterSmall + @"_t = " + bt.ToString("0.####", CultureInfo.InvariantCulture) + @"^{m} \{Check Instrument Mag\}");
+            ScratchPad.ScratchPad.Instance.Add(_rightFilterSmall + @"_t = " + vt.ToString("0.####", CultureInfo.InvariantCulture) + @"^{m} \{Check Instrument Mag\}");
+            ScratchPad.ScratchPad.Instance.Add(LeftFilter + @"_c = " + Bc.ToString("0.####", CultureInfo.InvariantCulture) + @" \{Comp Mag\}");
+
+
             // For left side (more blue filter):
-            return -LeftTx_yz * Txy * (bc - vc - bt + vt) + Bc - bc + bt;
+            double val = -LeftTx_yz * Txy * (bc - vc - bt + vt) + Bc - bc + bt;
+
+            ScratchPad.ScratchPad.Instance.Add(@"K_{" + LeftFilter + @"} = \text{" + LefttxyzName + @"} \cdot \text{" + TxyName + @"} \cdot (b_c - v_c - b_t + v_t) + B_c - b_c + b_t = " +
+                    val.ToString("0.####", CultureInfo.InvariantCulture) + @"^{m} \\ \\ \\");
+
+            return val;
         }
 
         private double RightSideTransform(ApertureMeasurementEntry leftMeas, ApertureMeasurementEntry rightMeas)
@@ -614,8 +661,18 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
             double bt = leftMeas.MachineMag;
             double vt = rightMeas.MachineMag;
             double Vc = rightMeas.CompMag;
+
+            ScratchPad.ScratchPad.Instance.Add(_leftFilterSmall + @"_c = " + bc.ToString("0.####", CultureInfo.InvariantCulture) + @"^{m} \{Comp Instrument Mag\}");
+            ScratchPad.ScratchPad.Instance.Add(_rightFilterSmall + @"_c = " + vc.ToString("0.####", CultureInfo.InvariantCulture) + @"^{m} \{Comp Instrument Mag\}");
+            ScratchPad.ScratchPad.Instance.Add(_leftFilterSmall + @"_t = " + bt.ToString("0.####", CultureInfo.InvariantCulture) + @"^{m} \{Target Instrument Mag\}");
+            ScratchPad.ScratchPad.Instance.Add(_rightFilterSmall + @"_t = " + vt.ToString("0.####", CultureInfo.InvariantCulture) + @"^{m} \{Target Instrument Mag\}");
+            ScratchPad.ScratchPad.Instance.Add(RightFilter + @"_c = " + Vc.ToString("0.####", CultureInfo.InvariantCulture) + @" \{Comp Mag\}");
+
             // For left side (more blue filter):
-            return -RightTx_yz * Txy * (bc - vc - bt + vt) + Vc - vc + vt;
+            double val =  -RightTx_yz * Txy * (bc - vc - bt + vt) + Vc - vc + vt;
+            ScratchPad.ScratchPad.Instance.Add(@"T_{" + RightFilter + @"} = - \text{" + RighttxyzName + @"} \cdot \text{" + TxyName + @"} \cdot (b_c - v_c - b_t + v_t) + V_c - v_c + v_t = " +
+                    val.ToString("0.####", CultureInfo.InvariantCulture) + @"^{m}\\ \\ \\");
+            return val;
         }
 
         private double RightSideCheckTransform(ApertureMeasurementEntry leftMeas, ApertureMeasurementEntry rightMeas)
@@ -625,16 +682,28 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
             double bt = leftMeas.KMachineMag;
             double vt = rightMeas.KMachineMag;
             double Vc = rightMeas.CompMag;
+
+            ScratchPad.ScratchPad.Instance.Add(_leftFilterSmall + @"_c = " + bc.ToString("0.####", CultureInfo.InvariantCulture) + @"^{m} \{Comp Instrument Mag\}");
+            ScratchPad.ScratchPad.Instance.Add(_rightFilterSmall + @"_c = " + vc.ToString("0.####", CultureInfo.InvariantCulture) + @"^{m} \{Comp Instrument Mag\}");
+            ScratchPad.ScratchPad.Instance.Add(_leftFilterSmall + @"_t = " + bt.ToString("0.####", CultureInfo.InvariantCulture) + @"^{m} \{Check Instrument Mag\}");
+            ScratchPad.ScratchPad.Instance.Add(_rightFilterSmall + @"_t = " + vt.ToString("0.####", CultureInfo.InvariantCulture) + @"^{m} \{Check Instrument Mag\}");
+            ScratchPad.ScratchPad.Instance.Add(RightFilter + @"_c = " + Vc.ToString("0.####", CultureInfo.InvariantCulture) + @" \{Comp Mag\}");
+
             // For left side (more blue filter):
-            return -RightTx_yz * Txy * (bc - vc - bt + vt) + Vc - vc + vt;
+            double val =  -RightTx_yz * Txy * (bc - vc - bt + vt) + Vc - vc + vt;
+            ScratchPad.ScratchPad.Instance.Add(@"K_{" + RightFilter + @"} = - \text{" + RighttxyzName + @"} \cdot \text{" + TxyName + @"} \cdot (b_c - v_c - b_t + v_t) + V_c - v_c + v_t = " +
+                    val.ToString("0.####", CultureInfo.InvariantCulture) + @"^{m}\\ \\ \\");
+            return val;
         }
 
         private bool StdDeviation()
         {
+            ScratchPad.ScratchPad.Instance.Add(@"\\ \\ \\Uncertainty \\ \\");
             // Doppelt hält besser! 
             List<ApertureMeasurementEntry> leftSideMeas = new List<ApertureMeasurementEntry>();
             List<ApertureMeasurementEntry> rightSideMeas = new List<ApertureMeasurementEntry>();
-
+            bool leftIsStd = true;
+            bool rightIsStd = true;
             foreach (ApertureMeasurementEntry e in Measures)
             {
                 if (e.Filter == LeftFilter)
@@ -648,8 +717,8 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
             double leftKavrg = 0.0;
             foreach (ApertureMeasurementEntry t in leftSideMeas)
             {
-                leftavrg += t.MachineMag;
-                leftKavrg += t.KMachineMag;
+                leftavrg += t.Mag;
+                leftKavrg += t.KMeasMag;
             }
             leftavrg = leftavrg / leftSideMeas.Count();
             leftKavrg = leftKavrg / leftSideMeas.Count();
@@ -658,26 +727,32 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
             double rightKavrg = 0.0;
             foreach (ApertureMeasurementEntry t in rightSideMeas)
             {
-                rightavrg += t.MachineMag;
-                rightKavrg += t.KMachineMag;
+                rightavrg += t.Mag;
+                rightKavrg += t.KMeasMag;
             }
             rightavrg = rightavrg / rightSideMeas.Count();
             rightKavrg = rightKavrg / rightSideMeas.Count();
+
+            ScratchPad.ScratchPad.Instance.Add(@"\overline{X_{" + LeftFilter + " var}} = " + leftavrg.ToString("0.####", CultureInfo.InvariantCulture));
+            ScratchPad.ScratchPad.Instance.Add(@"\overline{X_{" + LeftFilter + " k}} = " + leftKavrg.ToString("0.####", CultureInfo.InvariantCulture));
+            ScratchPad.ScratchPad.Instance.Add(@"\\ \overline{X_{" + RightFilter + " var}} = " + rightavrg.ToString("0.####", CultureInfo.InvariantCulture));
+            ScratchPad.ScratchPad.Instance.Add(@"\overline{X_{" + RightFilter + " k}} = " + rightKavrg.ToString("0.####", CultureInfo.InvariantCulture));
+
 
             // Calculate the quadrat sums:
             double leftsum = 0.0;
             double leftKsum = 0.0;
             foreach (ApertureMeasurementEntry t in leftSideMeas)
             {
-                leftsum += (t.MachineMag - leftavrg) * (t.MachineMag - leftavrg);
-                leftKsum += (t.KMachineMag - leftKavrg) * (t.KMachineMag - leftKavrg);
+                leftsum += (t.Mag - leftavrg) * (t.Mag - leftavrg);
+                leftKsum += (t.KMeasMag - leftKavrg) * (t.KMeasMag - leftKavrg);
             }
             double rightsum = 0.0;
             double rightKsum = 0.0;
             foreach (ApertureMeasurementEntry t in rightSideMeas)
             {
-                rightsum += (t.MachineMag - rightavrg) * (t.MachineMag - rightavrg);
-                rightKsum += (t.KMachineMag - rightKavrg) * (t.KMachineMag - rightKavrg);
+                rightsum += (t.Mag - rightavrg) * (t.Mag - rightavrg);
+                rightKsum += (t.KMeasMag - rightKavrg) * (t.KMeasMag - rightKavrg);
             }
 
             LeftStd = Math.Sqrt(leftsum / (leftSideMeas.Count() - 1));
@@ -686,15 +761,29 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
             RightStd = Math.Sqrt(rightsum / (rightSideMeas.Count() - 1));
             RightKStd = Math.Sqrt(rightKsum / (rightSideMeas.Count() - 1));
 
+            if (!double.IsNaN(LeftStd) && !double.IsNaN(LeftKStd))
+            {
+                ScratchPad.ScratchPad.Instance.Add(@"\sigma_{" + LeftFilter + @",var} = \sqrt{(\frac{\sum{(x_i - \overline{X})^2}}{N - 1})} = " + LeftStd.ToString("0.####", CultureInfo.InvariantCulture));
+                ScratchPad.ScratchPad.Instance.Add(@"\sigma_{" + LeftFilter + @",K} = \sqrt{(\frac{\sum{(x_i - \overline{X})^2}}{N - 1})} = " + LeftKStd.ToString("0.####", CultureInfo.InvariantCulture));
+            }
+            if (!double.IsNaN(RightStd) && !double.IsNaN(RightKStd))
+            {
+                ScratchPad.ScratchPad.Instance.Add(@"\sigma_{" + RightFilter + @",var} = \sqrt{(\frac{\sum{(x_i - \overline{X})^2}}{N - 1})} = " + RightStd.ToString("0.####", CultureInfo.InvariantCulture));
+                ScratchPad.ScratchPad.Instance.Add(@"\sigma_{" + RightFilter + @",K} = \sqrt{(\frac{\sum{(x_i - \overline{X})^2}}{N - 1})} = " + RightKStd.ToString("0.####", CultureInfo.InvariantCulture));
+            }
             if (leftSideMeas.Count < 3)
             {
+                leftIsStd = false;
                 LeftStd = leftSideMeas[0].MagErr;
                 LeftKStd = leftSideMeas[0].MagErr;
+                ScratchPad.ScratchPad.Instance.Add(@"\text{Too less data, SNR CCD Eq. used for }" + LeftFilter);
             }
             if (rightSideMeas.Count < 3)
             {
+                rightIsStd = false;
                 RightStd = rightSideMeas[0].MagErr;
                 RightKStd = rightSideMeas[0].MagErr;
+                ScratchPad.ScratchPad.Instance.Add(@"\text{Too less data, SNR CCD Eq. used for }" + RightFilter);
             }
 
             // Calculate combined roport (one line per filter)
@@ -772,7 +861,8 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
             combined.RightJD = rightSideMeas[0].JD;
             combined.LeftAirmass = leftSideMeas[0].Airmass;
             combined.RightAirmass = rightSideMeas[0].Airmass;
-
+            combined.LeftIsStd = leftIsStd;
+            combined.RightIsStd = rightIsStd;
             CombinedTransformedMeas.Add(combined);
             return true;
         }
@@ -809,6 +899,8 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
         public double LeftAirmass { get; set; }
         public double RightAirmass { get; set; }
 
+        public bool LeftIsStd { get; set; }
+        public bool RightIsStd { get; set; }
 
 
         private string _Txy_Name;

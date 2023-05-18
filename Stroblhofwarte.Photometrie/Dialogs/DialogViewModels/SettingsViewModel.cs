@@ -44,6 +44,16 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                 OnPropertyChanged("AstrometrynetKey"); }
         }
 
+        public bool ScratchPadActive
+        {
+            get { return GlobalConfig.Instance.ScratchPadActive; }
+            set
+            {
+                GlobalConfig.Instance.ScratchPadActive = value;
+                OnPropertyChanged("ScratchPadActive");
+            }
+        }
+
         public string AAVSOFov
         {
             get { return GlobalConfig.Instance.AAVSOFov.ToString(); }

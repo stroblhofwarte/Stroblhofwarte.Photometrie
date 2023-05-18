@@ -391,7 +391,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                     continue;
                 double indice = ColorIndexFromData(_transfromModel, t);
                 double corr = ColorCorrValue(_transfromModel, t);
-                ScatterPoint p = new ScatterPoint(indice, t.Meas + _MACHINE_MAG_C - (t.V + corr));
+                ScatterPoint p = new ScatterPoint(indice, t.Meas - _MACHINE_MAG_C - (t.V + corr));
                 _tx_yz_series.Points.Add(p);
             }
 

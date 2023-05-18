@@ -853,9 +853,9 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                         (int)StroblhofwarteImage.Instance.GetSensorOffset(),
                         StroblhofwarteImage.Instance.GetBinning(),
                         StroblhofwarteImage.Instance.GetSensorSetTemp());
-                ApertureSize = (int)instr.Aperture;
-                AnnulusInnerRadius = (int)instr.InnerAnnulus;
-                AnnulusOuterRadius = (int)instr.OuterAnnulus;
+                if(ApertureSize != (int)instr.Aperture) ApertureSize = (int)instr.Aperture;
+                if(AnnulusInnerRadius != (int)instr.InnerAnnulus) AnnulusInnerRadius = (int)instr.InnerAnnulus;
+                if(AnnulusOuterRadius != (int)instr.OuterAnnulus) AnnulusOuterRadius = (int)instr.OuterAnnulus;
             }
             catch (Exception ex)
             {
@@ -868,6 +868,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         {
             try
             {
+                ScratchPad.ScratchPad.Instance.Begin();
                 AutodetectAperture();
                 UpdateApertureMeasurement();
                 if (MagMeasurement.Instance.CalibrationMode)
@@ -912,6 +913,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                     StarDataRelay.Instance.UserInfo = "";
                     PhotoState = enumPhotoState.INIT;
                 }
+                ScratchPad.ScratchPad.Instance.Commit();
                 OnPropertyChanged("ImageSource");
                 
             }

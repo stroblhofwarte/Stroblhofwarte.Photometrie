@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Stroblhofwarte.Config\Stroblhofwarte.Config.csproj" />
+  </ItemGroup>
+
 </Project>

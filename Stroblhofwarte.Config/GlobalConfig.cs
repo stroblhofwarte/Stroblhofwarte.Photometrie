@@ -127,6 +127,16 @@ namespace Stroblhofwarte.Config
             }
         }
 
+        public bool ScratchPadActive
+        {
+            get { return Stroblhofwarte.Config.Settings.Default.ScratchPadActive; }
+            set
+            {
+                Stroblhofwarte.Config.Settings.Default.ScratchPadActive = value;
+                Stroblhofwarte.Config.Settings.Default.Save();
+            }
+        }
+
         #endregion
         #region Ctor
 
