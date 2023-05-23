@@ -35,14 +35,14 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
         #region Properties
 
         private ObservableCollection<ApertureMeasurementEntry> _measures;
-        public ObservableCollection<ApertureMeasurementEntry> Measures 
-        { 
-            set 
+        public ObservableCollection<ApertureMeasurementEntry> Measures
+        {
+            set
             {
                 _measures = value;
                 string left = string.Empty;
                 string right = string.Empty;
-                if(ValidateData(out left, out right))
+                if (ValidateData(out left, out right))
                 {
                     LeftFilter = left;
                     RightFilter = right;
@@ -56,11 +56,11 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                 {
                     IsError = true;
                 }
-            } 
-            private get 
-            { 
-                return _measures; 
-            } 
+            }
+            private get
+            {
+                return _measures;
+            }
         }
 
         private ObservableCollection<TransformedEntry> _transformedMeas;
@@ -112,8 +112,8 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
         private string _error;
         public string Error
         {
-            set 
-            { 
+            set
+            {
                 _error = value;
                 OnPropertyChanged("Error");
             }
@@ -140,6 +140,8 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                 return _txyName;
             }
         }
+
+        public double TxyErr { get; set; }
 
         private string _righttxyzName;
         public string RighttxyzName
@@ -226,6 +228,8 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
             }
         }
 
+        public double LeftTx_yzErr { get; set;}
+
         private double _rightTx_yz;
         public double RightTx_yz
         {
@@ -239,6 +243,8 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                 return _rightTx_yz;
             }
         }
+
+        public double RightTx_yzErr { get; set; }
 
         private double _leftstd;
         public double LeftStd
@@ -330,7 +336,9 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                    "|CMAGINS=" + t.LeftCheckInstrumentMag.ToString(CultureInfo.InvariantCulture) +
                    "|KMAGINS=" + t.LeftCheckInstrumentMag.ToString(CultureInfo.InvariantCulture) +
                    "|" + t.LeftTx_yz_Name + "=" + t.LeftTx_yz.ToString(CultureInfo.InvariantCulture) +
-                   "|" + t.Txy_Name + "=" + t.Txy.ToString(CultureInfo.InvariantCulture);
+                   "|" + t.Txy_Name + "=" + t.Txy.ToString(CultureInfo.InvariantCulture) +
+                   "|" + t.LeftTx_yz_Name + "Err=" + t.LeftTx_yzErr.ToString(CultureInfo.InvariantCulture) +
+                   "|" + TxyName + "Err=" + t.TxyErr.ToString(CultureInfo.InvariantCulture);
                 if (t.LeftIsStd)
                     leftNote += "|MERR=STDDIV";
                 else
@@ -355,7 +363,9 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                     "|CMAGINS=" + t.RightCheckInstrumentMag.ToString(CultureInfo.InvariantCulture) +
                     "|KMAGINS=" + t.RightCheckInstrumentMag.ToString(CultureInfo.InvariantCulture) +
                     "|" + t.RightTx_yz_Name + "=" + t.RightTx_yz.ToString(CultureInfo.InvariantCulture) +
-                    "|" + t.Txy_Name + "=" + t.Txy.ToString(CultureInfo.InvariantCulture);
+                    "|" + t.Txy_Name + "=" + t.Txy.ToString(CultureInfo.InvariantCulture) +
+                    "|" + t.RightTx_yz_Name + "Err=" + t.RightTx_yzErr.ToString(CultureInfo.InvariantCulture) +
+                    "|" + TxyName + "Err=" + t.TxyErr.ToString(CultureInfo.InvariantCulture);
                 if (t.RightIsStd)
                     rightNote += "|MERR=STDDIV";
                 else
@@ -408,7 +418,9 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                     "|CMAGINS=" + t.LeftCheckInstrumentMag.ToString(CultureInfo.InvariantCulture) +
                     "|KMAGINS=" + t.LeftCheckInstrumentMag.ToString(CultureInfo.InvariantCulture) +
                     "|" + t.LeftTx_yz_Name + "=" + t.LeftTx_yz.ToString(CultureInfo.InvariantCulture) +
-                    "|" + t.Txy_Name + "=" + t.Txy.ToString(CultureInfo.InvariantCulture);
+                    "|" + t.Txy_Name + "=" + t.Txy.ToString(CultureInfo.InvariantCulture) +
+                    "|" + t.LeftTx_yz_Name + "Err=" + t.LeftTx_yzErr.ToString(CultureInfo.InvariantCulture) +
+                    "|" + TxyName + "Err=" + t.TxyErr.ToString(CultureInfo.InvariantCulture);
                 if (t.LeftIsStd)
                     leftNote += "|MERR=STDDIV";
                 else
@@ -433,7 +445,9 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                     "|CMAGINS=" + t.RightCheckInstrumentMag.ToString(CultureInfo.InvariantCulture) +
                     "|KMAGINS=" + t.RightCheckInstrumentMag.ToString(CultureInfo.InvariantCulture) +
                     "|" + t.RightTx_yz_Name + "=" + t.RightTx_yz.ToString(CultureInfo.InvariantCulture) +
-                    "|" + t.Txy_Name + "=" + t.Txy.ToString(CultureInfo.InvariantCulture);
+                    "|" + t.Txy_Name + "=" + t.Txy.ToString(CultureInfo.InvariantCulture) +
+                    "|" + t.RightTx_yz_Name + "Err=" + t.RightTx_yzErr.ToString(CultureInfo.InvariantCulture) +
+                    "|" + TxyName + "Err=" + t.TxyErr.ToString(CultureInfo.InvariantCulture);
                 if (t.RightIsStd)
                     rightNote += "|MERR=STDDIV";
                 else
@@ -537,6 +551,10 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
             double dTxy = Stroblhofwarte.AperturePhotometry.Instruments.Instance.GetTransformationParam(hash, strTxy);
             double dleftTx_yz = Stroblhofwarte.AperturePhotometry.Instruments.Instance.GetTransformationParam(hash, strLeftTx_yz);
             double drightTx_yz = Stroblhofwarte.AperturePhotometry.Instruments.Instance.GetTransformationParam(hash, strRightTx_yz);
+            TxyErr = Stroblhofwarte.AperturePhotometry.Instruments.Instance.GetTransformationParam(hash, strTxy + "Err");
+            LeftTx_yzErr = Stroblhofwarte.AperturePhotometry.Instruments.Instance.GetTransformationParam(hash, strLeftTx_yz + "Err");
+            RightTx_yzErr = Stroblhofwarte.AperturePhotometry.Instruments.Instance.GetTransformationParam(hash, strRightTx_yz + "Err");
+
             if (double.IsNaN(dTxy) || double.IsNaN(dleftTx_yz) || double.IsNaN(drightTx_yz))
             {
                 Error = "Not all required parameters are there: ";
@@ -591,7 +609,10 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                         LeftCompMag = e.CompMag,
                         LeftInstrumentMag = e.MachineMag,
                         LeftJD = e.JD,
-                        LeftAirmass = e.Airmass
+                        LeftAirmass = e.Airmass,
+                        LeftTx_yzErr = LeftTx_yzErr,
+                        RightTx_yzErr = RightTx_yzErr,
+                        TxyErr = TxyErr
                     };
 
                     t.LeftMag = LeftSideTransform(e, ee);
@@ -863,6 +884,9 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
             combined.RightAirmass = rightSideMeas[0].Airmass;
             combined.LeftIsStd = leftIsStd;
             combined.RightIsStd = rightIsStd;
+            combined.TxyErr = TxyErr;
+            combined.LeftTx_yzErr = LeftTx_yzErr;
+            combined.RightTx_yzErr = RightTx_yzErr;
             CombinedTransformedMeas.Add(combined);
             return true;
         }
@@ -901,8 +925,7 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
 
         public bool LeftIsStd { get; set; }
         public bool RightIsStd { get; set; }
-
-
+        
         private string _Txy_Name;
         public string Txy_Name { 
             get 
@@ -915,6 +938,8 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                 OnPropertyChanged("Txy_Name");
             } 
         }
+
+        public double TxyErr { get; set; }
 
         private string _LeftTx_yz_Name;
         public string LeftTx_yz_Name
@@ -930,6 +955,8 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
             }
         }
 
+        public double LeftTx_yzErr { get; set; }
+
         private string _RightTx_yz_Name;
         public string RightTx_yz_Name
         {
@@ -943,6 +970,8 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
                 OnPropertyChanged("RightTx_yz_Name");
             }
         }
+
+        public double RightTx_yzErr { get; set; }
 
         #endregion
         public event PropertyChangedEventHandler PropertyChanged;

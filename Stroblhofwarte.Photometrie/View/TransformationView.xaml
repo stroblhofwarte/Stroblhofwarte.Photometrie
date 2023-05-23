@@ -33,16 +33,18 @@
         <Label Content="Color Index:" HorizontalAlignment="Left" Margin="212,70,0,0" Width="74" Grid.Row="2" Height="26" VerticalAlignment="Top"/>
         <Label Content="{Binding MagErrorParameterName}" HorizontalAlignment="Left" Margin="19,14,0,0" Width="74" Grid.Row="2" Height="25" VerticalAlignment="Top"/>
         <Label Content="{Binding MagErrorSlope}" HorizontalAlignment="Left" Margin="98,14,0,0" Width="170" Grid.Row="2" Height="25" VerticalAlignment="Top"/>
+        <Label Content="{Binding Tx_yzErr}" HorizontalAlignment="Left" Margin="268,14,0,0" Width="144" Grid.Row="2" Height="26" VerticalAlignment="Top"/>
+        <Label Content="{Binding TxyErr}" HorizontalAlignment="Left" Margin="268,38,0,0" Width="144" Grid.Row="2" Height="26" VerticalAlignment="Top"/>
         <Label Content="{Binding ColorErrorParameterName}" HorizontalAlignment="Left" Margin="19,40,0,0" Width="74" Grid.Row="2" Height="24" VerticalAlignment="Top"/>
         <Label Content="{Binding ColorErrorSlope}" HorizontalAlignment="Left" Margin="98,40,0,0" Width="170" Grid.Row="2" Height="24" VerticalAlignment="Top"/>
         <Button Width="25" ToolTip="Store Tx_yz parameter to the instrument setup" Command="{Binding CommandAddTx_yz}"
-                        Style="{DynamicResource MahApps.Styles.Button.Circle}" HorizontalAlignment="Left" Margin="273,14,0,0" Grid.Row="2" Height="24" VerticalAlignment="Top">
+                        Style="{DynamicResource MahApps.Styles.Button.Circle}" HorizontalAlignment="Left" Margin="417,14,0,0" Grid.Row="2" Height="24" VerticalAlignment="Top">
             <StackPanel Orientation="Vertical">
                 <icon:PackIconMaterial Width="15" Height="15" Kind="ContentSaveMove" HorizontalAlignment="Center"/>
             </StackPanel>
         </Button>
         <Button Width="25" ToolTip="Store Tx_yz parameter to the instrument setup" Command="{Binding CommandAddTxy}"
-                        Style="{DynamicResource MahApps.Styles.Button.Circle}" HorizontalAlignment="Left" Margin="273,40,0,0" Grid.Row="2" Height="24" VerticalAlignment="Top">
+                        Style="{DynamicResource MahApps.Styles.Button.Circle}" HorizontalAlignment="Left" Margin="417,40,0,0" Grid.Row="2" Height="24" VerticalAlignment="Top">
             <StackPanel Orientation="Vertical">
                 <icon:PackIconMaterial Width="15" Height="15" Kind="ContentSaveMove" HorizontalAlignment="Center"/>
             </StackPanel>

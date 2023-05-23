@@ -38,20 +38,20 @@ namespace Stroblhofwarte.AperturePhotometry
 
         public MeasurementResult Measure(int userx, int usery, int searchRadius, double apertureR, double innerAnulusR, double outerAnnulusR)
         {
-            _searchRadius = searchRadius;
+            _searchRadius = (int)outerAnnulusR;
 
             double apertureInnerR = apertureR;
             double apertureOuterR = apertureR + 2;
 
             // Get orginal data array:
             // This function will throw an exception when the subimage is outside the image.
-            ushort[] pix = StroblhofwarteImage.Instance.GetSubimagRaw(new Point(userx, usery), (searchRadius * 2) + 4, (searchRadius * 2) + 4);
+            ushort[] pix = StroblhofwarteImage.Instance.GetSubimagRaw(new Point(userx, usery), (_searchRadius * 2) + 4, (_searchRadius * 2) + 4);
 
             // Check if the aperture is inside the image
             int First = 2;
-            int Last = (searchRadius * 2) + 2;
+            int Last = (_searchRadius * 2) + 2;
 
-            int middle = searchRadius + 2;
+            int middle = _searchRadius + 2;
             // Get the average and threshold values
 
             double apertureInnerRsqr = (apertureInnerR * apertureInnerR);

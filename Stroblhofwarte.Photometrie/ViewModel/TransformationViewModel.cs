@@ -46,9 +46,31 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
         private ScatterSeries _tx_yz_series;
         private LineSeries _tx_yz_fit;
+        private double _tx_yz_err;
+        public double Tx_yzErr
+        {
+            get { 
+                return _tx_yz_err; 
+            }
+            set
+            {
+                _tx_yz_err = value;
+                OnPropertyChanged("Tx_yzErr");
+            }
+        }
 
         private ScatterSeries _txy_series;
         private LineSeries _txy_fit;
+        private double _txy_err;
+        public double TxyErr
+        {
+            get { return _txy_err; }
+            set
+            {
+                _txy_err = value;
+                OnPropertyChanged("TxyErr");
+            }
+        }
 
         private bool _tx_yzChanged = false;
         private bool _txyChanged = false;
@@ -207,6 +229,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             string hash = Stroblhofwarte.AperturePhotometry.Instruments.Instance.Hash(newobj);
 
             Stroblhofwarte.AperturePhotometry.Instruments.Instance.AddOrUpdateTransformationParameter(hash, MagErrorParameterName, MagErrorSlope);
+            Stroblhofwarte.AperturePhotometry.Instruments.Instance.AddOrUpdateTransformationParameter(hash, MagErrorParameterName+"Err", Tx_yzErr);
             _tx_yzChanged = false;
         }
 
@@ -248,6 +271,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             string hash = Stroblhofwarte.AperturePhotometry.Instruments.Instance.Hash(newobj);
 
             Stroblhofwarte.AperturePhotometry.Instruments.Instance.AddOrUpdateTransformationParameter(hash, ColorErrorParameterName, ColorErrorSlope);
+            Stroblhofwarte.AperturePhotometry.Instruments.Instance.AddOrUpdateTransformationParameter(hash, ColorErrorParameterName + "Err", TxyErr);
             _txyChanged = false;
         }
 
@@ -421,9 +445,20 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 _tx_yz_fit.Points.Clear();
                 _tx_yz_fit.Points.Add(new DataPoint(0, yIntersect));
                 _tx_yz_fit.Points.Add(new DataPoint(xmax, yIntersect + (slope * xmax)));
-
+                Tx_yzErr = StdDiv(yIntersect, slope, _tx_yz_series);
             }
             Model_Tx_yz.InvalidatePlot(true);
+        }
+
+        private double StdDiv(double yIntersect, double slope, ScatterSeries data)
+        {
+            double qdrsum = 0.0;
+            foreach(ScatterPoint pnt in data.Points) 
+            {
+                double avrg = pnt.X * slope + yIntersect;
+                qdrsum += (pnt.Y - avrg) * (pnt.Y - avrg);
+            }
+            return Math.Sqrt(qdrsum / (data.Points.Count - 1));
         }
         private double ColorIndexFromData(TransformModel filter, TrandformationEntry dataline)
         {
@@ -512,7 +547,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 _txy_fit.Points.Clear();
                 _txy_fit.Points.Add(new DataPoint(0, yIntersect));
                 _txy_fit.Points.Add(new DataPoint(xmax, yIntersect + (slope * xmax)));
-
+                TxyErr = StdDiv(yIntersect, slope, _txy_series);
             }
             Model_Txy.InvalidatePlot(true);
         }
