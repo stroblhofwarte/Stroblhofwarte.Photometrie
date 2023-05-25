@@ -33,6 +33,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         }
 
         private bool _autoPhotometryCanStart = false;
+        private bool _cancel = false;
         #endregion
 
         #region Ctor
@@ -41,10 +42,23 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         {
             AutomatisationHub.AutomatisationHub.Instance.PhotometryDone += Instance_PhotometryDone;
             StroblhofwarteImage.Instance.NewImageLoaded += Instance_NewImageLoaded;
+            AutomatisationHub.AutomatisationHub.Instance.Cancel += Instance_Cancel;
+        }
+
+        private void Instance_Cancel(object? sender, EventArgs e)
+        {
+            _cancel = true;
         }
 
         private void Instance_NewImageLoaded(object? sender, EventArgs e)
         {
+            if(_cancel)
+            {
+                _cancel = false;
+                AutomatisationHub.AutomatisationHub.Instance.AutomatedModeFinished();
+                _autoPhotometryCanStart = false;
+                return;
+            }
             if(AutoPhotometry && _autoPhotometryCanStart)
             {
                 AutomatisationHub.AutomatisationHub.Instance.StartPhotometry();
@@ -53,6 +67,13 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
         private void Instance_PhotometryDone(object? sender, EventArgs e)
         {
+            if (_cancel)
+            {
+                _cancel = false;
+                AutomatisationHub.AutomatisationHub.Instance.AutomatedModeFinished();
+                _autoPhotometryCanStart = false;
+                return;
+            }
             if(AutoImageLoad)
             {
                 if(AutomatisationHub.AutomatisationHub.Instance.NextImageAvailabel)
@@ -64,6 +85,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 else
                 {
                     _autoPhotometryCanStart = false;
+                    AutomatisationHub.AutomatisationHub.Instance.AutomatedModeFinished();
                 }
             }
         }

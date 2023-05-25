@@ -196,7 +196,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             }
         }
 
-        
+
         private bool _showProfile;
         public bool ShowProfile
 
@@ -277,9 +277,9 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         private double _varError;
         public double VarError
         {
-            get 
+            get
             {
-                return _varError; 
+                return _varError;
             }
             set
             {
@@ -338,8 +338,8 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             set
             {
                 _referenceMag = value;
-                
-               
+
+
                 OnPropertyChanged("ReferenceMag");
             }
         }
@@ -410,6 +410,28 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 _annulusOuterRadius = value;
                 _apertureChanged = true;
                 OnPropertyChanged("AnnulusOuterRadius");
+            }
+        }
+        private bool _isAutomode;
+        public bool IsAutomode
+        {
+            get { return _isAutomode; }
+            set {
+                _isAutomode = value;
+                OnPropertyChanged("IsAutomode");
+                OnPropertyChanged("IsAutomodeVisibility");
+            }
+        }
+
+        public Visibility IsAutomodeVisibility
+        {
+            get
+            {
+                if (_isAutomode)
+                {
+                    return Visibility.Visible;
+                }
+                return Visibility.Hidden;
             }
         }
 
@@ -829,6 +851,32 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         }
         #endregion
 
+        #region commandStopAutomode
+        private RelayCommand commandStopAutomode;
+        public ICommand CommandStopAutomode
+        {
+            get
+            {
+                if (commandStopAutomode == null)
+                {
+                    commandStopAutomode = new RelayCommand(param => this.StopAutomode(), param => this.CanStopAutomode());
+                }
+                return commandStopAutomode;
+            }
+        }
+
+        private bool CanStopAutomode()
+        {
+            return true;
+        }
+
+        private void StopAutomode()
+        {
+            AutomatisationHub.AutomatisationHub.Instance.Stop();
+            IsAutomode = false;
+        }
+        #endregion
+
         #region ctor
 
         public ApertureViewModel()
@@ -843,11 +891,18 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             _centroidSearchRadius =Config.GlobalConfig.Instance.MagnificationN / 8;
 
             AutomatisationHub.AutomatisationHub.Instance.PhotometryRequest += Instance_PhotometryRequest;
+            AutomatisationHub.AutomatisationHub.Instance.AutomodeDone += Instance_AutomodeDone;
+            IsAutomode = false;
+        }
 
+        private void Instance_AutomodeDone(object? sender, EventArgs e)
+        {
+            IsAutomode = false;
         }
 
         private void Instance_PhotometryRequest(object? sender, EventArgs e)
         {
+            IsAutomode = true;
             AutoMeasure();
         }
 

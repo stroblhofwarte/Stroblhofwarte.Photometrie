@@ -1,4 +1,6 @@
-﻿namespace AutomatisationHub
+﻿using System.Runtime.CompilerServices;
+
+namespace AutomatisationHub
 {
     public class AutomatisationHub
     {
@@ -36,6 +38,10 @@
         // This event is fired when photometry was done
         public event EventHandler PhotometryDone;
 
+        public event EventHandler AutomodeDone;
+
+        public event EventHandler Cancel;
+
         #endregion
 
         #region Properties
@@ -64,6 +70,16 @@
         public void PhotometryFinished()
         {
             PhotometryDone?.Invoke(this, null);
+        }
+
+        public void AutomatedModeFinished()
+        {
+            AutomodeDone?.Invoke(this, null);
+        }
+
+        public void Stop()
+        {
+            Cancel?.Invoke(this, null);
         }
     }
 }

@@ -21,16 +21,15 @@
     <Grid>
         <Image  Source="{Binding ImageSource}" Margin="0,0,0,267" />
         <Label Content="{Binding MagString}" Margin="117,24,0,0" FontSize="16" FontWeight="Bold" Foreground="#FFFDF534" Height="32" VerticalAlignment="Top" HorizontalAlignment="Left" Width="341"/>
-
-
+       
 
 
 
         <mah:MetroTabControl Margin="0,442,0,0" Style="{DynamicResource MahApps.Styles.TabControl.AnimatedSingleRow}">
             <mah:MetroTabItem Header="Photometry">
                 <Grid>
+                    
 
-                   
                     <Button Width="30" ToolTip="Delete all measurements"
                         Style="{DynamicResource MahApps.Styles.Button.Circle}" Command="{Binding CommandClear}" Height="30" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="0,0,0,30">
                         <StackPanel Orientation="Vertical">
@@ -81,6 +80,8 @@
                             <icon:PackIconMaterial Width="18" Height="18" Kind="Play" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Button>
+                    <Button Content="Automatic mode Exit" Command="{Binding CommandStopAutomode}" Visibility="{Binding IsAutomodeVisibility}" Height="60" VerticalAlignment="Bottom" />
+
                 </Grid>
             </mah:MetroTabItem>
             <mah:MetroTabItem Header="Aperture">
