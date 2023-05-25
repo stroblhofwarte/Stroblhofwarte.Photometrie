@@ -17,6 +17,7 @@ using Stroblhofwarte.FITS.DataObjects;
 using Stroblhofwarte.FITS.Interface;
 using Stroblhofwarte.Image.Interface;
 using System.ComponentModel;
+using System.DirectoryServices;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
@@ -58,10 +59,7 @@ namespace Stroblhofwarte.Image
             set
             {
                 _cursorClickPosition = value;
-                if (NewCursorClickPosition != null)
-                {
-                    NewCursorClickPosition(this, null);
-                }
+                NewCursorClickPosition?.Invoke(this, null);
             }
         }
 
@@ -72,10 +70,7 @@ namespace Stroblhofwarte.Image
             set
             {
                 _cursorPosition = value;
-                if (NewCursorPosition != null)
-                {
-                    NewCursorPosition(this, null);
-                }
+                NewCursorPosition?.Invoke(this, null);
             }
         }
 
@@ -139,12 +134,11 @@ namespace Stroblhofwarte.Image
         #endregion
 
         public bool Load(string filename)
-        {
+        {  
             _imageData = new StroblhofwarteFITS(filename);
-            if(NewImageLoaded != null)
-            {
-                NewImageLoaded(this, null);
-            }
+
+            NewImageLoaded?.Invoke(this, null);
+            
             Filename = filename;
             return _imageData.IsValid;
         }

@@ -102,7 +102,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             return true;
         }
 
-        private async void Open()
+        private void Open()
         {
             // Create OpenFileDialog 
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
@@ -120,7 +120,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 string[] files = Directory.GetFiles(folderPath);
                 MyFolder = folderPath;
 
-                await Task.Factory.StartNew(() =>
+                Task.Factory.StartNew(() =>
                 {
                     System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
                     {
@@ -249,7 +249,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             return true;
         }
 
-        private async void NewImage(object param)
+        private void NewImage(object param)
         {
             FitsFileModel item = param as FitsFileModel;
             System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
@@ -261,8 +261,25 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             foreach(FitsFileModel file in _files)
             {
                 if(file.State == "loaded") file.State = "";
+                file.Loaded = false;
             }
             item.State = "loaded";
+            item.Loaded = true;
+            int currentImageIdx = -1;
+            int i = 0;
+            foreach (FitsFileModel file in _files)
+            {
+                if (file.Loaded == true)
+                {
+                    currentImageIdx = i;
+                    break;
+                }
+                i++;
+            }
+            if (currentImageIdx < _files.Count - 1)
+            {
+                AutomatisationHub.AutomatisationHub.Instance.NextImageAvailabel = true;
+            }
             WaitAnimation = Visibility.Hidden;
         }
 
@@ -276,6 +293,52 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         {
             _files = new ObservableCollection<FitsFileModel>();
             ContentId = "FileViewModel";
+            AutomatisationHub.AutomatisationHub.Instance.NextImageRequest += Instance_NextImageRequest;
+        }
+
+        private void Instance_NextImageRequest(object? sender, EventArgs e)
+        {
+            Task.Factory.StartNew(async () =>
+            {
+                int currentImageIdx = -1;
+                int i = 0;
+                foreach (FitsFileModel file in _files)
+                {
+                    if (file.Loaded == true)
+                    {
+                        currentImageIdx = i;
+                        break;
+                    }
+                    i++;
+                }
+                if (currentImageIdx == -1 && _files.Count > 0)
+                {
+                    // nothing loaded yet, load the first image
+                    StroblhofwarteImage.Instance.Load(MyFolder + "\\" + _files[0].Name);
+                    _files[0].State = "loaded";
+                    _files[0].Loaded = true;
+                    return;
+                }
+                if (currentImageIdx > -1 && currentImageIdx < _files.Count)
+                {
+                    // the last image was not reached yet, load the next one:
+                    _files[currentImageIdx].State = "";
+                    _files[currentImageIdx].Loaded = false;
+                    _files[currentImageIdx + 1].State = "loaded";
+                    _files[currentImageIdx + 1].Loaded = true;
+                    StroblhofwarteImage.Instance.Load(MyFolder + "\\" + _files[currentImageIdx + 1].Name);
+                }
+
+                //Inform the world if more images are availabel:
+                if (currentImageIdx == _files.Count - 2)
+                {
+                    AutomatisationHub.AutomatisationHub.Instance.NextImageAvailabel = false;
+                }
+                else
+                {
+                    AutomatisationHub.AutomatisationHub.Instance.NextImageAvailabel = true;
+                }
+            });
         }
 
         #endregion
@@ -310,6 +373,8 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             get { return _state; }
             set { _state = value; OnPropertyChanged("State"); }
         }
+
+        public bool Loaded { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

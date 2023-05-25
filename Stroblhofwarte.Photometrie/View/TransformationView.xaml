@@ -77,7 +77,7 @@
                         <ColumnDefinition Width="16*"/>
                         <ColumnDefinition Width="381*"/>
                     </Grid.ColumnDefinitions>
-                    <oxy:PlotView Name ="Tx_yz" Model="{Binding Model_Tx_yz}" Background="#242426" Foreground="Silver" Grid.ColumnSpan="2" />
+                    <oxy:PlotView Name ="Tx_yz" Model="{Binding Model_Tx_yz}" Foreground="Silver" Grid.ColumnSpan="2" Background="#FF242426" />
                 </Grid>
             </TabItem>
             <TabItem Header="Txy    ">

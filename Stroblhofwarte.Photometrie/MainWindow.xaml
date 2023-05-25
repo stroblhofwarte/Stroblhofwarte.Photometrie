@@ -85,7 +85,9 @@
                 <DataTemplate DataType="{x:Type vm:ScratchPadViewModel}">
                     <v:ScratchPadView />
                 </DataTemplate>
-
+                <DataTemplate DataType="{x:Type vm:AutomatisationViewModel}">
+                    <v:AutomatisationView />
+                </DataTemplate>
 
             </dock:DockingManager.Resources>
 

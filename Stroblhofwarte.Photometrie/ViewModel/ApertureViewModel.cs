@@ -757,7 +757,21 @@ namespace Stroblhofwarte.Photometrie.ViewModel
         private bool CanStart()
         {
             if (StroblhofwarteImage.Instance.IsValid == false) return false;
-            if (PhotoState == enumPhotoState.INIT) return true;
+            if (PhotoState == enumPhotoState.INIT)
+            {
+                if (AutomatisationHub.AutomatisationHub.Instance.AutomaticImageLoadEnabled)
+                {
+                    if (AutomatisationHub.AutomatisationHub.Instance.NextImageAvailabel)
+                    {
+                        return true;
+                    }
+                    else 
+                    { 
+                        return false; 
+                    }
+                }
+                return true;
+            }
             return false;
         }
 
@@ -828,6 +842,49 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             ContentId = "ApertureViewModel";
             _centroidSearchRadius =Config.GlobalConfig.Instance.MagnificationN / 8;
 
+            AutomatisationHub.AutomatisationHub.Instance.PhotometryRequest += Instance_PhotometryRequest;
+
+        }
+
+        private void Instance_PhotometryRequest(object? sender, EventArgs e)
+        {
+            AutoMeasure();
+        }
+
+        private void AutoMeasure()
+        {
+            Task.Factory.StartNew(async () =>
+            {
+                Stroblhofwarte.AperturePhotometry.Centroid photometer = new Centroid(_centroidSearchRadius);
+                Stroblhofwarte.AperturePhotometry.Radius radius = new Radius();
+                // Comp Star:
+                PhotoState = enumPhotoState.COMP;
+                _starCentroid = photometer.GetCentroid(AutomatisationHub.AutomatisationHub.Instance.CPoint.X, AutomatisationHub.AutomatisationHub.Instance.CPoint.Y);
+                AutomatisationHub.AutomatisationHub.Instance.CPoint = _starCentroid;
+                System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
+                {
+                    UpdateApertureMeasurement();
+                }));
+                
+                // Var Star:
+                PhotoState = enumPhotoState.VAR;
+                _starCentroid = photometer.GetCentroid(AutomatisationHub.AutomatisationHub.Instance.VarPoint.X, AutomatisationHub.AutomatisationHub.Instance.VarPoint.Y);
+                AutomatisationHub.AutomatisationHub.Instance.VarPoint = _starCentroid;
+                System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
+                {
+                    UpdateApertureMeasurement();
+                }));
+                // Check Star:
+                PhotoState = enumPhotoState.CHECK;
+                _starCentroid = photometer.GetCentroid(AutomatisationHub.AutomatisationHub.Instance.KPoint.X, AutomatisationHub.AutomatisationHub.Instance.KPoint.Y);
+                AutomatisationHub.AutomatisationHub.Instance.KPoint = _starCentroid;
+                System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
+                {
+                    UpdateApertureMeasurement();
+                }));
+                PhotoState = enumPhotoState.INIT;
+                AutomatisationHub.AutomatisationHub.Instance.PhotometryFinished();
+            });
         }
 
         private void Instance_CompStarChanged(object? sender, EventArgs e)
@@ -911,6 +968,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                     StepInfo = "<Start> to start measurement";
                     StarDataRelay.Instance.UserInfoVisibility = false;
                     StarDataRelay.Instance.UserInfo = "";
+                    AutomatisationHub.AutomatisationHub.Instance.PhotometryFinished();
                     PhotoState = enumPhotoState.INIT;
                 }
                 ScratchPad.ScratchPad.Instance.Commit();
@@ -930,6 +988,13 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 Stroblhofwarte.AperturePhotometry.Centroid photometer = new Centroid(_centroidSearchRadius);
                 Stroblhofwarte.AperturePhotometry.Radius radius = new Radius();
                 _starCentroid = photometer.GetCentroid(StroblhofwarteImage.Instance.CursorClickPosition.X, StroblhofwarteImage.Instance.CursorClickPosition.Y);
+                // Update star position in automatisation hub:
+                if (PhotoState == enumPhotoState.COMP)
+                    AutomatisationHub.AutomatisationHub.Instance.CPoint = _starCentroid;
+                if (PhotoState == enumPhotoState.VAR)
+                    AutomatisationHub.AutomatisationHub.Instance.VarPoint = _starCentroid;
+                if (PhotoState == enumPhotoState.CHECK)
+                    AutomatisationHub.AutomatisationHub.Instance.KPoint = _starCentroid;
             }
             catch (Exception ex)
             {

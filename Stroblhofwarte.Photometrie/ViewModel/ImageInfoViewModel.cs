@@ -56,20 +56,23 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
         private void Instance_NewImageLoaded(object? sender, EventArgs e)
         {
-            Info.Clear();
-            ImageInfoEntry entry = new ImageInfoEntry()
+            System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
             {
-                Object = StroblhofwarteImage.Instance.GetObject(),
-                Exposure = StroblhofwarteImage.Instance.GetExposureTime().ToString(CultureInfo.InvariantCulture),
-                Instrument = StroblhofwarteImage.Instance.GetInstrument(),
-                Filter = StroblhofwarteImage.Instance.GetFilter(),
-                ObservationDate = StroblhofwarteImage.Instance.GetObservationTimeUTC(),
-                Telescope = StroblhofwarteImage.Instance.GetTelescope(),
-                FocalLength = StroblhofwarteImage.Instance.GetFocalLength(),
-                FocalRatio = StroblhofwarteImage.Instance.GetFocalRatio(),
-                JD = StroblhofwarteImage.Instance.GetJD()
-            };
-            Info.Add(entry);
+                Info.Clear();
+                ImageInfoEntry entry = new ImageInfoEntry()
+                {
+                    Object = StroblhofwarteImage.Instance.GetObject(),
+                    Exposure = StroblhofwarteImage.Instance.GetExposureTime().ToString(CultureInfo.InvariantCulture),
+                    Instrument = StroblhofwarteImage.Instance.GetInstrument(),
+                    Filter = StroblhofwarteImage.Instance.GetFilter(),
+                    ObservationDate = StroblhofwarteImage.Instance.GetObservationTimeUTC(),
+                    Telescope = StroblhofwarteImage.Instance.GetTelescope(),
+                    FocalLength = StroblhofwarteImage.Instance.GetFocalLength(),
+                    FocalRatio = StroblhofwarteImage.Instance.GetFocalRatio(),
+                    JD = StroblhofwarteImage.Instance.GetJD()
+                };
+                Info.Add(entry);
+            }));
         }
 
         #endregion

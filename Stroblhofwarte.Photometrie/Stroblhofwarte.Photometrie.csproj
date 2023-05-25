@@ -41,6 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AutomatisationHub\AutomatisationHub.csproj" />
     <ProjectReference Include="..\ScratchPad\ScratchPad.csproj" />
     <ProjectReference Include="..\Stroblhofwarte.AperturePhotometry\Stroblhofwarte.AperturePhotometry.csproj" />
     <ProjectReference Include="..\Stroblhofwarte.Astrometry.Solver\Stroblhofwarte.Astrometry.Solver.csproj" />

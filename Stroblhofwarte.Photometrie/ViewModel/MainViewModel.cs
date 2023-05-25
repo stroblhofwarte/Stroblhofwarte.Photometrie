@@ -34,21 +34,22 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
     public MainViewModel()
     {
-      var documents = new List<DockWindowViewModel>();
+        var documents = new List<DockWindowViewModel>();
 
-      documents.Add(new FileViewModel() { Title = "Files" });
-      documents.Add(new ImageViewModel() { Title = "Image" });
-      documents.Add(new AavsoViewModel() { Title = "AAVSO Data" });
-      documents.Add(new MagnificationViewModel() { Title = "Magnification" });
-      documents.Add(new ApertureViewModel() { Title = "Aperture View" });
-      documents.Add(new ImageInfoViewModel() { Title = "Image Info" });
-      documents.Add(new ReportViewModel() { Title = "Report" });
-      documents.Add(new StandardFieldViewModel() { Title = "Standard Field" });
-      documents.Add(new TransformationViewModel() { Title = "Transformation" });
-      documents.Add(new ScratchPadViewModel() { Title = "ScratchPad" });
+        documents.Add(new FileViewModel() { Title = "Files" });
+        documents.Add(new ImageViewModel() { Title = "Image" });
+        documents.Add(new AavsoViewModel() { Title = "AAVSO Data" });
+        documents.Add(new MagnificationViewModel() { Title = "Magnification" });
+        documents.Add(new ApertureViewModel() { Title = "Aperture View" });
+        documents.Add(new ImageInfoViewModel() { Title = "Image Info" });
+        documents.Add(new ReportViewModel() { Title = "Report" });
+        documents.Add(new StandardFieldViewModel() { Title = "Standard Field" });
+        documents.Add(new TransformationViewModel() { Title = "Transformation" });
+        documents.Add(new ScratchPadViewModel() { Title = "ScratchPad" });
+        documents.Add(new AutomatisationViewModel() { Title = "Automatisation" });
 
-      this.DockManagerViewModel = new DockManagerViewModel(documents);
-      this.MenuViewModel = new MenuViewModel(documents);
+        this.DockManagerViewModel = new DockManagerViewModel(documents);
+        this.MenuViewModel = new MenuViewModel(documents);
     }
 
         #region Commands
