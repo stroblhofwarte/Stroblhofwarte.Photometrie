@@ -35,27 +35,38 @@
         <TabControl Style="{DynamicResource MahApps.Styles.TabControl}">
             <TabItem Header="Settings">
                 <Grid>
-                    <Label Content="Astrometry.Net Solver" HorizontalAlignment="Left" Margin="51,67,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
-                    <Label Content="__________________________________________________________________________________________________________" HorizontalAlignment="Left" Margin="180,62,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
-                    <TextBox HorizontalAlignment="Left" Margin="222,102,0,0" TextWrapping="NoWrap" Text="{Binding AstrometrynetHost, Mode=TwoWay}" VerticalAlignment="Top" Width="189"/>
-                    <Label Content="Astrometry.Net Host:" HorizontalAlignment="Left" Margin="96,102,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
-                    <TextBox HorizontalAlignment="Left" Margin="222,133,0,0" TextWrapping="NoWrap" Text="{Binding AstrometrynetKey, Mode=TwoWay}" VerticalAlignment="Top" Width="189"/>
-                    <Label Content="Astrometry.Net APIKey:" HorizontalAlignment="Left" Margin="84,133,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
+                    <Label Content="Astrometry.Net Solver" HorizontalAlignment="Left" Margin="51,17,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
+                    <Label Content="__________________________________________________________________________________________________________" HorizontalAlignment="Left" Margin="180,12,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
+                    <TextBox HorizontalAlignment="Left" Margin="222,52,0,0" TextWrapping="NoWrap" Text="{Binding AstrometrynetHost, Mode=TwoWay}" VerticalAlignment="Top" Width="189"/>
+                    <Label Content="Astrometry.Net Host:" HorizontalAlignment="Left" Margin="96,52,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
+                    <TextBox HorizontalAlignment="Left" Margin="222,83,0,0" TextWrapping="NoWrap" Text="{Binding AstrometrynetKey, Mode=TwoWay}" VerticalAlignment="Top" Width="189"/>
+                    <Label Content="Astrometry.Net APIKey:" HorizontalAlignment="Left" Margin="84,83,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
 
-                    <Label Content="ScratchPad Active:" HorizontalAlignment="Left" Margin="111,189,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
-                    <mah:ToggleSwitch IsOn="{Binding ScratchPadActive, Mode=TwoWay}"   Margin="0,186,414,0" Width="119" FontSize="12" VerticalAlignment="Top" Height="32" HorizontalAlignment="Right"/>
+                    <Label Content="Active:" HorizontalAlignment="Left" Margin="158,282,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
+                    <mah:ToggleSwitch IsOn="{Binding ScratchPadActive, Mode=TwoWay}"   Margin="226,279,0,0" Width="119" FontSize="12" Height="32" VerticalAlignment="Top"/>
 
 
 
-                    <Label Content="Magnification" HorizontalAlignment="Left" Margin="51,279,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
-                    <Label Content="__________________________________________________________________________________________________________" HorizontalAlignment="Left" Margin="180,274,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
-                    <TextBox HorizontalAlignment="Left" Margin="226,305,0,0" TextWrapping="NoWrap" Text="{Binding MagnificationN, Mode=TwoWay}" VerticalAlignment="Top" Width="56"/>
-                    <Label Content="Magnification NxN (px):" HorizontalAlignment="Left" Margin="84,305,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
-                    <Label Content="Filter, Instrument Database" HorizontalAlignment="Left" Margin="51,350,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
-                    <Label Content="__________________________________________________________________________________________________________" HorizontalAlignment="Left" Margin="208,345,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5" Width="246"/>
-                    <TextBox HorizontalAlignment="Left" Margin="226,376,0,0" TextWrapping="NoWrap" Text="{Binding FilterDatabasePath, Mode=TwoWay}" VerticalAlignment="Top" Width="460" ToolTip="Set this only, when you want to have the db outside the standard directory. Otherwise set this to blank." />
-                    <Label Content="Directory:" HorizontalAlignment="Left" Margin="84,376,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
-                    <Button Content="..." Command="{Binding BrowseFilterPathCommand}" HorizontalAlignment="Left" Margin="691,376,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Magnification" HorizontalAlignment="Left" Margin="51,321,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
+                    <Label Content="__________________________________________________________________________________________________________" HorizontalAlignment="Left" Margin="180,316,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
+                    <TextBox HorizontalAlignment="Left" Margin="226,347,0,0" TextWrapping="NoWrap" Text="{Binding MagnificationN, Mode=TwoWay}" VerticalAlignment="Top" Width="56"/>
+                    <Label Content="Magnification NxN (px):" HorizontalAlignment="Left" Margin="84,347,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
+                    <Label Content="Filter, Instrument Database" HorizontalAlignment="Left" Margin="51,392,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
+                    <Label Content="__________________________________________________________________________________________________________" HorizontalAlignment="Left" Margin="208,387,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5" Width="246"/>
+                    <TextBox HorizontalAlignment="Left" Margin="226,418,0,0" TextWrapping="NoWrap" Text="{Binding FilterDatabasePath, Mode=TwoWay}" VerticalAlignment="Top" Width="460" ToolTip="Set this only, when you want to have the db outside the standard directory. Otherwise set this to blank." />
+                    <Label Content="Directory:" HorizontalAlignment="Left" Margin="84,418,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
+                    <Button Content="..." Command="{Binding BrowseFilterPathCommand}" HorizontalAlignment="Left" Margin="691,418,0,0" VerticalAlignment="Top"/>
+                    <Label Content="__________________________________________________________________________________________________________" HorizontalAlignment="Left" Margin="180,239,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
+                    <Label Content="ScratchPad:" HorizontalAlignment="Left" Margin="51,242,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
+                    <Label Content="__________________________________________________________________________________________________________" HorizontalAlignment="Left" Margin="180,126,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
+                    <Label Content="ASTAP Solver:" HorizontalAlignment="Left" Margin="51,134,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
+                    <TextBox HorizontalAlignment="Left" Margin="222,165,0,0" TextWrapping="NoWrap" Text="{Binding AstapExe, Mode=TwoWay}" VerticalAlignment="Top" Width="189"/>
+                    <Label Content="ASTAP Exe:" HorizontalAlignment="Left" Margin="84,165,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
+                    <Button Content="..." Command="{Binding BrowseAstapExe}" HorizontalAlignment="Left" Margin="416,165,0,0" VerticalAlignment="Top"/>
+                    <TextBox HorizontalAlignment="Left" Margin="223,198,0,0" TextWrapping="NoWrap" Text="{Binding AstapArgs, Mode=TwoWay}" VerticalAlignment="Top" Width="189"/>
+                    <Label Content="ASTAP Args:" HorizontalAlignment="Left" Margin="85,198,0,0" VerticalAlignment="Top" Foreground="#FFC5C5C5"/>
+                    <mah:ToggleSwitch IsOn="{Binding Astap, Mode=TwoWay}"   Margin="476,131,0,0" Width="119" FontSize="12" Height="32" VerticalAlignment="Top"/>
+                    <mah:ToggleSwitch IsOn="{Binding Astrometry, Mode=TwoWay}"   Margin="476,17,0,0" Width="119" FontSize="12" Height="32" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
             <TabItem Header="AAVSO">

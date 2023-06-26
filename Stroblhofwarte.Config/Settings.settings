@@ -32,5 +32,17 @@
     <Setting Name="ScratchPadActive" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="AstapExe" Type="System.String" Scope="User">
+      <Value Profile="(Default)">c:\Program Files\astap\astap.exe</Value>
+    </Setting>
+    <Setting Name="AstapArgs" Type="System.String" Scope="User">
+      <Value Profile="(Default)">-r 180 -z 2</Value>
+    </Setting>
+    <Setting Name="Astap" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Astrometry" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

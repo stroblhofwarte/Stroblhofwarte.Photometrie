@@ -137,6 +137,46 @@ namespace Stroblhofwarte.Config
             }
         }
 
+        public string AstapExe
+        {
+            get { return Stroblhofwarte.Config.Settings.Default.AstapExe; }
+            set
+            {
+                Stroblhofwarte.Config.Settings.Default.AstapExe = value;
+                Stroblhofwarte.Config.Settings.Default.Save();
+            }
+        }
+
+        public string AstapArgs
+        {
+            get { return Stroblhofwarte.Config.Settings.Default.AstapArgs; }
+            set
+            {
+                Stroblhofwarte.Config.Settings.Default.AstapArgs = value;
+                Stroblhofwarte.Config.Settings.Default.Save();
+            }
+        }
+
+        public bool Astap
+        {
+            get { return Stroblhofwarte.Config.Settings.Default.Astap; }
+            set
+            {
+                Stroblhofwarte.Config.Settings.Default.Astap = value;
+                Stroblhofwarte.Config.Settings.Default.Save();
+            }
+        }
+
+        public bool Astrometry
+        {
+            get { return Stroblhofwarte.Config.Settings.Default.Astrometry; }
+            set
+            {
+                Stroblhofwarte.Config.Settings.Default.Astrometry = value;
+                Stroblhofwarte.Config.Settings.Default.Save();
+            }
+        }
+
         #endregion
         #region Ctor
 

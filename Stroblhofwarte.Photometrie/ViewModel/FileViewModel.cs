@@ -14,6 +14,7 @@
 
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
+using Stroblhofwarte.Astap.Solver;
 using Stroblhofwarte.Astrometry.Solver.AstrometryNet;
 using Stroblhofwarte.FITS;
 using Stroblhofwarte.Image;
@@ -21,19 +22,27 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.Caching;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Shapes;
 
 namespace Stroblhofwarte.Photometrie.ViewModel
 {
     public class FileViewModel : DockWindowViewModel
     {
         #region Properties
+
+        public FileSystemWatcher _fileWatcher;
+        private readonly MemoryCache _memCache;
+        private readonly CacheItemPolicy _cacheItemPolicy;
+        private const int CacheTimeMilliseconds = 1000;
 
         private string _myFolder;
 
@@ -116,7 +125,7 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             if (dlg.ShowDialog() == true)
             {
                 Files.Clear();
-                string folderPath = Path.GetDirectoryName(dlg.FileName);
+                string folderPath = System.IO.Path.GetDirectoryName(dlg.FileName);
                 string[] files = Directory.GetFiles(folderPath);
                 MyFolder = folderPath;
 
@@ -131,25 +140,23 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                     {
                         if (file.EndsWith(".fits") || file.EndsWith(".fit"))
                         {
-                            string wcs = "";
-                            StroblhofwarteHEADER checkFile = new StroblhofwarteHEADER(file);
-                            if (checkFile.WCS != null)
-                                wcs = "yes";
-                            string date = ParseFITSDate(checkFile.RawImage.DATE_LOC);
-                            date = date.Replace("T", " ");
-                            string pureFilename = Path.GetFileName(file);
-                            System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
-                            {
-                                Files.Add(new FitsFileModel()
-                                {
-                                    Name = pureFilename,
-                                    Date = date,
-                                    WCS = wcs
-                                });
-                            }));
-                            
+                            AddFile(file);
                         }
                     }
+
+                    // Create a file watcher to detect when new images arrive:
+                    if(_fileWatcher != null)
+                    {
+                        _fileWatcher.Changed -= _fileWatcher_Changed;
+                    }
+
+                    _fileWatcher = new FileSystemWatcher();
+                    _fileWatcher.Path = folderPath;
+                    _fileWatcher.NotifyFilter = NotifyFilters.LastWrite;
+                    _fileWatcher.Filter = "*.fits";
+                    _fileWatcher.Changed += _fileWatcher_Changed;
+                    _fileWatcher.EnableRaisingEvents = true;
+                    
                     System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
                     {
                         WaitAnimation = Visibility.Hidden;
@@ -157,6 +164,65 @@ namespace Stroblhofwarte.Photometrie.ViewModel
 
                 });
             }
+
+        }
+
+        private bool AddFile(string fullPath)
+        {
+            try
+            {
+                string wcs = "";
+                StroblhofwarteHEADER checkFile = new StroblhofwarteHEADER(fullPath);
+              
+                if (checkFile.WCS != null)
+                    wcs = "yes";
+                string date = ParseFITSDate(checkFile.RawImage.DATE_LOC);
+                date = date.Replace("T", " ");
+                string pureFilename = System.IO.Path.GetFileName(fullPath);
+                System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
+                {
+                    Files.Add(new FitsFileModel()
+                    {
+                        Name = pureFilename,
+                        Date = date,
+                        WCS = wcs
+                    });
+                }));
+                return true;
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
+        }
+
+        // FileSystemWatcher fires more than once. At the beginning of the copy process, at the end, sometimes also in between.
+        // If the code reactes on the first event, the copy process is not completed and a incomplete file is loaded. 
+        // For this a  cache item is created and after one second the file is accessed.
+        private void _fileWatcher_Changed(object sender, FileSystemEventArgs e)
+        {
+            if (!AutomatisationHub.AutomatisationHub.Instance.FileScanEnabled)
+                return;
+            string pureFilename = System.IO.Path.GetFileName(e.FullPath);
+            foreach(FitsFileModel f in Files)
+            {
+                if(f.Name == pureFilename)
+                {
+                    // File was loaded before. Do nothing.
+                    return;
+                }
+            }
+            _cacheItemPolicy.AbsoluteExpiration =
+            DateTimeOffset.Now.AddMilliseconds(CacheTimeMilliseconds);
+            _memCache.AddOrGetExisting(e.Name, e, _cacheItemPolicy);
+        }
+
+        private void OnRemovedFromCache(CacheEntryRemovedArguments args)
+        {
+            if (args.RemovedReason != CacheEntryRemovedReason.Expired) return;
+            var e = (FileSystemEventArgs)args.CacheItem.Value;
+            if (AddFile(e.FullPath))
+                AutomatisationHub.AutomatisationHub.Instance.NewImageArrived();
         }
 
         private string ParseFITSDate(string date)
@@ -202,7 +268,9 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             if (result == MessageDialogResult.Negative) return;
             await Task.Factory.StartNew(async () =>
             {
-                AstrometryNet solver = new AstrometryNet(Config.GlobalConfig.Instance.AstrometrynetHost, Config.GlobalConfig.Instance.AstrometrynetKey);
+                // Stupid: Replace with base class. 
+                AstrometryNet astrometry = new AstrometryNet(Config.GlobalConfig.Instance.AstrometrynetHost, Config.GlobalConfig.Instance.AstrometrynetKey);
+                AstapSolver astap = new AstapSolver(Config.GlobalConfig.Instance.AstapExe, Config.GlobalConfig.Instance.AstapArgs);
                 foreach (FitsFileModel file in _files)
                 {
                     if (file.WCS == "yes") continue;
@@ -212,7 +280,11 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                         OnPropertyChanged("Files");
                     }));
 
-                    bool solveResult = await solver.Solve(MyFolder + "\\" + file.Name);
+                    bool solveResult = false;
+                    if (Config.GlobalConfig.Instance.Astrometry)
+                        solveResult = await astrometry.Solve(MyFolder + "\\" + file.Name);
+                    if (Config.GlobalConfig.Instance.Astap)
+                        solveResult = await astap.Solve(MyFolder + "\\" + file.Name);
                     if (!solveResult)
                     {
                         file.State = "error";
@@ -294,7 +366,14 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             _files = new ObservableCollection<FitsFileModel>();
             ContentId = "FileViewModel";
             AutomatisationHub.AutomatisationHub.Instance.NextImageRequest += Instance_NextImageRequest;
+
+            _memCache = MemoryCache.Default;
+            _cacheItemPolicy = new CacheItemPolicy()
+            {
+                RemovedCallback = OnRemovedFromCache
+            };
         }
+
 
         private void Instance_NextImageRequest(object? sender, EventArgs e)
         {

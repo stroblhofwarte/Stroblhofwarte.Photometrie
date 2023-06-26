@@ -29,7 +29,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharpFITS", "CSharpFITS\CS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScratchPad", "ScratchPad\ScratchPad.csproj", "{1687C796-62B5-4CBB-8DDF-78E9FDBE5828}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutomatisationHub", "AutomatisationHub\AutomatisationHub.csproj", "{7C15FFF1-3DB4-426A-937B-907D55B6F6DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutomatisationHub", "AutomatisationHub\AutomatisationHub.csproj", "{7C15FFF1-3DB4-426A-937B-907D55B6F6DE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stroblhofwarte.Astap.Solver", "Stroblhofwarte.Astap.Solver\Stroblhofwarte.Astap.Solver.csproj", "{4494B2FF-211D-4E59-897E-D575B23347FD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -91,6 +93,10 @@ Global
 		{7C15FFF1-3DB4-426A-937B-907D55B6F6DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C15FFF1-3DB4-426A-937B-907D55B6F6DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C15FFF1-3DB4-426A-937B-907D55B6F6DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4494B2FF-211D-4E59-897E-D575B23347FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4494B2FF-211D-4E59-897E-D575B23347FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4494B2FF-211D-4E59-897E-D575B23347FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4494B2FF-211D-4E59-897E-D575B23347FD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

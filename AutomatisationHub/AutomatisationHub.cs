@@ -24,6 +24,7 @@ namespace AutomatisationHub
 
         public bool AutomaticImageLoadEnabled { get; set; }
         public bool AutomaticPhotometryEnabled { get; set; }
+        public bool FileScanEnabled { get; set; }
         #endregion
 
         #region Events
@@ -41,6 +42,7 @@ namespace AutomatisationHub
         public event EventHandler AutomodeDone;
 
         public event EventHandler Cancel;
+        public event EventHandler NewFileArrived;
 
         #endregion
 
@@ -80,6 +82,12 @@ namespace AutomatisationHub
         public void Stop()
         {
             Cancel?.Invoke(this, null);
+        }
+
+        public void NewImageArrived()
+        {
+            NextImageAvailabel = true;
+            NewFileArrived?.Invoke(this, null);
         }
     }
 }

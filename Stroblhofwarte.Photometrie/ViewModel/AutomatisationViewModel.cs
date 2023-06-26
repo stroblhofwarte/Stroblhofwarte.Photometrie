@@ -32,6 +32,17 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             }
         }
 
+        public bool FileScan
+        {
+            get { return AutomatisationHub.AutomatisationHub.Instance.FileScanEnabled; }
+            set
+            {
+                AutomatisationHub.AutomatisationHub.Instance.FileScanEnabled = value;
+                AutomatisationHub.AutomatisationHub.Instance.AutomatedModeFinished();
+                OnPropertyChanged("FileScan");
+            }
+        }
+
         private bool _autoPhotometryCanStart = false;
         private bool _cancel = false;
         #endregion
@@ -43,6 +54,13 @@ namespace Stroblhofwarte.Photometrie.ViewModel
             AutomatisationHub.AutomatisationHub.Instance.PhotometryDone += Instance_PhotometryDone;
             StroblhofwarteImage.Instance.NewImageLoaded += Instance_NewImageLoaded;
             AutomatisationHub.AutomatisationHub.Instance.Cancel += Instance_Cancel;
+            AutomatisationHub.AutomatisationHub.Instance.NewFileArrived += Instance_NewFileArrived;
+        }
+
+        private void Instance_NewFileArrived(object? sender, EventArgs e)
+        {
+            _autoPhotometryCanStart = true;
+            AutomatisationHub.AutomatisationHub.Instance.NextImage();
         }
 
         private void Instance_Cancel(object? sender, EventArgs e)
@@ -85,7 +103,8 @@ namespace Stroblhofwarte.Photometrie.ViewModel
                 else
                 {
                     _autoPhotometryCanStart = false;
-                    AutomatisationHub.AutomatisationHub.Instance.AutomatedModeFinished();
+                    if(!AutomatisationHub.AutomatisationHub.Instance.FileScanEnabled)
+                        AutomatisationHub.AutomatisationHub.Instance.AutomatedModeFinished();
                 }
             }
         }

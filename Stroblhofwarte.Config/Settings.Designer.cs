@@ -142,5 +142,53 @@ namespace Stroblhofwarte.Config {
                 this["ScratchPadActive"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("c:\\Program Files\\astap\\astap.exe")]
+        public string AstapExe {
+            get {
+                return ((string)(this["AstapExe"]));
+            }
+            set {
+                this["AstapExe"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-r 180 -z 2")]
+        public string AstapArgs {
+            get {
+                return ((string)(this["AstapArgs"]));
+            }
+            set {
+                this["AstapArgs"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Astap {
+            get {
+                return ((bool)(this["Astap"]));
+            }
+            set {
+                this["Astap"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Astrometry {
+            get {
+                return ((bool)(this["Astrometry"]));
+            }
+            set {
+                this["Astrometry"] = value;
+            }
+        }
     }
 }

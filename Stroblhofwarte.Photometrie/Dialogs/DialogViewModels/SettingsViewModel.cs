@@ -173,6 +173,64 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
             }
         }
 
+        public string AstapExe
+        {
+            get { return GlobalConfig.Instance.AstapExe; }
+            set
+            {
+                try
+                {
+                    GlobalConfig.Instance.AstapExe = value;
+                }
+                catch (Exception ex)
+                {
+                    GlobalConfig.Instance.AstapExe = "";
+                }
+                OnPropertyChanged("AstapExe");
+            }
+        }
+
+        public string AstapArgs
+        {
+            get { return GlobalConfig.Instance.AstapArgs; }
+            set
+            {
+                try
+                {
+                    GlobalConfig.Instance.AstapArgs = value;
+                }
+                catch (Exception ex)
+                {
+                    GlobalConfig.Instance.AstapArgs = "";
+                }
+                OnPropertyChanged("AstapArgs");
+            }
+        }
+
+        public bool Astap
+        {
+            get { return GlobalConfig.Instance.Astap; }
+            set
+            {
+                GlobalConfig.Instance.Astap = value;
+                GlobalConfig.Instance.Astrometry = false;
+                OnPropertyChanged("Astap");
+                OnPropertyChanged("Astrometry");
+            }
+        }
+
+        public bool Astrometry
+        {
+            get { return GlobalConfig.Instance.Astrometry; }
+            set
+            {
+                GlobalConfig.Instance.Astrometry = value;
+                GlobalConfig.Instance.Astap = false;
+                OnPropertyChanged("Astap");
+                OnPropertyChanged("Astrometry");
+            }
+        }
+
         #endregion
 
         #region Commands
@@ -246,6 +304,42 @@ namespace Stroblhofwarte.Photometrie.Dialogs.DialogViewModels
             {
                 string folderPath = Path.GetDirectoryName(dlg.FileName);
                 StandardFieldsPath = folderPath;
+            }
+        }
+
+        private RelayCommand _browseAstapExe;
+        public ICommand BrowseAstapExe
+        {
+            get
+            {
+                if (_browseAstapExe == null)
+                {
+                    _browseAstapExe = new RelayCommand(param => this.BrowseAstap(), param => this.CanStapExe());
+                }
+                return _browseAstapExe;
+            }
+        }
+
+        private bool CanStapExe()
+        {
+            return true;
+        }
+
+        private void BrowseAstap()
+        {
+            // Create OpenFileDialog 
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+
+
+            dlg.ValidateNames = false;
+            dlg.CheckFileExists = false;
+            dlg.CheckPathExists = true;
+            // Always default to Folder Selection.
+            dlg.FileName = "astap.exe";
+            if (dlg.ShowDialog() == true)
+            {
+                string folderPath = dlg.FileName;
+                AstapExe = folderPath;
             }
         }
         #endregion
