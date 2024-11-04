@@ -13,4 +13,5 @@ Stroblhofwarte.Photometrie is a tool for star photometrie on CCD/CMOS images:
 
 ![Stroblhofwarte.Photometrie](https://github.com/stroblhofwarte/Stroblhofwarte.Photometrie/blob/master/Stroblhofwarte.Photometrie.png )
 
-For a detailed description of this software see: https://astro.stroblhofwarte-oberrohrbach.de (german only)
+A short usage report can be found on: https://astro.karglhoefchen-aldersbach.de/2023/05/29/supernova-sn-2023ixf/ (german)
+
